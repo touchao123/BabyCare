@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -16,7 +16,7 @@ import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.parse.ParseImpl;
 
-public class BaseActivity extends ActionBarActivity implements LayerCallbacks {
+public class BaseActivity extends AppCompatActivity implements LayerCallbacks {
     protected ProgressDialog mDialog;
 
     public BaseActivity() {

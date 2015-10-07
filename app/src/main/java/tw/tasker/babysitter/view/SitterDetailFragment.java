@@ -68,7 +68,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         mSkillNumber = (TextView) rootView.findViewById(R.id.skillNumber);
         mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
 
-        initData();
+        //initData();
         return rootView;
     }
 
@@ -89,7 +89,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         if (Config.sitterInfo == null) {
             loadProfileData();
         } else {
-            fillDataToUI(Config.sitterInfo);
+            //fillDataToUI(Config.sitterInfo);
         }
 
     }
@@ -118,7 +118,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         //mSex.setText(babysitter.getSex());
         //mAge.setText(babysitter.getAge());
         mTel.setText("聯絡電話：" + sitter.getTel());
-        mAddress.setText("住家地址：" + sitter.getAddress());
+        mAddress.setText(sitter.getAddress());
 
         int babyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
         mBabycareCount.setRating(babyCount);
