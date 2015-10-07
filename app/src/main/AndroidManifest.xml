@@ -52,7 +52,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCLzUxrhoPiXZVBxFiicvuUy9fbvzQ4h0c" />
@@ -69,7 +69,7 @@
             android:name=".view.HomeActivity"
             android:label="保母列表"
             android:launchMode="singleTask"
-            android:theme="@style/ActivityTheme"></activity>
+            android:theme="@style/ActivityTheme" />
 
         <!-- User Manager -->
         <activity
@@ -87,33 +87,34 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".view.SignUpActivity"
             android:label="建立帳號"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.ProfileActivity"
             android:label="個人檔案"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.ConversationActivity"
-            android:label="訊息欄"></activity>
+            android:label="訊息欄" />
         <activity
             android:name=".view.MessageActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
             android:name=".view.DataCheckActivity"
             android:label="資料確認"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
             android:name=".view.SitterDetailActivity"
             android:label="詳細資料"
-            android:windowSoftInputMode="stateHidden|adjustResize"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- Parse -->
         <service android:name="com.parse.PushService" />
