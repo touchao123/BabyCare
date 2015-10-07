@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SitterList -->
+    <string name="demo_name">林女士</string>
+    <string name="demo_age">(20歲)</string>
+    <string name="demo_babycare_time">日托，夜托</string>
+    <string name="demo_babycare_count">目前托育人數：</string>
+    <string name="demo_address">高雄市鳳山區光復路 (2km)</string>
+    <string name="demo_education">教育程度：大學</string>
+    <string name="demo_experience">保母經驗：15年</string>
+    <string name="demo_skills">其他才能：英語</string>
+    <string name="demo_licence">證照：保母照，中餐照，月嫂照</string>
+    <string name="demo_introduction">我是一個具有愛心，細心照顧小孩的保母，把您最親愛最寶貝的小孩交給我，我不會讓您失望，謝謝。</string>
+
+</resources>
