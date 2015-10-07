@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <!-- Brand colors -->
+    <color name="primary">#3FA9B1</color>
+    <color name="primary_dark">#90CFD2</color>
+    <color name="accent">#FBC53B</color>
+
+    <color name="click">#23869A</color>
+
+    <color name="hint">#CCCCCC</color>
+    <color name="gray_dark">#969696</color>
+    <color name="gray_light">#F2F2F2</color>
+    <color name="normal_text">#646464</color>
+
+    <!-- PagerSlidingTabStrip -->
+    <color name="white_alpha_80">#80FFFFFF</color>
+    <color name="forget_password">#BABABA</color>
+
 </resources>

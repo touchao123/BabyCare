@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_card"
+        android:minHeight="100dp"
+        android:orientation="vertical">
+
+        <!-- Card Contents go here -->
+
+        <include layout="@layout/list_item_sitter_header" />
+
+        <include layout="@layout/list_item_sitter_content" />
+    </LinearLayout>
+
+</FrameLayout>

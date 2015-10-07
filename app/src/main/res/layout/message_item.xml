@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="right"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="1.0">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatar"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/profile" />
+
+        <TextView
+            android:id="@+id/sendTime_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|bottom"
+            android:text="4:30pm"
+            android:textAlignment="gravity"
+            android:textColor="@color/hint"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/msgContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoText="false"
+            android:nestedScrollingEnabled="true"
+            android:padding="5dp"
+            android:singleLine="false"
+            android:text="My message here. My message here. My message here. My message here. My message here. My message here."
+            android:textColor="#ff000000"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/sendTime_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:text="4:30pm"
+            android:textAlignment="gravity"
+            android:textColor="@color/hint"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+</LinearLayout>

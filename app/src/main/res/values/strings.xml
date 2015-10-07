@@ -1,4 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">babysitter</string>
-    <string name="action_settings">Settings</string>
+
+    <!-- BabyCare -->
+    <string name="app_name">BabyCare</string>
+
+    <!-- Strings related to login -->
+    <string name="sign_up">建立帳號</string>
+    <string name="log_in">登入</string>
+    <string name="prompt_username">英文字母或數字</string>
+    <string name="prompt_password">六位數以上數字或英文字母</string>
+    <string name="prompt_password_again">請再輸入一次您的密碼</string>
+    <string name="action_sign_in_short">登入</string>
+
+    <!-- Error messages -->
+    <string name="error_intro">"請 "</string>
+    <string name="error_blank_username">輸入帳號</string>
+    <string name="error_blank_password">輸入密碼</string>
+    <string name="error_mismatched_passwords">再輸入一次密碼</string>
+    <string name="error_join">", 並 "</string>
+    <string name="error_end">.</string>
+
+    <!-- Sitter list  -->
+    <string name="contact">媒合保母</string>
+    <string name="contact_sent">已傳送媒合邀請</string>
+    <string name="detail"><u>更多資料 </u></string>
+
 </resources>
