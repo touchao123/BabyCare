@@ -19,11 +19,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -47,6 +44,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     private CircleImageView mAvatar;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private Button mEidt;
+    private ImageView mStaticMap;
 
     public SitterDetailFragment() {
         // TODO Auto-generated constructor stub
@@ -86,6 +84,9 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         pager.setAdapter(new ImageAdapter(getActivity()));
         //pager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
         pager.setCurrentItem(0);
+
+        mStaticMap = (ImageView) rootView.findViewById(R.id.static_map);
+        showStaticMap();
 
         //initData();
         return rootView;
@@ -156,6 +157,11 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         }
     }
 
+    private void showStaticMap() {
+        String staticMapUrl = "http://maps.googleapis.com/maps/api/staticmap?&scale=2&language=tw&center=%E9%AB%98%E9%9B%84%E5%B8%82%E9%B3%B3%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E8%B7%AF&zoom=16&scale=false&size=400x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:A%7C%E9%AB%98%E9%9B%84%E5%B8%82%E9%B3%B3%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E8%B7%AF";
+        ImageLoader.getInstance().displayImage(staticMapUrl, mStaticMap, Config.OPTIONS);
+    }
+
     private void getOldAvatar(Babysitter sitter) {
         String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
         String parseUrl = sitter.getImageUrl();
@@ -193,22 +199,10 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         private final Context mContext;
 
         private LayoutInflater inflater;
-        private DisplayImageOptions options;
 
         ImageAdapter(Context context) {
             mContext = context;
             inflater = LayoutInflater.from(context);
-
-            options = new DisplayImageOptions.Builder()
-                    //.showImageForEmptyUri(R.drawable.ic_empty)
-                    //.showImageOnFail(R.drawable.ic_error)
-                    .resetViewBeforeLoading(true)
-                    .cacheOnDisk(true)
-                    .imageScaleType(ImageScaleType.EXACTLY)
-                    .bitmapConfig(Bitmap.Config.RGB_565)
-                    .considerExifParams(true)
-                    .displayer(new FadeInBitmapDisplayer(300))
-                    .build();
         }
 
         @Override
@@ -237,7 +231,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
 
             final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
-            ImageLoader.getInstance().displayImage(IMAGE_URLS[position], imageView, options, new SimpleImageLoadingListener() {
+            ImageLoader.getInstance().displayImage(IMAGE_URLS[position], imageView, Config.OPTIONS, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     spinner.setVisibility(View.VISIBLE);

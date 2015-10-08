@@ -1,7 +1,10 @@
 package tw.tasker.babysitter;
 
+import android.graphics.Bitmap;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.parse.ParseGeoPoint;
 
 import java.util.List;
@@ -21,11 +24,16 @@ public class Config {
     public static final DisplayImageOptions OPTIONS
             = new DisplayImageOptions.Builder()
             .cacheInMemory(true)
-            .cacheOnDisc(true)
-            .displayer(new SimpleBitmapDisplayer())
+            .cacheOnDisk(true)
+            .resetViewBeforeLoading(true)
             .showImageOnFail(R.drawable.profile)
-            .showImageOnLoading(R.drawable.profile)
+                    //.showImageOnLoading(R.drawable.profile)
+            .imageScaleType(ImageScaleType.EXACTLY)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .considerExifParams(true)
+            .displayer(new FadeInBitmapDisplayer(300))
             .build();
+
     public static final double LAT = 22.885127;
     public static final double LNG = 120.589881;
     public static final int MAX_POST_SEARCH_DISTANCE = 50;
