@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- SitterList -->
+    <!-- Sitter info  -->
     <string name="demo_name">林女士</string>
     <string name="demo_age">(20歲)</string>
     <string name="demo_babycare_time">日托，夜托</string>
@@ -14,5 +14,13 @@
     <string name="tel">聯絡電話：0915552673</string>
     <string name="demo_skill_number">保母證號：1234567890</string>
     <string name="demo_community_name">高雄市第四區社區保母系統</string>
+
+    <!-- Parent info  -->
+    <string name="demo_parent_name">陳先生</string>
+    <string name="demo_parent_babycare_plan">預計托育時間：現在</string>
+    <string name="demo_parent_introduction">註記：乳糖不適症</string>
+    <string name="demo_parent_baby_gender">小孩姓別：女</string>
+    <string name="demo_parent_babycare_count">希望保母照顧人數：</string>
+    <string name="demo_parent_baby_age">小孩步數：1歲3月</string>
 
 </resources>

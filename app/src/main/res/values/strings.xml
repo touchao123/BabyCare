@@ -25,6 +25,9 @@
     <string name="contact_sent">已傳送媒合邀請</string>
     <string name="detail"><u>更多資料 </u> > </string>
 
+    <!-- Parent list -->
+    <string name="parent_contact">媒合爸媽</string>
+
     <!-- Content descriptions -->
     <string name="descr_image">圖片</string>
 

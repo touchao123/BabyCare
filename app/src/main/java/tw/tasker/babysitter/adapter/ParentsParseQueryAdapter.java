@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -175,25 +173,25 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
             // null);
             LayoutInflater mInflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rootView = mInflater.inflate(R.layout.list_item_sitter, parent,
+            rootView = mInflater.inflate(R.layout.item_list_parent, parent,
                     false);
         } else {
             rootView = view;
             // recycle = true;
         }
 
-        mAge = (TextView) rootView.findViewById(R.id.age);
+        //mAge = (TextView) rootView.findViewById(R.id.age);
         //mAge.setText("("+userInfo.getAge()+")");
 
         //mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
         //getOldAvator(userInfo);
 
-        final LinearLayout expandable = (LinearLayout) rootView
-                .findViewById(R.id.expandable);
-        final LinearLayout expandableToggle = (LinearLayout) rootView
-                .findViewById(R.id.expandable_toggle_button);
-
-        final ImageView arrow = (ImageView) rootView.findViewById(R.id.arrow);
+//        final LinearLayout expandable = (LinearLayout) rootView
+//                .findViewById(R.id.expandable);
+//        final LinearLayout expandableToggle = (LinearLayout) rootView
+//                .findViewById(R.id.expandable_toggle_button);
+//
+//        final ImageView arrow = (ImageView) rootView.findViewById(R.id.arrow);
 
 //		expandableToggle.setOnTouchListener(new OnTouchListener() {
 //			@Override
@@ -214,20 +212,19 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 //		});
 
 
-        if (mExpandableObjectID.equals(userInfo.getObjectId())) {
-            arrow.setRotation(180);
-        } else {
-            arrow.setRotation(0);
-        }
+//        if (mExpandableObjectID.equals(userInfo.getObjectId())) {
+//            arrow.setRotation(180);
+//        } else {
+//            arrow.setRotation(0);
+//        }
 
-        TextView name = (TextView) rootView.findViewById(R.id.name);
-        TextView address = (TextView) rootView.findViewById(R.id.address);
-        TextView babycareTime = (TextView) rootView
-                .findViewById(R.id.babycare_time);
+//        TextView name = (TextView) rootView.findViewById(R.id.name);
+//        TextView address = (TextView) rootView.findViewById(R.id.address);
+//        TextView babycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
 
-        TextView babysitterNumber = (TextView) rootView
-                .findViewById(R.id.babysitterNumber);
-        TextView education = (TextView) rootView.findViewById(R.id.education);
+//        TextView babysitterNumber = (TextView) rootView
+//                .findViewById(R.id.babysitterNumber);
+//        TextView education = (TextView) rootView.findViewById(R.id.education);
 //		TextView communityName = (TextView) rootView
 //				.findViewById(R.id.communityName);
 
@@ -330,8 +327,8 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 //		int babyCount = getBabyCount(userInfo.getBabycareCount());
 //		mBabyCount.setRating(babyCount);
 
-        name.setText(userInfo.getName());
-        address.setText(userInfo.getAddress());
+//        name.setText(userInfo.getName());
+//        address.setText(userInfo.getAddress());
 
         //String changeText = getChangeText(babysitter.getBabycareTime());
 
@@ -341,8 +338,8 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         //babysitterNumber.setText("保母證號：" + babysitter.getSkillNumber());
         //education.setText("教育程度：" + babysitter.getEducation());
 
-        TextView km = (TextView) rootView.findViewById(R.id.km);
-        ImageView kmLine = (ImageView) rootView.findViewById(R.id.km_line);
+//        TextView km = (TextView) rootView.findViewById(R.id.km);
+//        ImageView kmLine = (ImageView) rootView.findViewById(R.id.km_line);
 
 //		float distance = (float) babysitter.getLocation()
 //				.distanceInKilometersTo(Config.MY_LOCATION);
