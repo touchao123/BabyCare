@@ -11,5 +11,8 @@
     <string name="demo_skills">其他才能：英語</string>
     <string name="demo_licence">證照：保母照，中餐照，月嫂照</string>
     <string name="demo_introduction">我是一個具有愛心，細心照顧小孩的保母，把您最親愛最寶貝的小孩交給我，我不會讓您失望，謝謝。</string>
+    <string name="tel">聯絡電話：0915552673</string>
+    <string name="demo_skill_number">保母證號：1234567890</string>
+    <string name="demo_community_name">高雄市第四區社區保母系統</string>
 
 </resources>
