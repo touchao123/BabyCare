@@ -46,5 +46,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:7.5.0'
     compile 'com.google.android.gms:play-services-location:7.5.0'
     compile 'com.android.support:recyclerview-v7:+'
-
+    compile 'com.commit451:PhotoView:1.2.4'
 }
