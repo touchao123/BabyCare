@@ -25,4 +25,7 @@
     <string name="contact_sent">已傳送媒合邀請</string>
     <string name="detail"><u>更多資料 </u> > </string>
 
+    <!-- Content descriptions -->
+    <string name="descr_image">圖片</string>
+
 </resources>
