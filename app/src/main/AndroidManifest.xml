@@ -116,6 +116,12 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <activity
+            android:name=".view.ImagePageActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+
         <!-- Parse -->
         <service android:name="com.parse.PushService" />
 
