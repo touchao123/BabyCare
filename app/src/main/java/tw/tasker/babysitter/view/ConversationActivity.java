@@ -50,7 +50,7 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message);
+        setContentView(R.layout.activity_conversatio);
 
 //		mListView = (ListView) findViewById(R.id.list);
 //		

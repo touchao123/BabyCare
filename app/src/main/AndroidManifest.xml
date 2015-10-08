@@ -100,7 +100,8 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.ConversationActivity"
-            android:label="訊息欄" />
+            android:label="訊息欄"
+            android:theme="@style/ActivityTheme" />
         <activity
             android:name=".view.MessageActivity"
             android:theme="@style/ActivityTheme"
