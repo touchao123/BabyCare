@@ -3,26 +3,16 @@ package tw.tasker.babysitter.utils;
 import android.content.Intent;
 import android.net.Uri;
 
+import tw.tasker.babysitter.view.ConversationActivity;
+import tw.tasker.babysitter.view.DataCheckActivity;
+import tw.tasker.babysitter.view.DispatchActivity;
+import tw.tasker.babysitter.view.HomeActivity;
+import tw.tasker.babysitter.view.ProfileActivity;
+import tw.tasker.babysitter.view.SignUpActivity;
+import tw.tasker.babysitter.view.SitterDetailActivity;
+
 public class IntentUtil {
     private static final String PACKAGE_NAME = "tw.tasker.babysitter";
-
-    private static final String CONVERSATION_ACTIVITY = PACKAGE_NAME + ".view.ConversationActivity";
-    private static final String PROFILE_ACTIVITY = PACKAGE_NAME + ".view.ProfileActivity";
-    private static final String DISPATCH_ACTIVITY = PACKAGE_NAME + ".view.DispatchActivity";
-    private static final String DATACHECK_ACTIVITY = PACKAGE_NAME + ".view.DataCheckActivity";
-    private static final String SITTERDETAIL_ACTIVITY = PACKAGE_NAME + ".view.SitterDetailActivity";
-
-    public static Intent startConversationActivity() {
-        Intent intent = new Intent();
-        intent.setClassName(PACKAGE_NAME, CONVERSATION_ACTIVITY);
-        return intent;
-    }
-
-    public static Intent startProfileActivity() {
-        Intent intent = new Intent();
-        intent.setClassName(PACKAGE_NAME, PROFILE_ACTIVITY);
-        return intent;
-    }
 
     public static Intent startFacebook() {
         String uri = "fb://page/765766966779332";
@@ -49,9 +39,30 @@ public class IntentUtil {
         return intent;
     }
 
-    public static Intent startDispatchActivity() {
+    public static Intent startConversationActivity() {
+        Class<ConversationActivity> clazz = ConversationActivity.class;
+        String className = clazz.getName();
+
         Intent intent = new Intent();
-        intent.setClassName(PACKAGE_NAME, DISPATCH_ACTIVITY);
+        intent.setClassName(PACKAGE_NAME, className);
+        return intent;
+    }
+
+    public static Intent startProfileActivity() {
+        Class<ProfileActivity> clazz = ProfileActivity.class;
+        String className = clazz.getName();
+
+        Intent intent = new Intent();
+        intent.setClassName(PACKAGE_NAME, className);
+        return intent;
+    }
+
+    public static Intent startDispatchActivity() {
+        Class<DispatchActivity> clazz = DispatchActivity.class;
+        String className = clazz.getName();
+
+        Intent intent = new Intent();
+        intent.setClassName(PACKAGE_NAME, className);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -59,14 +70,38 @@ public class IntentUtil {
     }
 
     public static Intent startDataCheckActivity() {
+        Class<DataCheckActivity> clazz = DataCheckActivity.class;
+        String className = clazz.getName();
+
         Intent intent = new Intent();
-        intent.setClassName(PACKAGE_NAME, DATACHECK_ACTIVITY);
+        intent.setClassName(PACKAGE_NAME, className);
         return intent;
     }
 
     public static Intent startSitterDetailActivity() {
+        Class<SitterDetailActivity> clazz = SitterDetailActivity.class;
+        String className = clazz.getName();
+
         Intent intent = new Intent();
-        intent.setClassName(PACKAGE_NAME, SITTERDETAIL_ACTIVITY);
+        intent.setClassName(PACKAGE_NAME, className);
+        return intent;
+    }
+
+    public static Intent startSignUpActivity() {
+        Class<SignUpActivity> clazz = SignUpActivity.class;
+        String className = clazz.getName();
+
+        Intent intent = new Intent();
+        intent.setClassName(PACKAGE_NAME, className);
+        return intent;
+    }
+
+    public static Intent startHomeActivity() {
+        Class<HomeActivity> clazz = HomeActivity.class;
+        String className = clazz.getName();
+
+        Intent intent = new Intent();
+        intent.setClassName(PACKAGE_NAME, className);
         return intent;
     }
 }

@@ -2,12 +2,21 @@ package tw.tasker.babysitter.utils;
 
 import android.widget.EditText;
 
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.layer.LayerImpl;
 
 public class AccountChecker {
+
+    public static boolean isSuccess(ParseException e) {
+        if (e == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static boolean isEmpty(EditText etText) {
         if (etText.getText().toString().trim().length() > 0) {
