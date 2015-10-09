@@ -102,8 +102,8 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
         //Set the content of the message, sender, and received time
         viewHolder.content.setText(LayerImpl.getMessageText(message));
         //viewHolder.sender.setText(ParseImpl.getUsername(senderId));
-        viewHolder.timeRight.setText(LayerImpl.getReceivedAtTime(message));
-        viewHolder.timeLeft.setText(LayerImpl.getReceivedAtTime(message));
+        viewHolder.timeRight.setText(" " + LayerImpl.getReceivedAtTime(message));
+        viewHolder.timeLeft.setText(LayerImpl.getReceivedAtTime(message) + " ");
 
         viewHolder.message = message;
 

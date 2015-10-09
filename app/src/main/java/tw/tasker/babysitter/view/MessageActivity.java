@@ -68,10 +68,10 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         setContentView(R.layout.activity_message);
 
         //View containing all messages in the target Conversastion
-        mMessagesView = (RecyclerView) findViewById(R.id.mRecyclerView);
+        mMessagesView = (RecyclerView) findViewById(R.id.recycler_view);
 
         //Check to see when the locally Authenticated user is trying to send a message
-        Button sendButton = (Button) findViewById(R.id.sendButton);
+        Button sendButton = (Button) findViewById(R.id.send_button);
         if (sendButton != null)
             sendButton.setOnClickListener(this);
 
@@ -240,7 +240,7 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
 
         switch (v.getId()) {
 
-            case R.id.sendButton:
+            case R.id.send_button:
                 Log.d("Activity", "Send button pressed");
                 sendMessage();
                 break;
@@ -277,7 +277,7 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         }
 
         //Grab the user's input
-        EditText input = (EditText) findViewById(R.id.textInput);
+        EditText input = (EditText) findViewById(R.id.text_input);
         String text = getTextAsString(input);
 
         //If the input is valid, create a new Message and send it to the Conversation
