@@ -65,7 +65,7 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
     //Grab all the view objects on the message_screen layout when the Activity starts
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.message_screen);
+        setContentView(R.layout.activity_message);
 
         //View containing all messages in the target Conversastion
         mMessagesView = (RecyclerView) findViewById(R.id.mRecyclerView);

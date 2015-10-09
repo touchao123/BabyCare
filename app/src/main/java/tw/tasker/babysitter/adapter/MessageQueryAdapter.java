@@ -70,7 +70,7 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         //The message_item is just an example view you can use to display each message in a list
-        View itemView = mInflater.inflate(R.layout.message_item, mParentView, false);
+        View itemView = mInflater.inflate(R.layout.item_list_message, mParentView, false);
 
         //Tie the view elements to the fields in the actual view after it has been created
         ViewHolder holder = new ViewHolder(itemView, mMessageClickHandler);

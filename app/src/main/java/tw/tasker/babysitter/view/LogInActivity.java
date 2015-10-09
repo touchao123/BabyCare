@@ -47,7 +47,7 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in);
+        setContentView(R.layout.activity_login);
 
         // Set up the login form.
         mAccoutn = (EditText) findViewById(R.id.account);

@@ -82,7 +82,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
         //The conversation_item is just an example view you can use to display each Conversation in a list
-        View itemView = mInflater.inflate(R.layout.conversation_item, null);
+        View itemView = mInflater.inflate(R.layout.item_list_conversation, null);
 
         //Tie the view elements to the fields in the actual view after it has been created
         ViewHolder holder = new ViewHolder(itemView, mConversationClickHandler);

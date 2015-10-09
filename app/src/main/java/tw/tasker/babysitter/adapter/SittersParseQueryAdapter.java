@@ -162,7 +162,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
         if (view == null) {
             LayoutInflater mInflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rootView = mInflater.inflate(R.layout.list_item_sitter, parent,
+            rootView = mInflater.inflate(R.layout.item_list_sitter, parent,
                     false);
         } else {
             rootView = view;
