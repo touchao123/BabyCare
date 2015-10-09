@@ -109,7 +109,7 @@ public class SitterHomeFragment extends Fragment implements
         contact.setEnabled(false);
 
         TalkToParent talkToParent = new TalkToParent();
-        talkToParent.send(mUserInfo.getUser());
+        talkToParent.send(mUserInfo);
     }
 
     @Override

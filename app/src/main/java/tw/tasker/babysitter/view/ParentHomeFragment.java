@@ -283,7 +283,7 @@ public class ParentHomeFragment extends Fragment implements
 
         if (requestCode == REQUEST_DATA_CHECK) {
             TalkToSitter talkToSitter = new TalkToSitter();
-            talkToSitter.send(mSitter.getUser());
+            talkToSitter.send(mSitter);
         }
     }
 

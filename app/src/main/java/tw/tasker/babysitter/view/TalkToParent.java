@@ -33,18 +33,19 @@ public class TalkToParent {
     //The owning conversation
     private Conversation mConversation;
 
-    public void send(ParseUser parent) {
+    public void send(UserInfo parent) {
         pushTextToParent(parent);
-        newConversationWithParent(parent.getObjectId());
+        newConversationWithParent(parent);
 
     }
 
     @DebugLog
-    private void pushTextToParent(ParseUser parentUser) {
+    private void pushTextToParent(UserInfo parent) {
+
         ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-        LogUtils.LOGD("vic", "push obj:" + parentUser.getObjectId());
+        LogUtils.LOGD("vic", "push obj:" + parent.getUser().getObjectId());
         //ParseObject obj = ParseObject.createWithoutData("user", "KMyQfnc5k3");
-        pushQuery.whereEqualTo("user", parentUser);
+        pushQuery.whereEqualTo("user", parent.getUser());
 
         // Send push notification to query
         ParsePush push = new ParsePush();
@@ -64,12 +65,12 @@ public class TalkToParent {
     }
 
     @DebugLog
-    protected void newConversationWithParent(String ParentObjectId) {
+    protected void newConversationWithParent(UserInfo parent) {
 
         if (mTargetParticipants == null)
             mTargetParticipants = new ArrayList<>();
 
-        mTargetParticipants.add(ParentObjectId);
+        mTargetParticipants.add(parent.getUser().getObjectId());
         mTargetParticipants.add(ParseUser.getCurrentUser().getObjectId());
 
         //First Check to see if we have a valid Conversation object
@@ -82,7 +83,7 @@ public class TalkToParent {
                 mConversation = LayerImpl.getLayerClient().newConversation(mTargetParticipants);
                 //createMessagesAdapter();
 
-                addFavorite(ParentObjectId);
+                addFavorite(parent.getObjectId());
 
                 //Once the Conversation object is created, we don't allow changing the Participant List
                 // Note: this is an implementation choice. It is always possible to add/remove participants

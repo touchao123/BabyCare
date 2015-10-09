@@ -36,16 +36,16 @@ class TalkToSitter {
     public TalkToSitter() {
     }
 
-    public void send(ParseUser user) {
-        pushTextToSitter(user);
-        newConversationWithSitter(user.getObjectId());
+    public void send(Babysitter sitter) {
+        pushTextToSitter(sitter);
+        newConversationWithSitter(sitter);
     }
 
-    private void pushTextToSitter(ParseUser sitterUser) {
+    private void pushTextToSitter(Babysitter sitterUser) {
         ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-        LogUtils.LOGD("vic", "push obj:" + sitterUser.getObjectId());
+        LogUtils.LOGD("vic", "push obj:" + sitterUser.getUser().getObjectId());
         //ParseObject obj = ParseObject.createWithoutData("user", "KMyQfnc5k3");
-        pushQuery.whereEqualTo("user", sitterUser);
+        pushQuery.whereEqualTo("user", sitterUser.getUser());
 
         // Send push notification to query
         ParsePush push = new ParsePush();
@@ -67,12 +67,12 @@ class TalkToSitter {
 
     }
 
-    protected void newConversationWithSitter(String sitterObjectId) {
+    protected void newConversationWithSitter(Babysitter sitter) {
 
         if (mTargetParticipants == null)
             mTargetParticipants = new ArrayList<>();
 
-        mTargetParticipants.add(sitterObjectId);
+        mTargetParticipants.add(sitter.getUser().getObjectId());
         mTargetParticipants.add(ParseUser.getCurrentUser().getObjectId());
 
         //First Check to see if we have a valid Conversation object
@@ -85,7 +85,7 @@ class TalkToSitter {
                 mConversation = LayerImpl.getLayerClient().newConversation(mTargetParticipants);
                 //createMessagesAdapter();
 
-                addFavorite(sitterObjectId);
+                addFavorite(sitter.getObjectId());
 
                 //Once the Conversation object is created, we don't allow changing the Participant List
                 // Note: this is an implementation choice. It is always possible to add/remove participants
