@@ -5,6 +5,7 @@ import android.widget.EditText;
 import com.parse.ParseUser;
 
 import tw.tasker.babysitter.UserType;
+import tw.tasker.babysitter.layer.LayerImpl;
 
 public class AccountChecker {
 
@@ -59,6 +60,15 @@ public class AccountChecker {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static void logout() {
+        if (ParseUser.getCurrentUser() == null) { // 沒有登入
+        } else { // 有登入
+            // Call the Parse log out method
+            ParseUser.logOut();
+            LayerImpl.getLayerClient().deauthenticate();
         }
     }
 }

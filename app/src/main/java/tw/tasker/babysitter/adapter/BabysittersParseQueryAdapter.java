@@ -26,7 +26,6 @@ import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.LogUtils;
 
 public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     public SitterListClickHandler mSitterListClickHandler;
@@ -179,7 +178,7 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
         }
 
         initView(rootView);
-        initData(babysitter);
+        //initData(babysitter);
         initListener(babysitter);
 
         return rootView;
@@ -188,7 +187,7 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
     private void initView(View rootView) {
         mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
         mName = (TextView) rootView.findViewById(R.id.name);
-        mBabysitterNumber = (TextView) rootView.findViewById(R.id.babysitterNumber);
+//        mBabysitterNumber = (TextView) rootView.findViewById(R.id.babysitterNumber);
         mAge = (TextView) rootView.findViewById(R.id.age);
         mEducation = (TextView) rootView.findViewById(R.id.education);
         mAddress = (TextView) rootView.findViewById(R.id.address);
@@ -200,7 +199,7 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
         mExpandableToggle = (LinearLayout) rootView.findViewById(R.id.expandable_toggle_button);
         mArrow = (ImageView) rootView.findViewById(R.id.arrow);
 
-        mKm = (TextView) rootView.findViewById(R.id.km);
+//        mKm = (TextView) rootView.findViewById(R.id.km);
         mKmLine = (ImageView) rootView.findViewById(R.id.km_line);
 
         mContact = (Button) rootView.findViewById(R.id.contact);
@@ -226,10 +225,10 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         mCommunityName.setText(content);
 
-        initArrowRotation(babysitter.getObjectId());
+//        initArrowRotation(babysitter.getObjectId());
         initContactStatus(babysitter);
-        getKmPosition(babysitter);
-        initKmPosition(babysitter);
+//        getKmPosition(babysitter);
+//        initKmPosition(babysitter);
     }
 
     private void initArrowRotation(String objectId) {
@@ -251,57 +250,6 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
 
     }
 
-    private void getKmPosition(Babysitter babysitter) {
-        float distance = (float) babysitter.getLocation()
-                .distanceInKilometersTo(Config.MY_LOCATION);
-
-
-        if (babysitter.mGroup > -1) { // 已有距離區間
-
-        } else { // 沒有距離區間
-            int d = (int) distance; // 轉為單純數字來比較就好
-            LogUtils.LOGD("vic", "[ ] defaultDistance:" + defaultDistance + ", d: " + d + ", diff: " + (d - defaultDistance));
-
-            if (mIsFirst && d >= defaultDistance) {
-                defaultDistance = d;
-                mIsFirst = false;
-            }
-
-            babysitter.mGroup = defaultDistance; // 給 距離區間 ex.2
-            if (d >= defaultDistance) { // 如果現在的距離 > 門檻值，做調整
-
-                babysitter.mGroup = defaultDistance; // 更新 距離區間
-                int step = 1;
-                if (d - defaultDistance > 0) {
-                    step = d - defaultDistance;
-                }
-                LogUtils.LOGD("vic", "[*] defaultDistance:" + defaultDistance + ", d: " + d + ", diff: " + (d - defaultDistance));
-                defaultDistance = defaultDistance + step; // 門檻值往上調整 ex.4
-                babysitter.mIsShow = true; // 可以show出來
-
-            }
-        }
-
-    }
-
-    private void initKmPosition(Babysitter babysitter) {
-        if (babysitter.mIsShow && Config.keyWord.isEmpty()) {
-            // km.setTextColor(android.graphics.Color.RED);
-            mKm.setText("  " + babysitter.mGroup + " KM  ");
-            mKm.setVisibility(View.VISIBLE);
-            mKmLine.setBackgroundResource(R.drawable.line);
-        } else {
-            mKm.setVisibility(View.INVISIBLE);
-            mKmLine.setBackgroundResource(R.drawable.gray_line);
-            mKm.setText("  2 KM  ");
-            // km.setTextColor(android.graphics.Color.RED);
-        }
-
-        LogUtils.LOGD("vic", "babysitter.mGroup:" + babysitter.mGroup
-                + ", babysitter.mIsShwo:" + babysitter.mIsShow);
-
-    }
-
     private void initListener(final Babysitter babysitter) {
 
         mContact.setOnClickListener(new OnClickListener() {
@@ -320,24 +268,6 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
                 Config.sitterInfo = babysitter;
             }
         });
-
-//		expandableToggle.setOnTouchListener(new OnTouchListener() {
-//		@Override
-//		public boolean onTouch(View v, MotionEvent event) {
-//
-//			
-//			if (clickDuration < MAX_CLICK_DURATION) {
-//				if (expandable.getVisibility() == View.VISIBLE) {
-//					arrow.animate().rotation(0).start();
-//					mIsExpandableSitter = "";
-//				} else {
-//					arrow.animate().rotation(180).start();
-//					mIsExpandableSitter = babysitter.getObjectId();
-//				}
-//			}
-//			return false;
-//		}
-//	});
 
     }
 
@@ -369,15 +299,10 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
         }
     }
 
-
-
 	/*
      * @Override public int getViewTypeCount() { return 2; }
 	 */
 
-    public void setExpandableObjectID(String objectID) {
-        mExpandableObjectID = objectID;
-    }
 
     public static interface SitterListClickHandler {
         public void onContactClick(View v, Babysitter babysitter);

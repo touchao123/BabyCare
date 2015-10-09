@@ -8,6 +8,8 @@ import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.UserType;
+import tw.tasker.babysitter.utils.AccountChecker;
 
 public class HomeActivity extends BaseActivity {
     @Override
@@ -17,7 +19,16 @@ public class HomeActivity extends BaseActivity {
 
         if (savedInstanceState == null) {
 
-            Fragment fragment = new HomeFragment();
+            Fragment fragment = null;
+            UserType userType = AccountChecker.getUserType();
+            if (userType == UserType.PARENT) { // 爸媽，抓保母資料
+                fragment = new ParentHomeFragment();
+            } else if (userType == UserType.SITTER) { // 保母，抓爸媽資料
+                fragment = new SitterHomeFragment();
+            } else if (userType == UserType.LATER) {
+
+            }
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment).commit();
         }

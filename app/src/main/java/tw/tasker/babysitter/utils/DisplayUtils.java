@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.parse.ParseUser;
 
@@ -24,6 +25,11 @@ import java.util.List;
 import tw.tasker.babysitter.view.ListDialogFragment;
 
 public class DisplayUtils {
+
+
+    public static void makeToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 
     public static String getDateTime(Date date) {
         SimpleDateFormat formatter = new SimpleDateFormat(
