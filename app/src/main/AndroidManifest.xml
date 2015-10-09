@@ -69,7 +69,8 @@
             android:name=".view.HomeActivity"
             android:label="保母列表"
             android:launchMode="singleTask"
-            android:theme="@style/ActivityTheme" />
+
+            />
 
         <!-- User Manager -->
         <activity
@@ -100,11 +101,9 @@
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.ConversationActivity"
-            android:label="訊息欄"
-            android:theme="@style/ActivityTheme" />
+            android:label="訊息欄" />
         <activity
             android:name=".view.MessageActivity"
-            android:theme="@style/ActivityTheme"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
