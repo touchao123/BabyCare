@@ -25,8 +25,8 @@ public class HomeActivity extends BaseActivity {
                 fragment = new ParentHomeFragment();
             } else if (userType == UserType.SITTER) { // 保母，抓爸媽資料
                 fragment = new SitterHomeFragment();
-            } else if (userType == UserType.LATER) {
-
+            } else if (userType == UserType.LATER) { // 一般，抓爸媽資料
+                fragment = new SitterHomeFragment();
             }
 
             getSupportFragmentManager().beginTransaction()
