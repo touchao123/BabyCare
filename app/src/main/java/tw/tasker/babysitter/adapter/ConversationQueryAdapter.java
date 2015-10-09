@@ -17,23 +17,15 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.SortDescriptor;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.List;
 
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.layer.LayerImpl;
-import tw.tasker.babysitter.model.Babysitter;
-import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
-import tw.tasker.babysitter.utils.LogUtils;
 
 /*
  * ConversationQueryAdapter.java
@@ -56,6 +48,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
     //Handle the callbacks when the Conversation item is actually clicked. In this case, the
     // ConversationsActivity class implements the ConversationClickHandler
     private final ConversationClickHandler mConversationClickHandler;
+    private Confirm mConfirm;
 
     //Constructor for the ConversationQueryAdapter
     //Sorts all conversations by last message received (ie, downloaded to the device)
@@ -67,7 +60,23 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
         //Sets the LayoutInflator and Click callback handler
         mInflater = LayoutInflater.from(context);
         mConversationClickHandler = conversationClickHandler;
+
+        UserType userType = AccountChecker.getUserType();
+        switch (userType) {
+            case PARENT:
+                mConfirm = new ParentConfirm();
+                break;
+
+            case SITTER:
+                mConfirm = new SitterConfirm();
+                break;
+
+            default:
+                mConfirm = new ParentConfirm();
+                break;
+        }
     }
+
 
     //When a new Conversation is created (ie, either locally, or by another user), a new ViewHolder is created
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -116,15 +125,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
             }
         }
 
-        String participatsTitle = "";
-        UserType userType = AccountChecker.getUserType();
-        if (userType == UserType.PARENT) {
-            participatsTitle = "保母:";
-        } else if (userType == UserType.SITTER) {
-            participatsTitle = "爸媽:";
-        }
-
-        viewHolder.participants.setText(participatsTitle + participants);
+        viewHolder.participants.setText(mConfirm.getParticipatsTitle() + participants);
 
         //Grab the last message in the conversation and show it in the format "sender: last message content"
         Message message = conversation.getLastMessage();
@@ -145,7 +146,10 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
                 Message msg = LayerImpl.getLayerClient().newMessage(part);
                 viewHolder.conversation.send(msg);
 
-                updateSitterConfirm(viewHolder.conversation.getId().toString(), viewHolder);
+
+                String conversationId = viewHolder.conversation.getId().toString();
+                mConfirm.updateConfirm(conversationId);
+
 
                 viewHolder.onConfirmClick();
                 //viewHolder.isConfirm = true;
@@ -172,94 +176,11 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
 //			viewHolder.cancel.setVisibility(View.VISIBLE);
 //		}
 
-        loadSitterFavoriteData(Config.sitterInfo, viewHolder);
+        mConfirm.loadStatus(viewHolder);
+
 
     }
 
-    private boolean isConfirmBothParentAndSitter(String conversationId) {
-        for (BabysitterFavorite favorite : Config.favorites) {
-//			/String favoriteUserId = favorite.getUser().getObjectId();
-            String favoriteConversationId = favorite.getConversationId();
-
-            if (favoriteConversationId.equals(conversationId) &&
-                    favorite.getIsParentConfirm() && favorite.getIsSitterConfirm()) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-    protected void updateSitterConfirm(String conversationId, final ViewHolder viewHolder) {
-        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
-        query.whereEqualTo("conversationId", conversationId);
-        query.getFirstInBackground(new GetCallback<BabysitterFavorite>() {
-
-            @Override
-            public void done(BabysitterFavorite favorite, ParseException exception) {
-                if (favorite != null) {
-                    favorite.setIsSitterConfirm(true);
-                    favorite.saveInBackground();
-                }
-            }
-        });
-    }
-
-    private void loadSitterFavoriteData(Babysitter sitter, final ViewHolder viewHolder) {
-        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
-
-        if (AccountChecker.getUserType() == UserType.PARENT) {
-            query.whereEqualTo("UserInfo", Config.userInfo);
-        } else if (AccountChecker.getUserType() == UserType.SITTER) {
-            query.whereEqualTo("Babysitter", Config.sitterInfo);
-        }
-
-        query.findInBackground(new FindCallback<BabysitterFavorite>() {
-
-            @Override
-            public void done(List<BabysitterFavorite> favorites, ParseException e) {
-                if (AccountChecker.isNull(favorites)) {
-                    //Toast.makeText(getActivity(), "查不到你的資料!", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Config.favorites = favorites;
-
-                    for (BabysitterFavorite favorite : favorites) {
-                        LogUtils.LOGD("vic", "sitter favorite isParentConfirm():" + favorite.getIsParentConfirm());
-                        LogUtils.LOGD("vic", "sitter favorite isSitterConfirm():" + favorite.getIsSitterConfirm());
-                    }
-
-                    //LogUtils.LOGD("vic", "isConfirm()" + viewHolder.isConfirm);
-
-                    String conversationId = viewHolder.conversation.getId().toString();
-
-                    if (isConfirmBothParentAndSitter(conversationId) || isUserSendRequest(conversationId)) {
-                        LogUtils.LOGD("vic", "2.confirm button hide!");
-                        viewHolder.match.setVisibility(View.GONE);
-                        viewHolder.cancel.setVisibility(View.GONE);
-                    } else {
-                        LogUtils.LOGD("vic", "2.confirm button show!");
-                        viewHolder.match.setVisibility(View.VISIBLE);
-                        viewHolder.cancel.setVisibility(View.VISIBLE);
-                    }
-
-                }
-            }
-        });
-    }
-
-    private boolean isUserSendRequest(String conversationId) {
-        for (BabysitterFavorite favorite : Config.favorites) {
-            String favoriteUserId = favorite.getUser().getObjectId();
-            String favoriteConversationId = favorite.getConversationId();
-
-            if (favoriteConversationId.equals(conversationId) &&
-                    favoriteUserId.equals(ParseUser.getCurrentUser().getObjectId())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     //This example app only has one kind of view type, but you could support different TYPES of
     // Conversations if you were so inclined

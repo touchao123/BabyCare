@@ -5,6 +5,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import hugo.weaving.DebugLog;
+
 @ParseClassName("BabysitterFavorite")
 public class BabysitterFavorite extends ParseObject {
 
@@ -28,6 +30,7 @@ public class BabysitterFavorite extends ParseObject {
         put("Babysitter", babysitter);
     }
 
+    @DebugLog
     public Boolean getIsParentConfirm() {
         return getBoolean("isParentConfirm");
     }
@@ -36,6 +39,7 @@ public class BabysitterFavorite extends ParseObject {
         put("isParentConfirm", value);
     }
 
+    @DebugLog
     public Boolean getIsSitterConfirm() {
         return getBoolean("isSitterConfirm");
     }
