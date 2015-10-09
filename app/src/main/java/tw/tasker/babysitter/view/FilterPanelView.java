@@ -2,6 +2,7 @@ package tw.tasker.babysitter.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -20,7 +21,7 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.HomeEvent;
 
 class FilterPanelView implements View.OnClickListener {
-    private ParentHomeFragment parentHomeFragment;
+    private Context mContext;
     private View mRootView;
 
     private LinearLayout mFilterPanel;
@@ -52,8 +53,8 @@ class FilterPanelView implements View.OnClickListener {
     private Button mSave;
     private boolean mIsShow = true;
 
-    public FilterPanelView(ParentHomeFragment parentHomeFragment, View rootView) {
-        this.parentHomeFragment = parentHomeFragment;
+    public FilterPanelView(Context context, View rootView) {
+        mContext = context;
         mRootView = rootView;
         init();
     }
@@ -258,7 +259,7 @@ class FilterPanelView implements View.OnClickListener {
 
     private void savePreferences(String key, boolean value) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(parentHomeFragment.getActivity());
+                .getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
         editor.commit();
@@ -311,7 +312,7 @@ class FilterPanelView implements View.OnClickListener {
 
     private void setCheckBox(CheckBox checkBox, String key) {
         SharedPreferences sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(parentHomeFragment.getActivity());
+                .getDefaultSharedPreferences(mContext);
 
         boolean checkBoxValue = sharedPreferences.getBoolean(key, false);
         if (checkBoxValue) {

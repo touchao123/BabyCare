@@ -1,34 +1,18 @@
 package tw.tasker.babysitter.adapter;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.ParseException;
-import com.parse.ParseInstallation;
-import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.SendCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.Config;
@@ -36,24 +20,29 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
-import tw.tasker.babysitter.utils.LogUtils;
-import tw.tasker.babysitter.view.ListDialogFragment;
+import tw.tasker.babysitter.utils.AccountChecker;
 
 public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
-    private int defaultDistance = 2;
-    private int count = 2;
-    private boolean isColor = true;
-    private boolean mIsFirst = true;
+    public ParentListClickHandler mParentListClickHandler;
     private RatingBar mBabyCount;
-    private String mExpandableObjectID = "";
     private CircleImageView mAvatar;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private TextView mAge;
-    private ProgressDialog mRingProgressDialog;
-    private BabysitterFavorite mBabysitterFavorite;
+    private TextView mName;
+    private TextView mAddress;
+    private TextView mBabycareTime;
+    private TextView mBabysitterNumber;
+    private TextView mEducation;
+    private TextView mCommunityName;
+    private TextView mKm;
+    private ImageView mKmLine;
+    private Button mContact;
+    private TextView mDetail;
 
-    public ParentsParseQueryAdapter(Context context) {
+    public ParentsParseQueryAdapter(Context context, ParentListClickHandler parentListClickHandler) {
         super(context, getQueryFactory(context));
+        mParentListClickHandler = parentListClickHandler;
+
     }
 
     private static ParseQueryAdapter.QueryFactory<UserInfo> getQueryFactory(
@@ -168,306 +157,117 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         View rootView;
 
         if (view == null) {
-            // recycle = false;
-            // rootView = View.inflate(getContext(), R.layout.list_item_sitter,
-            // null);
             LayoutInflater mInflater = (LayoutInflater) getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rootView = mInflater.inflate(R.layout.item_list_parent, parent,
                     false);
         } else {
             rootView = view;
-            // recycle = true;
         }
 
-        //mAge = (TextView) rootView.findViewById(R.id.age);
-        //mAge.setText("("+userInfo.getAge()+")");
-
-        //mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
-        //getOldAvator(userInfo);
-
-//        final LinearLayout expandable = (LinearLayout) rootView
-//                .findViewById(R.id.expandable);
-//        final LinearLayout expandableToggle = (LinearLayout) rootView
-//                .findViewById(R.id.expandable_toggle_button);
-//
-//        final ImageView arrow = (ImageView) rootView.findViewById(R.id.arrow);
-
-//		expandableToggle.setOnTouchListener(new OnTouchListener() {
-//			@Override
-//			public boolean onTouch(View v, MotionEvent event) {
-//
-//
-//				if (clickDuration < MAX_CLICK_DURATION) {
-//					if (expandable.getVisibility() == View.VISIBLE) {
-//						arrow.animate().rotation(0).start();
-//						mIsExpandableSitter = "";
-//					} else {
-//						arrow.animate().rotation(180).start();
-//						mIsExpandableSitter = babysitter.getObjectId();
-//					}
-//				}
-//				return false;
-//			}
-//		});
+        initView(rootView);
+        //initData(userInfo);
+        initListener(userInfo);
 
 
-//        if (mExpandableObjectID.equals(userInfo.getObjectId())) {
-//            arrow.setRotation(180);
-//        } else {
-//            arrow.setRotation(0);
-//        }
-
-//        TextView name = (TextView) rootView.findViewById(R.id.name);
-//        TextView address = (TextView) rootView.findViewById(R.id.address);
-//        TextView babycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-
-//        TextView babysitterNumber = (TextView) rootView
-//                .findViewById(R.id.babysitterNumber);
-//        TextView education = (TextView) rootView.findViewById(R.id.education);
-//		TextView communityName = (TextView) rootView
-//				.findViewById(R.id.communityName);
-
-//		SpannableString content = new SpannableString(
-//				babysitter.getCommunityName());
-//		content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-//		communityName.setText(content);
-
-        Button contact = (Button) rootView.findViewById(R.id.contact);
-        contact.setOnClickListener(new OnClickListener() {
-
-
-            @Override
-            public void onClick(View v) {
-//				String[] phones = babysitter.getTel().replace("(日):", "")
-//						.replace("手機: ", "").split(" ");
-//				LogUtils.LOGD("vic", "phones" + babysitter.getTel());
-//				for (String phone : phones) {
-//					LogUtils.LOGD("vic", "phone" + phone);
-//				}
-
-//				showBabysitterPhone(phones);
-
-                //pushTextToSitter(babysitter);
-                addFavorite(userInfo);
-
-
-            }
-
-            private void pushTextToSitter(Babysitter babysitter) {
-                ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-                LogUtils.LOGD("vic", "push obj:" + babysitter.getUser().getObjectId());
-                //ParseObject obj = ParseObject.createWithoutData("user", "KMyQfnc5k3");
-                pushQuery.whereEqualTo("user", babysitter.getUser());
-
-                // Send push notification to query
-                ParsePush push = new ParsePush();
-                push.setQuery(pushQuery); // Set our Installation query
-                //push.setMessage("有爸媽，想找你帶小孩唷~");
-                JSONObject data = getJSONDataMessageForIntent();
-                push.setData(data);
-                push.sendInBackground(new SendCallback() {
-
-                    @Override
-                    public void done(ParseException e) {
-                        if (e != null)
-                            LogUtils.LOGD("vic", "erroe" + e.getMessage());
-                    }
-                });
-
-            }
-
-            private void addFavorite(UserInfo userInfo) {
-                mRingProgressDialog = ProgressDialog.show(getContext(),
-                        "請稍等 ...", "加入收藏中...", true);
-
-                Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, Config.sitterInfo.getObjectId());
-
-                BabysitterFavorite babysitterfavorite = new BabysitterFavorite();
-                mBabysitterFavorite = babysitterfavorite;
-                // favorite.put("baby", mBaby);
-                babysitterfavorite.setBabysitter(babysitter);
-                babysitterfavorite.setUserInfo(userInfo);
-                babysitterfavorite.put("user", ParseUser.getCurrentUser()); // 這裡的user，放的是爸媽的 user pointer
-                babysitterfavorite.setIsParentConfirm(false);
-                babysitterfavorite.setIsSitterConfirm(true);
-                babysitterfavorite.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            // Toast.makeText(getActivity().getApplicationContext(),
-                            // "saving doen!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getContext(),
-                                    "Error saving: " + e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-
-                        mRingProgressDialog.dismiss();
-                    }
-
-                });
-            }
-
-            private JSONObject getJSONDataMessageForIntent() {
-                try {
-                    JSONObject data = new JSONObject();
-                    data.put("alert", "家長[" + ParseUser.getCurrentUser().getUsername() + "]，想找你帶小孩唷~");
-                    //instead action is used
-                    //data.put("customdata", "custom data value");
-                    data.put("user", ParseUser.getCurrentUser().getObjectId());
-                    return data;
-                } catch (JSONException x) {
-                    throw new RuntimeException("Something wrong with JSON", x);
-                }
-            }
-        });
-
-//		mBabyCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
-//		int babyCount = getBabyCount(userInfo.getBabycareCount());
-//		mBabyCount.setRating(babyCount);
-
-//        name.setText(userInfo.getName());
-//        address.setText(userInfo.getAddress());
-
-        //String changeText = getChangeText(babysitter.getBabycareTime());
-
-        //babycareTime.setText(changeText);
-
-
-        //babysitterNumber.setText("保母證號：" + babysitter.getSkillNumber());
-        //education.setText("教育程度：" + babysitter.getEducation());
-
-//        TextView km = (TextView) rootView.findViewById(R.id.km);
-//        ImageView kmLine = (ImageView) rootView.findViewById(R.id.km_line);
-
-//		float distance = (float) babysitter.getLocation()
-//				.distanceInKilometersTo(Config.MY_LOCATION);
-
-
-//		if (babysitter.mGroup > -1) { // 已有距離區間
-//
-//		} else { // 沒有距離區間
-//			int d = (int) distance; // 轉為單純數字來比較就好
-//			LogUtils.LOGD("vic", "[ ] defaultDistance:" + defaultDistance + ", d: " + d + ", diff: " + (d - defaultDistance));
-//
-//			if (mIsFirst && d >= defaultDistance) {
-//				defaultDistance = d;
-//				mIsFirst = false;
-//			}
-//
-//			babysitter.mGroup = defaultDistance; // 給 距離區間 ex.2
-//			if (d >= defaultDistance ) { // 如果現在的距離 > 門檻值，做調整
-//
-//				babysitter.mGroup = defaultDistance; // 更新 距離區間
-//				int step = 1;
-//				if (d - defaultDistance > 0 ) {
-//					step = d - defaultDistance;
-//				}
-//				LogUtils.LOGD("vic", "[*] defaultDistance:" + defaultDistance + ", d: " + d + ", diff: " + (d - defaultDistance));
-//				defaultDistance = defaultDistance + step; // 門檻值往上調整 ex.4
-//				babysitter.mIsShow = true; // 可以show出來
-//
-//			}
-//		}
-
-        // if (mIsFirst) {
-        // kmLine.setVisibility(View.INVISIBLE);
-        // mIsFirst = false;
-        // } else {
-        // kmLine.setVisibility(View.VISIBLE);
-        // }
-
-//		if (babysitter.mIsShow && Config.keyWord.isEmpty()) {
-//			// km.setTextColor(android.graphics.Color.RED);
-//			km.setText("  " + babysitter.mGroup + " KM  ");
-//			km.setVisibility(View.VISIBLE);
-//			kmLine.setBackgroundResource(R.drawable.line);
-//		} else {
-//			km.setVisibility(View.INVISIBLE);
-//			kmLine.setBackgroundResource(R.drawable.gray_line);
-//			km.setText("  2 KM  ");
-//			// km.setTextColor(android.graphics.Color.RED);
-//		}
-
-//		LogUtils.LOGD("vic", "babysitter.mGroup:" + babysitter.mGroup
-//				+ ", babysitter.mIsShwo:" + babysitter.mIsShow);
-
-        // if (babysitter.getDistance() > 0.0f && babysitter.mIsShowDistance ) {
-        // // 已存
-        // km.setTextColor(android.graphics.Color.RED);
-        // km.setText(" [" + babysitter.getDistance() + "] ");
-        //
-        // } else { //未存
-        // DecimalFormat decimalFormat = new DecimalFormat("0.#");
-        //
-        // String show = "";
-        // int d = (int) distance;
-        // if (d >= defaultDistance ) {
-        // babysitter.setDistance(defaultDistance);
-        // km.setTextColor(android.graphics.Color.RED);
-        // km.setText(" [" + babysitter.getDistance() + "] ");
-        // //count++;
-        // defaultDistance = defaultDistance + count;
-        // } else {
-        // //babysitter.setDistance(-2.0f);
-        // }
-        // }
-
-        // babysitter.setDistance(distance);
-
-        // if ( distance > defaultDistance) {
-        // if (distance > 0.0f && distance < 1.0f) {
-        // show = " [" + decimalFormat.format(distance * 1000) + "公尺]";
-        // } else {
-        // show = " [" + decimalFormat.format(distance) + "公里]";
-        // }
-        // show = " [" + defaultDistance + "km]";
-        // km.setText(show);
-
-        // LogUtils.LOGD("vic",
-        // "defaultDistance:"+defaultDistance+", count:"+count+", total:" +
-        // (defaultDistance ) + ", distance:" +babysitter.getDistance() + "d:" +
-        // d);
-        // if (d >= defaultDistance ) {
-
-        // show = " [" + defaultDistance + "km]";
-        // km.setText(show);
-
-        // km.setTextColor(android.graphics.Color.RED);
-        // count++;
-        // defaultDistance = defaultDistance + count;
-        // isColor = false;
-        // } else {
-        // km.setText("");
-        // }
-
-        // }
-        // } else {
-        // km.setText("");
-        // }
-
-        // babysitter.setDistance(distance);
-
-        // BabysitterGridCard mCard = new BabysitterGridCard(getContext());
-        // mCard.setBabysitter(babysitter);
-        // mCard.init();
-
-        // CardView mCardView;
-        // mCardView = (CardView) view.findViewById(R.id.list_cardId);
-        // if (mCardView != null) {
-        // It is important to set recycle value for inner layout elements
-        // mCardView.setForceReplaceInnerLayout(Card.equalsInnerLayout(
-        // mCardView.getCard(), mCard));
-
-        // It is important to set recycle value for performance issue
-        // mCardView.setRecycle(recycle);
-        // mCardView.setCard(mCard);
-        // }
         return rootView;
     }
 
-    private void getOldAvator(Babysitter sitter) {
+    private void initView(View rootView) {
+        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
+        mName = (TextView) rootView.findViewById(R.id.name);
+//        mBabysitterNumber = (TextView) rootView.findViewById(R.id.babysitterNumber);
+        mAge = (TextView) rootView.findViewById(R.id.age);
+        mEducation = (TextView) rootView.findViewById(R.id.education);
+        mAddress = (TextView) rootView.findViewById(R.id.address);
+        mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
+        mBabyCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
+        mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
+
+//        mExpandable = (LinearLayout) rootView.findViewById(R.id.expandable);
+//        mExpandableToggle = (LinearLayout) rootView.findViewById(R.id.expandable_toggle_button);
+//        mArrow = (ImageView) rootView.findViewById(R.id.arrow);
+
+//        mKm = (TextView) rootView.findViewById(R.id.km);
+        mKmLine = (ImageView) rootView.findViewById(R.id.km_line);
+
+        mContact = (Button) rootView.findViewById(R.id.contact);
+        mDetail = (TextView) rootView.findViewById(R.id.detail);
+
+    }
+
+//    private void initData(UserInfo userInfo) {
+//        loadOldAvator(userInfo);
+//        mName.setText(userInfo.getName());
+//        mBabysitterNumber.setText("保母證號：" + userInfo.getSkillNumber());
+//        mAge.setText("(" + userInfo.getAge() + ")");
+//        mEducation.setText("教育程度：" + userInfo.getEducation());
+//        mAddress.setText(userInfo.getAddress());
+//
+//        String changeText = DisplayUtils.getChangeText(userInfo.getBabycareTime());
+//        mBabycareTime.setText(changeText);
+//
+//        int babyCount = DisplayUtils.getBabyCount(userInfo.getBabycareCount());
+//        mBabyCount.setRating(babyCount);
+//
+//        SpannableString content = new SpannableString(userInfo.getCommunityName());
+//        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+//        mCommunityName.setText(content);
+//
+//        initContactStatus(userInfo);
+//    }
+
+
+    private void initContactStatus(Babysitter babysitter) {
+        if (isFavoriteSitter(babysitter)) {
+            mContact.setEnabled(false);
+            mContact.setText(R.string.contact_sent);
+        } else {
+            mContact.setEnabled(true);
+            mContact.setText(R.string.contact);
+        }
+
+    }
+
+    private void initListener(final UserInfo userInfo) {
+
+        mContact.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mParentListClickHandler.onContactClick(v, userInfo);
+            }
+        });
+
+//        mDetail.setOnClickListener(new OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                mParentListClickHandler.onDetailClick();
+//                Config.userInfo = userInfo;
+//            }
+//        });
+
+    }
+
+    // TODO the system will be crashed sometimes.
+    private boolean isFavoriteSitter(Babysitter babysitter) {
+
+        if (AccountChecker.isNull(Config.favorites))
+            return false;
+
+        for (BabysitterFavorite favorite : Config.favorites) {
+            Babysitter favoriteSitter = favorite.getBabysitter();
+
+            if (favoriteSitter.getObjectId().equals(babysitter.getObjectId())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void loadOldAvator(Babysitter sitter) {
         String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
         String parseUrl = sitter.getImageUrl();
         if (parseUrl.equals("../img/photo_mother_no.jpg")) {
@@ -480,39 +280,11 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     /*
      * @Override public int getViewTypeCount() { return 2; }
      */
-    private void showBabysitterPhone(final String[] phones) {
-        DialogFragment newFragment = new ListDialogFragment(phones,
-                new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+    public static interface ParentListClickHandler {
+        public void onContactClick(View v, UserInfo userInfo);
 
-                        String phone = phones[which];
-                        makePhoneCall(phone);
-
-                    }
-                });
-
-        newFragment.show(
-                ((FragmentActivity) getContext()).getSupportFragmentManager(),
-                "dialog");
+        public void onDetailClick();
     }
 
-    private void makePhoneCall(String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + phoneNumber));
-        getContext().startActivity(intent);
-    }
-
-    public void setExpandableObjectID(String objectID) {
-        mExpandableObjectID = objectID;
-    }
-
-	/*
-     * @Override public View getNextPageView(View v, ViewGroup parent) { if (v
-	 * == null) { v = View.inflate(getContext(), R.layout.adapter_next_page,
-	 * null); }
-	 * 
-	 * return v; }
-	 */
 }

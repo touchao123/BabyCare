@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -29,18 +28,10 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 
 public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     public SitterListClickHandler mSitterListClickHandler;
-    private int defaultDistance = 2;
-    private int count = 2;
-    private boolean isColor = true;
-    private boolean mIsFirst = true;
     private RatingBar mBabyCount;
-    private String mExpandableObjectID = "";
     private CircleImageView mAvatar;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private TextView mAge;
-    private LinearLayout mExpandable;
-    private LinearLayout mExpandableToggle;
-    private ImageView mArrow;
     private TextView mName;
     private TextView mAddress;
     private TextView mBabycareTime;
@@ -195,9 +186,9 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
         mBabyCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
         mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
 
-        mExpandable = (LinearLayout) rootView.findViewById(R.id.expandable);
-        mExpandableToggle = (LinearLayout) rootView.findViewById(R.id.expandable_toggle_button);
-        mArrow = (ImageView) rootView.findViewById(R.id.arrow);
+//        mExpandable = (LinearLayout) rootView.findViewById(R.id.expandable);
+//        mExpandableToggle = (LinearLayout) rootView.findViewById(R.id.expandable_toggle_button);
+//        mArrow = (ImageView) rootView.findViewById(R.id.arrow);
 
 //        mKm = (TextView) rootView.findViewById(R.id.km);
         mKmLine = (ImageView) rootView.findViewById(R.id.km_line);
@@ -225,19 +216,9 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         mCommunityName.setText(content);
 
-//        initArrowRotation(babysitter.getObjectId());
         initContactStatus(babysitter);
-//        getKmPosition(babysitter);
-//        initKmPosition(babysitter);
     }
 
-    private void initArrowRotation(String objectId) {
-        if (mExpandableObjectID.equals(objectId)) {
-            mArrow.setRotation(180);
-        } else {
-            mArrow.setRotation(0);
-        }
-    }
 
     private void initContactStatus(Babysitter babysitter) {
         if (isFavoriteSitter(babysitter)) {

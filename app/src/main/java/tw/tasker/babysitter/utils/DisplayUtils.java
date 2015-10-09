@@ -141,10 +141,10 @@ public class DisplayUtils {
         context.startActivity(intent);
     }
 
-    public static JSONObject getJSONDataMessageForIntent() {
+    public static JSONObject getJSONDataMessageForIntent(String pushMessage) {
         try {
             JSONObject data = new JSONObject();
-            data.put("alert", "家長[" + ParseUser.getCurrentUser().getUsername() + "]，想找你帶小孩唷~");
+            data.put("alert", pushMessage);
             //instead action is used
             //data.put("customdata", "custom data value");
             data.put("user", ParseUser.getCurrentUser().getObjectId());

@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.model.Babysitter;
@@ -26,53 +27,49 @@ import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
 
-class TalkToSitter {
-    // private ParentHomeFragment parentHomeFragment;
+public class TalkToParent {
     // message
     private ArrayList<String> mTargetParticipants;
     //The owning conversation
     private Conversation mConversation;
 
-    public TalkToSitter() {
+    public void send(ParseUser parent) {
+        pushTextToParent(parent);
+        newConversationWithParent(parent.getObjectId());
+
     }
 
-    public void send(ParseUser user) {
-        pushTextToSitter(user);
-        newConversationWithSitter(user.getObjectId());
-    }
-
-    private void pushTextToSitter(ParseUser sitterUser) {
+    @DebugLog
+    private void pushTextToParent(ParseUser parentUser) {
         ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-        LogUtils.LOGD("vic", "push obj:" + sitterUser.getObjectId());
+        LogUtils.LOGD("vic", "push obj:" + parentUser.getObjectId());
         //ParseObject obj = ParseObject.createWithoutData("user", "KMyQfnc5k3");
-        pushQuery.whereEqualTo("user", sitterUser);
+        pushQuery.whereEqualTo("user", parentUser);
 
         // Send push notification to query
         ParsePush push = new ParsePush();
         push.setQuery(pushQuery); // Set our Installation query
-        String pushMessage = "家長[" + ParseUser.getCurrentUser().getUsername() + "]，想找你帶小孩唷~";
+        String pushMessage = "保母[" + ParseUser.getCurrentUser().getUsername() + "]，想幫您帶小孩唷~";
         JSONObject data = DisplayUtils.getJSONDataMessageForIntent(pushMessage);
         push.setData(data);
         push.sendInBackground(new SendCallback() {
 
             @Override
-            public void done(ParseException parseException) {
-                if (parseException == null) {
-                    //EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_PUSH));
-                } else {
-                    EventBus.getDefault().post(parseException);
-                }
+            public void done(ParseException e) {
+                if (e != null)
+                    LogUtils.LOGD("vic", "erroe" + e.getMessage());
             }
         });
 
     }
 
-    protected void newConversationWithSitter(String sitterObjectId) {
+    @DebugLog
+    protected void newConversationWithParent(String ParentObjectId) {
 
         if (mTargetParticipants == null)
             mTargetParticipants = new ArrayList<>();
 
-        mTargetParticipants.add(sitterObjectId);
+        mTargetParticipants.add(ParentObjectId);
         mTargetParticipants.add(ParseUser.getCurrentUser().getObjectId());
 
         //First Check to see if we have a valid Conversation object
@@ -85,7 +82,7 @@ class TalkToSitter {
                 mConversation = LayerImpl.getLayerClient().newConversation(mTargetParticipants);
                 //createMessagesAdapter();
 
-                addFavorite(sitterObjectId);
+                addFavorite(ParentObjectId);
 
                 //Once the Conversation object is created, we don't allow changing the Participant List
                 // Note: this is an implementation choice. It is always possible to add/remove participants
@@ -106,15 +103,18 @@ class TalkToSitter {
             MessagePart part = LayerImpl.getLayerClient().newMessagePart(text);
             Message msg = LayerImpl.getLayerClient().newMessage(part);
             mConversation.send(msg);
+
+
         } else {
             //showAlert("Send Message Error","You cannot send an empty message.");
         }
 
     }
 
-    private void addFavorite(String sitterObjectId) {
-        Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, sitterObjectId);
-        UserInfo userInfo = ParseObject.createWithoutData(UserInfo.class, Config.userInfo.getObjectId());
+    private void addFavorite(String parentObjectId) {
+
+        Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, Config.sitterInfo.getObjectId());
+        UserInfo userInfo = ParseObject.createWithoutData(UserInfo.class, parentObjectId);
 
         BabysitterFavorite babysitterfavorite = new BabysitterFavorite();
 
@@ -125,8 +125,8 @@ class TalkToSitter {
         babysitterfavorite.setUserInfo(userInfo);
 
         babysitterfavorite.put("user", ParseUser.getCurrentUser());
-        babysitterfavorite.setIsParentConfirm(true);
-        babysitterfavorite.setIsSitterConfirm(false);
+        babysitterfavorite.setIsParentConfirm(false);
+        babysitterfavorite.setIsSitterConfirm(true);
         babysitterfavorite.setConversationId(mConversation.getId().toString());
 
         babysitterfavorite.saveInBackground(new SaveCallback() {
@@ -138,7 +138,9 @@ class TalkToSitter {
                     EventBus.getDefault().post(parseException);
                 }
             }
+
         });
     }
+
 
 }

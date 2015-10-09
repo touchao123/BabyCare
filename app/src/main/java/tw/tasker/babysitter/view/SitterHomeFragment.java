@@ -18,50 +18,43 @@ import android.widget.ListView;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
-import tw.tasker.babysitter.adapter.BabysittersParseQueryAdapter;
-import tw.tasker.babysitter.adapter.BabysittersParseQueryAdapter.SitterListClickHandler;
+import tw.tasker.babysitter.adapter.ParentsParseQueryAdapter;
+import tw.tasker.babysitter.adapter.ParentsParseQueryAdapter.ParentListClickHandler;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.GetLocation;
 import tw.tasker.babysitter.utils.IntentUtil;
-import tw.tasker.babysitter.utils.MyLocation;
 import tw.tasker.babysitter.utils.ProgressBarUtils;
 
-import static tw.tasker.babysitter.utils.LogUtils.LOGD;
+public class SitterHomeFragment extends Fragment implements
+        OnQueryLoadListener<UserInfo>,
+        ParentListClickHandler {
 
-public class ParentHomeFragment extends Fragment implements
-        OnQueryLoadListener<Babysitter>,
-        SitterListClickHandler {
-
-    private static final int REQUEST_DATA_CHECK = 0;
     public ListView mListView;
     private FilterPanelView mFilterPanelView;
     private AddressPanelView mAddressPanelView;
-    private ParseQueryAdapter<Babysitter> mAdapter;
-    private Babysitter mSitter;
+    private ParseQueryAdapter<UserInfo> mAdapter;
+
+    private UserInfo mUserInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getActivity().setTitle("保母列表");
+        getActivity().setTitle("爸媽列表");
     }
 
     @Override
@@ -108,10 +101,28 @@ public class ParentHomeFragment extends Fragment implements
     }
 
     @Override
+    public void onContactClick(View v, UserInfo userInfo) {
+        mUserInfo = userInfo;
+
+        Button contact = (Button) v;
+        contact.setText("已送出媒合邀請");
+        contact.setEnabled(false);
+
+        TalkToParent talkToParent = new TalkToParent();
+        talkToParent.send(mUserInfo.getUser());
+    }
+
+    @Override
+    public void onDetailClick() {
+
+    }
+
+    @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -153,42 +164,23 @@ public class ParentHomeFragment extends Fragment implements
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
         super.onViewCreated(view, savedInstanceState);
         mFilterPanelView.initPosition(view);
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initLocation();
-        ParentData.load();
-
-    }
-
-    private void initLocation() {
-        // 初始化現在的位置
-        // if (Config.MY_LOCATION == null) {
-        MyLocation myLocation = new MyLocation(getActivity(), new GetLocation() {
-
-            @Override
-            public void done(ParseGeoPoint parseGeoPoint) {
-                Config.MY_LOCATION = parseGeoPoint;
-                UdateMyLocaton.save();
-                doListQuery();
-                // Config.MY_LOCATION = Config.MY_TEST_LOCATION;
-                // LogUtils.LOGD("vic",
-                // "get my location at ("+parseGeoPoint.getLatitude()+","+parseGeoPoint.getLongitude()+")");
-            }
-
-        });
-        // }
+        doListQuery();
+        SitterData.load();
     }
 
     private void doListQuery() {
-        mAdapter = new BabysittersParseQueryAdapter(getActivity(), this);
+        mAdapter = new ParentsParseQueryAdapter(getActivity(), this);
         mAdapter.setObjectsPerPage(Config.OBJECTS_PER_PAGE);
         mListView.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -248,7 +240,7 @@ public class ParentHomeFragment extends Fragment implements
     }
 
     @Override
-    public void onLoaded(List<Babysitter> arg0, Exception arg1) {
+    public void onLoaded(List<UserInfo> arg0, Exception arg1) {
         hideLoading();
     }
 
@@ -265,110 +257,32 @@ public class ParentHomeFragment extends Fragment implements
         ProgressBarUtils.hide(getActivity());
     }
 
-    @Override
-    public void onContactClick(View v, Babysitter babysitter) {
-        mSitter = babysitter;
-
-        Button contact = (Button) v;
-        contact.setText("已送出媒合邀請");
-        contact.setEnabled(false);
-
-        startActivityForResult(IntentUtil.startDataCheckActivity(), REQUEST_DATA_CHECK);
-    }
-
-    @DebugLog
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_DATA_CHECK) {
-            TalkToSitter talkToSitter = new TalkToSitter();
-            talkToSitter.send(mSitter.getUser());
-        }
-    }
-
-    @Override
-    public void onDetailClick() {
-        startActivityForResult(IntentUtil.startSitterDetailActivity(), 1);
-    }
-
-    private static class UdateMyLocaton {
-
-        public static void save() {
-            if (ParseUser.getCurrentUser() != null) {
-                hasUserInfo();
-            }
-        }
-
-        private static void hasUserInfo() {
-            ParseQuery<UserInfo> userInfoQuery = UserInfo.getQuery();
-            userInfoQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-            userInfoQuery.getFirstInBackground(new GetCallback<UserInfo>() {
-
-                @Override
-                public void done(UserInfo userInfo, ParseException e) {
-                    if (userInfo == null) {
-                        addUserInfo();
-                    } else {
-                        updateUserInfo(userInfo);
-                    }
-                }
-            });
-        }
-
-        @DebugLog
-        private static void addUserInfo() {
-
-            UserInfo userInfo = new UserInfo();
-            userInfo.setLocation(Config.MY_LOCATION);
-            userInfo.setUser(ParseUser.getCurrentUser());
-
-            userInfo.saveInBackground(new SaveCallback() {
-
-                @Override
-                public void done(ParseException e) {
-                    if (e == null) {
-                    } else {
-                        LOGD("vic", e.getMessage());
-                    }
-                }
-            });
-        }
-
-        @DebugLog
-        private static void updateUserInfo(UserInfo userInfo) {
-            userInfo.setLocation(Config.MY_LOCATION);
-            userInfo.saveInBackground();
-        }
-
-    }
-
-    private static class ParentData {
+    private static class SitterData {
         public static void load() {
-            loadParentsProfileData();
+            loadSitterProfileData();
         }
 
-        private static void loadParentsProfileData() {
-            ParseQuery<UserInfo> query = UserInfo.getQuery();
+        private static void loadSitterProfileData() {
+            ParseQuery<Babysitter> query = Babysitter.getQuery();
             query.whereEqualTo("user", ParseUser.getCurrentUser());
-            query.getFirstInBackground(new GetCallback<UserInfo>() {
+            query.getFirstInBackground(new GetCallback<Babysitter>() {
 
                 @Override
-                public void done(UserInfo userInfo, ParseException exception) {
-                    if (userInfo == null) {
+                public void done(Babysitter sitter, ParseException exception) {
+                    if (sitter == null) {
                         // DisplayUtils.makeToast(getActivity(), "查不到你的資料!");
 
                     } else {
-                        Config.userInfo = userInfo;
-                        loadParentsFavoriteData(userInfo);
+                        Config.sitterInfo = sitter;
+                        loadSitterFavoriteData(sitter);
                     }
                 }
             });
         }
 
-        private static void loadParentsFavoriteData(UserInfo userInfo) {
+        private static void loadSitterFavoriteData(Babysitter sitter) {
             ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
-            query.whereEqualTo("UserInfo", userInfo);
+            query.whereEqualTo("Babysitter", sitter);
             query.findInBackground(new FindCallback<BabysitterFavorite>() {
 
                 @Override
@@ -384,5 +298,4 @@ public class ParentHomeFragment extends Fragment implements
         }
 
     }
-
 }
