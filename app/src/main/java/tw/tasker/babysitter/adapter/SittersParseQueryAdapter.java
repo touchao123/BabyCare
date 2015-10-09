@@ -26,7 +26,7 @@ import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 
-public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
+public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     public SitterListClickHandler mSitterListClickHandler;
     private RatingBar mBabyCount;
     private CircleImageView mAvatar;
@@ -43,7 +43,7 @@ public class BabysittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> 
     private Button mContact;
     private TextView mDetail;
 
-    public BabysittersParseQueryAdapter(Context context, SitterListClickHandler sitterListClickHandler) {
+    public SittersParseQueryAdapter(Context context, SitterListClickHandler sitterListClickHandler) {
         super(context, getQueryFactory(context));
         mSitterListClickHandler = sitterListClickHandler;
     }

@@ -31,8 +31,8 @@ import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
-import tw.tasker.babysitter.adapter.BabysittersParseQueryAdapter;
-import tw.tasker.babysitter.adapter.BabysittersParseQueryAdapter.SitterListClickHandler;
+import tw.tasker.babysitter.adapter.SittersParseQueryAdapter;
+import tw.tasker.babysitter.adapter.SittersParseQueryAdapter.SitterListClickHandler;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.HomeEvent;
@@ -186,7 +186,7 @@ public class ParentHomeFragment extends Fragment implements
     }
 
     private void doListQuery() {
-        mAdapter = new BabysittersParseQueryAdapter(getActivity(), this);
+        mAdapter = new SittersParseQueryAdapter(getActivity(), this);
         mAdapter.setObjectsPerPage(Config.OBJECTS_PER_PAGE);
         mListView.setAdapter(mAdapter);
     }
