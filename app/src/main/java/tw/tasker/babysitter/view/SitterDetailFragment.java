@@ -195,6 +195,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     public void onClick(View v) {
         //mListener.onSwitchToNextFragment(Config.SITTER_EDIT_PAGE);
         getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_stop);
     }
 
 

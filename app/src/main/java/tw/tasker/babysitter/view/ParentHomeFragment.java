@@ -290,6 +290,7 @@ public class ParentHomeFragment extends Fragment implements
     @Override
     public void onDetailClick() {
         startActivityForResult(IntentUtil.startSitterDetailActivity(), 1);
+        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_stop);
     }
 
     private static class UpdateMyLocaton {
