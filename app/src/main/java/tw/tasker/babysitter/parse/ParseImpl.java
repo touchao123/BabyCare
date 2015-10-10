@@ -107,7 +107,7 @@ public class ParseImpl {
 
         ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
         // just only for test
-        userQuery.whereContains("account", "vic");
+        userQuery.whereContains("username", "vic");
         userQuery.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> results, ParseException e) {
                 if (e == null) {
