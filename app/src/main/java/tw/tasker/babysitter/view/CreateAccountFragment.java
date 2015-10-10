@@ -1,7 +1,6 @@
 package tw.tasker.babysitter.view;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,15 +25,17 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 
 public class CreateAccountFragment extends Fragment implements OnClickListener {
 
-    private EditText mName;
+    private EditText mAccount;
     private EditText mPassword;
     private EditText mPasswordAgain;
     private Button mCreate;
     private ScrollView mAllScreen;
+    private View mRootView;
 
     public CreateAccountFragment() {
     }
@@ -47,10 +48,26 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_account_create,
+        mRootView = inflater.inflate(R.layout.fragment_account_create,
                 container, false);
 
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        initView();
+        initListener();
+        loadData();
+
+        return mRootView;
+    }
+
+    private void initView() {
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+        // Set up the signup form.
+        mAccount = (EditText) mRootView.findViewById(R.id.account);
+        mPassword = (EditText) mRootView.findViewById(R.id.password);
+        mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
+        mCreate = (Button) mRootView.findViewById(R.id.create);
+    }
+
+    private void initListener() {
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -60,31 +77,26 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
             }
         });
 
-
-        // Set up the signup form.
-        mName = (EditText) rootView.findViewById(R.id.username);
-        mPassword = (EditText) rootView.findViewById(R.id.password);
-        mPasswordAgain = (EditText) rootView.findViewById(R.id.passwordAgain);
-
-        mCreate = (Button) rootView.findViewById(R.id.create);
         mCreate.setOnClickListener(this);
+    }
 
+    private void loadData() {
         if (BuildConfig.DEBUG)
             loadTestData();
-
-        return rootView;
     }
 
     private void loadTestData() {
-        mName.setText("vic");
+        mAccount.setText("vic");
         mPassword.setText("vic");
         mPasswordAgain.setText("vic");
-
     }
 
     @Override
     public void onClick(View v) {
-        if (isAccountOK()) {
+        String account = mAccount.getText().toString();
+        String password = mPassword.getText().toString();
+        String passwordAgain = mPasswordAgain.getText().toString();
+        if (AccountChecker.isAccountOK(getActivity(), account, password, passwordAgain)) {
             signUpSitter();
         }
     }
@@ -98,7 +110,7 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
 
         // Set up a new Parse user
         ParseUser user = new ParseUser();
-        user.setUsername(mName.getText().toString());
+        user.setUsername(mAccount.getText().toString());
         user.setPassword(mPassword.getText().toString());
         user.put("userType", "sitter");
 
@@ -126,87 +138,18 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
 
     private void addSitterInfo() {
         Babysitter sitterInfo = Config.sitterInfo;
-        //Sitter sitter = new Sitter();
         sitterInfo.setUser(ParseUser.getCurrentUser());
-
-        //sitter.setName(sitterInfo.getName());
-
-        //sitter.setTel(sitterInfo.getTel());
-        //sitter.setAddress(sitterInfo.getAddress());
-        //sitter.setBabycareCount(sitterInfo.getBabycareCount());
-        //sitter.setBabycareTime(sitterInfo.getBabycareTime());
-
-        //sitter.setSkillNumber(sitterInfo.getSkillNumber());
-        //sitter.setEducation(sitterInfo.getEducation());
-        //sitter.setCommunityName(sitterInfo.getCommunityName());
-
-        //sitter.setImageUrl(sitterInfo.getImageUrl());
-
-        //sitterInfo.setIsVerify(false);
-
         sitterInfo.saveInBackground(new SaveCallback() {
 
             @Override
             public void done(ParseException e) {
-                if (e == null) {
-                    goToNextActivity();
+                if (AccountChecker.isSuccess(e)) {
+                    startActivity(IntentUtil.startDispatchActivity());
                 } else {
-                    LogUtils.LOGD("vic", e.getMessage());
-                    Toast.makeText(getActivity(),
-                            "註冊失敗" /* e.getMessage() */, Toast.LENGTH_LONG)
-                            .show();
-
+                    DisplayUtils.makeToast(getActivity(), "註冊失敗");
                 }
             }
         });
-    }
-
-    private void goToNextActivity() {
-        Intent intent = new Intent(getActivity(), DispatchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    private boolean isAccountOK() {
-        // Validate the sign up data
-        boolean validationError = false;
-        StringBuilder validationErrorMessage = new StringBuilder(getResources()
-                .getString(R.string.error_intro));
-        if (AccountChecker.isEmpty(mName)) {
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_username));
-        }
-        if (AccountChecker.isEmpty(mPassword)) {
-            if (validationError) {
-                validationErrorMessage.append(getResources().getString(
-                        R.string.error_join));
-            }
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_password));
-        }
-        if (!AccountChecker.isMatching(mPassword, mPasswordAgain)) {
-            if (validationError) {
-                validationErrorMessage.append(getResources().getString(
-                        R.string.error_join));
-            }
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_mismatched_passwords));
-        }
-        validationErrorMessage.append(getResources().getString(
-                R.string.error_end));
-
-        // If there is a validation error, display the error
-        if (validationError) {
-            Toast.makeText(getActivity(), validationErrorMessage.toString(),
-                    Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
-        }
     }
 
 }

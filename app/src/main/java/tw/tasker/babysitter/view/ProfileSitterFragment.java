@@ -38,6 +38,7 @@ public class ProfileSitterFragment extends Fragment implements OnClickListener {
     private CircleImageView mAvatar;
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private Button mEidt;
+    private View mRootView;
 
     public ProfileSitterFragment() {
         // TODO Auto-generated constructor stub
@@ -52,29 +53,35 @@ public class ProfileSitterFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile_sitter, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_profile_sitter, container, false);
 
-        mEidt = (Button) rootView.findViewById(R.id.edit);
-        mEidt.setOnClickListener(this);
-
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
-
-
-        mNumber = (TextView) rootView.findViewById(R.id.number);
-        mSitterName = (TextView) rootView.findViewById(R.id.name);
-        //mSex = (TextView) rootView.findViewById(R.id.sex);
-        //mAge = (TextView) rootView.findViewById(R.id.age);
-        mEducation = (TextView) rootView.findViewById(R.id.education);
-        mTel = (TextView) rootView.findViewById(R.id.tel);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-        mBabycareCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
-        mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-
-        mSkillNumber = (TextView) rootView.findViewById(R.id.skillNumber);
-        mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
-
+        initView();
+        initListener();
         initData();
-        return rootView;
+
+        return mRootView;
+    }
+
+    private void initView() {
+        mEidt = (Button) mRootView.findViewById(R.id.edit);
+        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mNumber = (TextView) mRootView.findViewById(R.id.number);
+        mSitterName = (TextView) mRootView.findViewById(R.id.name);
+        //mSex = (TextView) mRootView.findViewById(R.id.sex);
+        //mAge = (TextView) mRootView.findViewById(R.id.age);
+        mEducation = (TextView) mRootView.findViewById(R.id.education);
+        mTel = (TextView) mRootView.findViewById(R.id.tel);
+        mAddress = (TextView) mRootView.findViewById(R.id.address);
+        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
+        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
+
+        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
+        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
+
+    }
+
+    private void initListener() {
+        mEidt.setOnClickListener(this);
     }
 
     private void initData() {

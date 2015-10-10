@@ -45,6 +45,8 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private Button mEidt;
     private ImageView mStaticMap;
+    private ViewPager mPager;
+    private View mRootView;
 
     public SitterDetailFragment() {
         // TODO Auto-generated constructor stub
@@ -59,47 +61,54 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_detail_sitter, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_detail_sitter, container, false);
 
-        mEidt = (Button) rootView.findViewById(R.id.edit);
+        initView();
+        initListener();
+        initData();
+
+        return mRootView;
+    }
+
+    private void initView() {
+        mEidt = (Button) mRootView.findViewById(R.id.edit);
+        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mNumber = (TextView) mRootView.findViewById(R.id.number);
+        mSitterName = (TextView) mRootView.findViewById(R.id.name);
+        //mSex = (TextView) mRootView.findViewById(R.id.sex);
+        //mAge = (TextView) mRootView.findViewById(R.id.age);
+        mEducation = (TextView) mRootView.findViewById(R.id.education);
+        mTel = (TextView) mRootView.findViewById(R.id.tel);
+        mAddress = (TextView) mRootView.findViewById(R.id.address);
+        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
+        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
+
+        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
+        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
+
+        mPager = (ViewPager) mRootView.findViewById(R.id.pager);
+        mStaticMap = (ImageView) mRootView.findViewById(R.id.static_map);
+
+    }
+
+    private void initListener() {
+        mPager.setAdapter(new ImageAdapter(getActivity()));
+        //mPager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
+        mPager.setCurrentItem(0);
+
         mEidt.setOnClickListener(this);
-
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
-
-
-        mNumber = (TextView) rootView.findViewById(R.id.number);
-        mSitterName = (TextView) rootView.findViewById(R.id.name);
-        //mSex = (TextView) rootView.findViewById(R.id.sex);
-        //mAge = (TextView) rootView.findViewById(R.id.age);
-        mEducation = (TextView) rootView.findViewById(R.id.education);
-        mTel = (TextView) rootView.findViewById(R.id.tel);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-        mBabycareCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
-        mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-
-        mSkillNumber = (TextView) rootView.findViewById(R.id.skillNumber);
-        mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
-
-        ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
-        pager.setAdapter(new ImageAdapter(getActivity()));
-        //pager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
-        pager.setCurrentItem(0);
-
-        mStaticMap = (ImageView) rootView.findViewById(R.id.static_map);
-        showStaticMap();
-
-        //initData();
-        return rootView;
     }
 
     private void initData() {
-        mSitterName.setText("聯絡電話：");
-        mAddress.setText("住家地址：");
-        mBabycareTime.setText("托育時段：");
+//        mSitterName.setText("聯絡電話：");
+//        mAddress.setText("住家地址：");
+//        mBabycareTime.setText("托育時段：");
 
-        mSkillNumber.setText("保母證號：");
-        mEducation.setText("教育程度：");
-        mCommunityName.setText("");
+//        mSkillNumber.setText("保母證號：");
+//        mEducation.setText("教育程度：");
+//        mCommunityName.setText("");
+
+        showStaticMap();
     }
 
     @Override

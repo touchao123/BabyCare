@@ -1,14 +1,11 @@
 package tw.tasker.babysitter.view;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,9 +23,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,12 +37,8 @@ import tw.tasker.babysitter.BuildConfig;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
-import tw.tasker.babysitter.model.Sitter;
-import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
-
-import static tw.tasker.babysitter.utils.LogUtils.LOGD;
 
 //import android.app.Fragment;
 
@@ -90,6 +80,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
     private CircleImageView mAvator;
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
+    private View mRootView;
 
     public SyncDataFragment() {
         // Required empty public constructor
@@ -100,10 +91,6 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
         Fragment fragment = new SyncDataFragment();
         mListener = listener;
 
-        //Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
-        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -111,23 +98,54 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-//		if (getArguments() != null) {
-//			mParam1 = getArguments().getString(ARG_PARAM1);
-//			mParam2 = getArguments().getString(ARG_PARAM2);
-//		}
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_data_sync, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_data_sync, container, false);
 
-        mAvator = (CircleImageView) rootView.findViewById(R.id.avator);
+        initView();
+        initListener();
+        loadData();
 
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        return mRootView;
+    }
+
+    private void initView() {
+        // Touch
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+
+        // Info
+        mAvator = (CircleImageView) mRootView.findViewById(R.id.avator);
+        mSync = (Button) mRootView.findViewById(R.id.sync);
+        mNumber = (TextView) mRootView.findViewById(R.id.number);
+        mSitterName = (TextView) mRootView.findViewById(R.id.name);
+        //mSex = (TextView) rootView.findViewById(R.id.sex);
+        //mAge = (TextView) rootView.findViewById(R.id.age);
+        mEducation = (TextView) mRootView.findViewById(R.id.education);
+        mTel = (TextView) mRootView.findViewById(R.id.tel);
+        mAddress = (TextView) mRootView.findViewById(R.id.address);
+        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
+        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
+        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
+        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
+
+        // Layout
+        mSyncLayout = (LinearLayout) mRootView.findViewById(R.id.sync_layout);
+        mDataLayout = (LinearLayout) mRootView.findViewById(R.id.data_layout);
+        mDataLayout.setVisibility(View.GONE);
+
+        // Signup
+        mName = (EditText) mRootView.findViewById(R.id.account);
+        mPassword = (EditText) mRootView.findViewById(R.id.password);
+        mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
+
+        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
+    }
+
+    private void initListener() {
+        mConfirm.setOnClickListener(this);
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -136,30 +154,6 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
                 return false;
             }
         });
-
-
-        mSync = (Button) rootView.findViewById(R.id.sync);
-
-        mNumber = (TextView) rootView.findViewById(R.id.number);
-        mSitterName = (TextView) rootView.findViewById(R.id.name);
-        //mSex = (TextView) rootView.findViewById(R.id.sex);
-        //mAge = (TextView) rootView.findViewById(R.id.age);
-        mEducation = (TextView) rootView.findViewById(R.id.education);
-        mTel = (TextView) rootView.findViewById(R.id.tel);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-        mBabycareCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
-        mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-
-        mSkillNumber = (TextView) rootView.findViewById(R.id.skillNumber);
-        mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
-
-
-        // layout
-        mSyncLayout = (LinearLayout) rootView.findViewById(R.id.sync_layout);
-        mDataLayout = (LinearLayout) rootView.findViewById(R.id.data_layout);
-
-        mDataLayout.setVisibility(View.GONE);
-
         mSync.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -171,25 +165,13 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
             }
 
         });
-
-        // Set up the signup form.
-        mName = (EditText) rootView.findViewById(R.id.username);
-        mPassword = (EditText) rootView.findViewById(R.id.password);
-        mPasswordAgain = (EditText) rootView.findViewById(R.id.passwordAgain);
-
-        mConfirm = (Button) rootView.findViewById(R.id.confirm);
-        mConfirm.setOnClickListener(this);
-
-        if (BuildConfig.DEBUG)
-            loadTestData();
-
-
-        return rootView;
     }
 
-    private void loadTestData() {
-        // mNumber.setText("031080");
-        mNumber.setText("154-056893");
+    private void loadData() {
+        if (BuildConfig.DEBUG) {
+            // mNumber.setText("031080");
+            mNumber.setText("154-056893");
+        }
     }
 
     @Override
@@ -210,12 +192,6 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
     }
 
     private void syncData() {
@@ -328,204 +304,6 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         //inflater.inflate(R.menu.add, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-//		case R.id.action_add:
-//			if (ParseUser.getCurrentUser() != null) {
-//				hasSitter();
-//			}
-//			addSitter();
-
-//			if (isAccountOK()) {
-//				signUpSitter();
-//			}
-
-
-//			break;
-            default:
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private boolean isAccountOK() {
-        // Validate the sign up data
-        boolean validationError = false;
-        StringBuilder validationErrorMessage = new StringBuilder(getResources()
-                .getString(R.string.error_intro));
-        if (AccountChecker.isEmpty(mName)) {
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_username));
-        }
-        if (AccountChecker.isEmpty(mPassword)) {
-            if (validationError) {
-                validationErrorMessage.append(getResources().getString(
-                        R.string.error_join));
-            }
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_password));
-        }
-        if (!AccountChecker.isMatching(mPassword, mPasswordAgain)) {
-            if (validationError) {
-                validationErrorMessage.append(getResources().getString(
-                        R.string.error_join));
-            }
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_mismatched_passwords));
-        }
-        validationErrorMessage.append(getResources().getString(
-                R.string.error_end));
-
-        // If there is a validation error, display the error
-        if (validationError) {
-            Toast.makeText(getActivity(), validationErrorMessage.toString(),
-                    Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private void signUpSitter() {
-        // Set up a progress dialog
-        final ProgressDialog dlg = new ProgressDialog(getActivity());
-        dlg.setTitle("註冊中");
-        dlg.setMessage("請稍候...");
-        dlg.show();
-
-        // Set up a new Parse user
-        ParseUser user = new ParseUser();
-        user.setUsername(mName.getText().toString());
-        user.setPassword(mPassword.getText().toString());
-        user.put("userType", "sitter");
-        // Call the Parse signup method
-        user.signUpInBackground(new SignUpCallback() {
-
-            @Override
-            public void done(ParseException e) {
-                dlg.dismiss();
-                if (e != null) {
-                    // Show the error message
-                    Toast.makeText(getActivity(), "註冊錯誤!" /* e.getMessage() */,
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    // Start an intent for the dispatch activity
-                    LogUtils.LOGD("vic", "user object id" + ParseUser.getCurrentUser().getObjectId());
-
-                    addSitter();
-                }
-            }
-        });
-    }
-
-    private void hasSitter() {
-        ParseQuery<Sitter> query = Sitter.getQuery();
-        query.whereEqualTo("user", ParseUser.getCurrentUser());
-        query.getFirstInBackground(new GetCallback<Sitter>() {
-
-            @Override
-            public void done(Sitter sitter, ParseException e) {
-                if (sitter == null) {
-                    addSitter();
-                    LOGD("vic", "addSitter()");
-
-                } else {
-                    updateSitter(sitter);
-                    LOGD("vic", "updateSitter()");
-
-                }
-
-            }
-        });
-    }
-
-//	private void addUserInfo() {
-//		LogUtils.LOGD("vic", "addUserInfo");
-//
-//		UserInfo userInfo = new UserInfo();
-//		//userInfo.setLocation(Config.MY_LOCATION);
-//		userInfo.setUser(ParseUser.getCurrentUser());
-//		userInfo.setName(mParentsName.getText().toString());
-//		userInfo.setAddress(mParentsAddress.getText().toString());
-//		userInfo.setPhone(mParents_phone.getText().toString());
-//		userInfo.setKidsAge(mKidsAge.getText().toString());
-//		userInfo.setKidsGender(mKidsGender.getText().toString());
-//		
-//		userInfo.saveInBackground(new SaveCallback() {
-//
-//			@Override
-//			public void done(ParseException e) {
-//				if (e == null) {
-//					goToNextActivity();
-//				} else {
-//					LOGD("vic", e.getMessage());
-//				}
-//			}
-//		});
-//	}
-
-    private void addSitter() {
-        Sitter sitter = new Sitter();
-        sitter.setUser(ParseUser.getCurrentUser());
-        sitter.setBabysitterNumber(mNumber.getText().toString());
-        sitter.setName(mSitterName.getText().toString());
-        //sitter.setSex(mSex.getText().toString());
-        sitter.setAge(mAge.getText().toString());
-        sitter.setEducation(mEducation.getText().toString());
-        sitter.setTel(mTel.getText().toString());
-        sitter.setAddress(mAddress.getText().toString());
-        //sitter.setBabycareCount(mBabycareCount.getText().toString());
-        sitter.setBabycareTime(mBabycareTime.getText().toString());
-        sitter.setIsVerify(false);
-
-        sitter.saveInBackground(new SaveCallback() {
-
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    //LOGD("vic", "sitter 新增成功!");
-                    Toast.makeText(
-                            getActivity(),
-                            "資料新增成功..." /* e.getMessage() */,
-                            Toast.LENGTH_LONG).show();
-
-                } else {
-                    LOGD("vic", e.getMessage());
-                }
-            }
-        });
-
-    }
-
-    private void updateSitter(Sitter sitter) {
-
-        sitter.setBabysitterNumber(mNumber.getText().toString());
-        sitter.setName(mSitterName.getText().toString());
-        //sitter.setSex(mSex.getText().toString());
-        sitter.setAge(mAge.getText().toString());
-        sitter.setEducation(mEducation.getText().toString());
-        sitter.setTel(mTel.getText().toString());
-        sitter.setAddress(mAddress.getText().toString());
-        //sitter.setBabycareCount(mBabycareCount.getText().toString());
-        sitter.setBabycareTime(mBabycareTime.getText().toString());
-        sitter.setIsVerify(false);
-
-        sitter.saveInBackground();
-
-        Toast.makeText(
-                getActivity(),
-                "資料更新成功..." /* e.getMessage() */,
-                Toast.LENGTH_LONG).show();
-
     }
 
     public class GovAsyncTask extends AsyncTask<String, Void, String> {

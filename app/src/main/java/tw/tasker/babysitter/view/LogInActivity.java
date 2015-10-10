@@ -34,9 +34,6 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
     private Button mLater;
     private Button mSignUp;
 
-    private StringBuilder mValidationErrorMessage;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +76,13 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
                 break;
 
             case R.id.log_in:
-                if (isValidationError()) {
-                    DisplayUtils.makeToast(this, mValidationErrorMessage.toString());
+
+                String account = mAccount.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+                String errorMessage = AccountChecker.isValidationError(this, account, password);
+
+                if (!errorMessage.isEmpty()) {
+                    DisplayUtils.makeToast(this, errorMessage);
                     return;
                 }
 
@@ -94,32 +96,6 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
             default:
                 break;
         }
-    }
-
-    protected boolean isValidationError() {
-        boolean validationError = false;
-        mValidationErrorMessage = new StringBuilder(getResources().getString(
-                R.string.error_intro));
-
-        if (AccountChecker.isEmpty(mAccount)) {
-            validationError = true;
-            mValidationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_username));
-        }
-
-        if (AccountChecker.isEmpty(mPassword)) {
-            if (validationError) {
-                mValidationErrorMessage.append(getResources().getString(
-                        R.string.error_join));
-            }
-            validationError = true;
-            mValidationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_password));
-        }
-
-        mValidationErrorMessage.append(getResources().getString(
-                R.string.error_end));
-        return validationError;
     }
 
     private void runLogin() {

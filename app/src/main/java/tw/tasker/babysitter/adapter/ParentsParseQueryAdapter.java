@@ -181,8 +181,8 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         mEducation = (TextView) rootView.findViewById(R.id.education);
         mAddress = (TextView) rootView.findViewById(R.id.address);
         mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-        mBabyCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
-        mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
+        mBabyCount = (RatingBar) rootView.findViewById(R.id.babycare_count);
+        mCommunityName = (TextView) rootView.findViewById(R.id.community_name);
 
 //        mExpandable = (LinearLayout) rootView.findViewById(R.id.expandable);
 //        mExpandableToggle = (LinearLayout) rootView.findViewById(R.id.expandable_toggle_button);

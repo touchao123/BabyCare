@@ -28,10 +28,6 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
@@ -58,6 +54,7 @@ public class ProfileParentEditFragment extends Fragment implements OnClickListen
     private Spinner mKidsAgeYear;
     private Spinner mKidsAgeMonth;
     private ScrollView mAllScreen;
+    private View mRootView;
 
     public ProfileParentEditFragment() {
         // Required empty public constructor
@@ -77,9 +74,34 @@ public class ProfileParentEditFragment extends Fragment implements OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_profile_parent, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_edit_profile_parent, container, false);
 
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        initView();
+        initListener();
+        initData();
+
+        return mRootView;
+    }
+
+    private void initView() {
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mName = (TextView) mRootView.findViewById(R.id.name);
+
+        mAccount = (TextView) mRootView.findViewById(R.id.account);
+        mPassword = (TextView) mRootView.findViewById(R.id.password);
+        mPhone = (TextView) mRootView.findViewById(R.id.phone);
+        mAddress = (TextView) mRootView.findViewById(R.id.address);
+
+        //mKidsAge = (TextView) mRootView.findViewById(R.id.kids_age);
+        mKidsAgeYear = (Spinner) mRootView.findViewById(R.id.kids_age_year);
+        mKidsAgeMonth = (Spinner) mRootView.findViewById(R.id.kids_age_month);
+        mKidsGender = (TextView) mRootView.findViewById(R.id.kids_gender);
+
+        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
+    }
+
+    private void initListener() {
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -89,102 +111,30 @@ public class ProfileParentEditFragment extends Fragment implements OnClickListen
             }
         });
 
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
         mAvatar.setOnClickListener(this);
+        mConfirm.setOnClickListener(this);
+    }
 
-        mName = (TextView) rootView.findViewById(R.id.name);
-
-        mAccount = (TextView) rootView.findViewById(R.id.account);
-        mPassword = (TextView) rootView.findViewById(R.id.password);
-        mPhone = (TextView) rootView.findViewById(R.id.phone);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-
-        //mKidsAge = (TextView) rootView.findViewById(R.id.kids_age);
-        mKidsAgeYear = (Spinner) rootView.findViewById(R.id.kids_age_year);
+    protected void initData() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.kids_age_year, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeYear.setAdapter(adapter);
-        mKidsAgeYear.setSelection(getPositionFromYear());
+        mKidsAgeYear.setSelection(DisplayUtils.getPositionFromYear(getActivity()));
 
-
-        mKidsAgeMonth = (Spinner) rootView.findViewById(R.id.kids_age_month);
         adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.kids_age_month, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeMonth.setAdapter(adapter);
-        mKidsAgeMonth.setSelection(getPositionFromMonth());
-
-        mKidsGender = (TextView) rootView.findViewById(R.id.kids_gender);
-
-        mConfirm = (Button) rootView.findViewById(R.id.confirm);
-        mConfirm.setOnClickListener(this);
-
-
-        //initData();
-
-        return rootView;
-    }
-
-    private int getPositionFromYear() {
-
-        String currentYear = Config.userInfo.getKidsAge();
-        if (!currentYear.isEmpty()) {
-            currentYear = Config.userInfo.getKidsAge().substring(0, 3);
-
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            currentYear = String.valueOf((calendar.get(Calendar.YEAR) - 1911));
-        }
-
-        String[] months = getResources().getStringArray(R.array.kids_age_year);
-        int position = Arrays.asList(months).indexOf(currentYear);
-
-        LogUtils.LOGD("vic", "year: " + position);
-        return position;
-    }
-
-    private int getPositionFromMonth() {
-
-        String currentMonth = Config.userInfo.getKidsAge();
-        if (!currentMonth.isEmpty()) {
-            currentMonth = Config.userInfo.getKidsAge().substring(3, 5);
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM");
-            currentMonth = simpleDateFormat.format(calendar.getTime());
-        }
-
-        String[] months = getResources().getStringArray(R.array.kids_age_month);
-        int position = Arrays.asList(months).indexOf(currentMonth);
-
-        //LogUtils.LOGD("vic", "month: " + position);
-        return position;
-    }
-
-
-    protected void initData() {
-        mName.setText("");
-        mAccount.setText("");
-        mPassword.setText("");
-
-        mPhone.setText("");
-        mAddress.setText("");
-
-        //mKidsAge.setText("");
-        mKidsGender.setText("");
+        mKidsAgeMonth.setSelection(DisplayUtils.getPositionFromMonth(getActivity()));
     }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         fillDataToUI(Config.userInfo);
-
     }
-
 
     protected void fillDataToUI(UserInfo userInfo) {
         mName.setText(userInfo.getName());

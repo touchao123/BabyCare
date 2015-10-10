@@ -8,11 +8,11 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.view.VerifyCodeFragment;
 
@@ -64,11 +64,8 @@ public class SmsReceiver extends BroadcastReceiver {
     }
 
     private void setVerifyCode(String message) {
-        // Show Alert
-        int duration = Toast.LENGTH_LONG;
         //Toast toast = Toast.makeText(context, "senderNum: "+ senderNum + ", message: " + message, duration);
-        Toast toast = Toast.makeText(mContext, "*" + message, duration);
-        toast.show();
+        DisplayUtils.makeToast(mContext, "*" + message);
 
         Pattern p = Pattern.compile("\\d{6}");
         Matcher m = p.matcher(message);

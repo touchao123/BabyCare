@@ -1,7 +1,6 @@
 package tw.tasker.babysitter.view;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -23,22 +22,19 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-
 import tw.tasker.babysitter.BuildConfig;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 
 import static tw.tasker.babysitter.utils.LogUtils.LOGD;
 
 public class SignUpParentFragment extends Fragment implements OnClickListener {
 
-    private EditText mName;
+    private EditText mAccount;
     private EditText mPassword;
     private EditText mPasswordAgain;
     private Button mSignUp;
@@ -51,6 +47,7 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
     private CheckBox mKidsGenderBoy;
     private CheckBox mKidsGenderGirl;
     private ScrollView mAllScreen;
+    private View mRootView;
 
     public static Fragment newInstance() {
         SignUpParentFragment fragment = new SignUpParentFragment();
@@ -66,10 +63,37 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_parent_signup,
+        mRootView = inflater.inflate(R.layout.fragment_parent_signup,
                 container, false);
 
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        initView();
+        initListener();
+        initData();
+
+        return mRootView;
+    }
+
+    private void initView() {
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+
+        // Set up the signup form.
+        mAccount = (EditText) mRootView.findViewById(R.id.account);
+        mPassword = (EditText) mRootView.findViewById(R.id.password);
+        mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
+        // Parent info
+        mParentsName = (EditText) mRootView.findViewById(R.id.parents_name);
+        mParentsAddress = (EditText) mRootView.findViewById(R.id.parents_address);
+        mParents_phone = (EditText) mRootView.findViewById(R.id.parents_phone);
+        mKidsAgeYear = (Spinner) mRootView.findViewById(R.id.kids_age_year);
+        mKidsAgeMonth = (Spinner) mRootView.findViewById(R.id.kids_age_month);
+        //mKidsGender = (EditText) mRootView.findViewById(R.id.kids_gender);
+        mKidsGenderBoy = (CheckBox) mRootView.findViewById(R.id.kids_gender_boy);
+        mKidsGenderGirl = (CheckBox) mRootView.findViewById(R.id.kids_gender_girl);
+
+        mSignUp = (Button) mRootView.findViewById(R.id.action_button);
+    }
+
+    private void initListener() {
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -78,76 +102,31 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
                 return false;
             }
         });
+        mSignUp.setOnClickListener(this);
+        mKidsGenderBoy.setOnClickListener(this);
+        mKidsGenderGirl.setOnClickListener(this);
+    }
 
-
-        // Set up the signup form.
-        mName = (EditText) rootView.findViewById(R.id.username);
-        mPassword = (EditText) rootView.findViewById(R.id.password);
-        mPasswordAgain = (EditText) rootView.findViewById(R.id.passwordAgain);
-
-        // Parent info
-        mParentsName = (EditText) rootView.findViewById(R.id.parents_name);
-        mParentsAddress = (EditText) rootView.findViewById(R.id.parents_address);
-        mParents_phone = (EditText) rootView.findViewById(R.id.parents_phone);
-        mKidsAgeYear = (Spinner) rootView.findViewById(R.id.kids_age_year);
-
+    private void initData() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.kids_age_year, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeYear.setAdapter(adapter);
-        mKidsAgeYear.setSelection(getPositionFromYear());
+        mKidsAgeYear.setSelection(DisplayUtils.getPositionFromYear(getActivity()));
 
-        mKidsAgeMonth = (Spinner) rootView.findViewById(R.id.kids_age_month);
         adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.kids_age_month, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeMonth.setAdapter(adapter);
-        mKidsAgeMonth.setSelection(getPositionFromMonth());
-
-        //mKidsGender = (EditText) rootView.findViewById(R.id.kids_gender);
-        mKidsGenderBoy = (CheckBox) rootView.findViewById(R.id.kids_gender_boy);
-        mKidsGenderGirl = (CheckBox) rootView.findViewById(R.id.kids_gender_girl);
-
-        mKidsGenderBoy.setOnClickListener(this);
-        mKidsGenderGirl.setOnClickListener(this);
-
-        //
-        mSignUp = (Button) rootView.findViewById(R.id.action_button);
-        mSignUp.setOnClickListener(this);
+        mKidsAgeMonth.setSelection(DisplayUtils.getPositionFromMonth(getActivity()));
 
         if (BuildConfig.DEBUG)
             loadTestData();
 
-        return rootView;
-    }
-
-
-    private int getPositionFromYear() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        String currentYear = String.valueOf((calendar.get(Calendar.YEAR) - 1911));
-
-        String[] months = getResources().getStringArray(R.array.kids_age_year);
-        int position = Arrays.asList(months).indexOf(currentYear);
-
-        LogUtils.LOGD("vic", "year: " + position);
-        return position;
-    }
-
-    private int getPositionFromMonth() {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM");
-        String currentMonth = simpleDateFormat.format(calendar.getTime());
-
-        String[] months = getResources().getStringArray(R.array.kids_age_month);
-        int position = Arrays.asList(months).indexOf(currentMonth);
-
-        //LogUtils.LOGD("vic", "month: " + position);
-        return position;
     }
 
     private void loadTestData() {
-        mName.setText("vic2");
+        mAccount.setText("vic2");
         mPassword.setText("vic2");
         mPasswordAgain.setText("vic2");
 
@@ -158,6 +137,7 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
         //mKidsAgeYear.setText("2015");
         //mKidsAgeMonth.setText("03");
         //mKidsGender.setText("男");
+
     }
 
     @Override
@@ -166,7 +146,11 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.action_button:
-                if (isAccountOK()) {
+                String account = mAccount.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+                String passwordAgain = mPasswordAgain.getText().toString().trim();
+
+                if (AccountChecker.isAccountOK(getActivity(), account, password, passwordAgain)) {
                     signUpParents();
                 }
 
@@ -198,7 +182,7 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
 
         // Set up a new Parse user
         ParseUser user = new ParseUser();
-        user.setUsername(mName.getText().toString());
+        user.setUsername(mAccount.getText().toString());
         user.setPassword(mPassword.getText().toString());
         user.put("userType", "parent");
 
@@ -247,7 +231,7 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    goToNextActivity();
+                    startActivity(IntentUtil.startDispatchActivity());
                 } else {
                     LOGD("vic", e.getMessage());
                 }
@@ -255,55 +239,4 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
         });
     }
 
-    private void goToNextActivity() {
-        Intent intent = new Intent(getActivity(), DispatchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    private boolean isAccountOK() {
-        // Validate the sign up data
-        boolean validationError = false;
-        StringBuilder validationErrorMessage = new StringBuilder(getResources()
-                .getString(R.string.error_intro));
-
-        if (AccountChecker.isEmpty(mName)) {
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_username));
-        }
-
-        if (AccountChecker.isEmpty(mPassword)) {
-            if (validationError) {
-                validationErrorMessage.append(getResources().getString(
-                        R.string.error_join));
-            }
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_blank_password));
-        }
-
-        if (!AccountChecker.isMatching(mPassword, mPasswordAgain)) {
-            if (validationError) {
-                validationErrorMessage.append(getResources().getString(
-                        R.string.error_join));
-            }
-            validationError = true;
-            validationErrorMessage.append(getResources().getString(
-                    R.string.error_mismatched_passwords));
-        }
-
-        validationErrorMessage.append(getResources().getString(
-                R.string.error_end));
-
-        // If there is a validation error, display the error
-        if (validationError) {
-            Toast.makeText(getActivity(), validationErrorMessage.toString(),
-                    Toast.LENGTH_LONG).show();
-            return false;
-        } else {
-            return true;
-        }
-    }
 }

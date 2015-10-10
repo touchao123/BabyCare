@@ -10,11 +10,6 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.utils.AccountChecker;
 
 public class SitterDetailActivity extends BaseActivity implements OnClickListener {
-    //	private SignUpListener mListener = new Listener();
-//	private Fragment mProfileSitterFragment;
-//	private Fragment mProfileParentFragment;
-//	private Fragment mProfileParentEditFragment;
-//	private Fragment mProfileSitterEditFragment;
     private FragmentTransaction mFragmentTransaction;
     private Fragment mSitterDetailFragment;
 
@@ -24,11 +19,6 @@ public class SitterDetailActivity extends BaseActivity implements OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
-//		mProfileSitterFragment = ProfileSitterFragment.newInstance(mListener);
-//		mProfileSitterEditFragment = ProfileSitterEditFragment.newInstance(mListener);
-
-//		mProfileParentFragment = ProfileParentFragment.newInstance(mListener);
-//		mProfileParentEditFragment = ProfileParentEditFragment.newInstance(mListener);
         mSitterDetailFragment = SitterDetailFragment.newInstance(null);
 
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -44,11 +34,6 @@ public class SitterDetailActivity extends BaseActivity implements OnClickListene
             mFragmentTransaction.add(R.id.container, fragment).commit();
 
         }
-
-//		mEdit = (Button) findViewById(R.id.edit);
-//		mEdit.setOnClickListener(this);
-
-
     }
 
 
@@ -59,42 +44,7 @@ public class SitterDetailActivity extends BaseActivity implements OnClickListene
 
     @Override
     public void onClick(View v) {
-//		LogUtils.LOGD("vic", "編輯");
-//		Fragment fragment = ProfileParentEditFragment.newInstance();
-//		getSupportFragmentManager().beginTransaction()
-//		.replace(R.id.container, fragment).addToBackStack(null).commit();
     }
 
-//	private final class Listener implements SignUpListener {
-//
-//		@Override
-//		public void onSwitchToNextFragment(int type) {
-//			
-//			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//			
-//			switch (type) {
-//			case Config.PARENT_READ_PAGE:
-//				ft.replace(R.id.container, mProfileParentFragment).commit();
-//				break;
-//
-//			case Config.PARENT_EDIT_PAGE:
-//				ft.replace(R.id.container, mProfileParentEditFragment).commit();
-//				break;
-//				
-//			case Config.SITTER_READ_PAGE:
-//				ft.replace(R.id.container, mProfileSitterFragment).commit();
-//				break;
-//				
-//			case Config.SITTER_EDIT_PAGE:
-//				ft.replace(R.id.container, mProfileSitterEditFragment).commit();
-//				break;
-//				
-//			default:
-//				break;
-//			}
-//			
-//		}
-//		
-//	}
 
 }

@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.SaveCallback;
@@ -33,6 +32,7 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
     private EditText mContact;
     private Button mSend;
     private ScrollView mAllScreen;
+    private View mRootView;
 
     public ChangePhoneFragment() {
         // Required empty public constructor
@@ -46,8 +46,13 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_phone_change, container, false);
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        mRootView = inflater.inflate(R.layout.fragment_phone_change, container, false);
+
+        initView();
+        initListener();
+        loadData();
+
+
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -57,18 +62,8 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
             }
         });
 
-        mPhone = (TextView) rootView.findViewById(R.id.phone);
-        mMessageTop = (TextView) rootView.findViewById(R.id.message_top);
-        mMessageBottom = (TextView) rootView.findViewById(R.id.message_bottom);
-
-        mContact = (EditText) rootView.findViewById(R.id.contact);
-        mSend = (Button) rootView.findViewById(R.id.send);
         mSend.setOnClickListener(this);
-
-        //mWebSite = (Button) rootView.findViewById(R.id.website);
         //mWebSite.setOnClickListener(this);
-
-        //mCall = (Button) rootView.findViewById(R.id.call);
         //mCall.setOnClickListener(this);
 
         String tel = Config.sitterInfo.getTel();
@@ -86,7 +81,26 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
 
         mMessageBottom.setText("若無法獲取驗證碼，\n請留下電話或E-Mail，將會有專人聯絡您。");
 
-        return rootView;
+        return mRootView;
+    }
+
+    private void initView() {
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+        mPhone = (TextView) mRootView.findViewById(R.id.phone);
+        mMessageTop = (TextView) mRootView.findViewById(R.id.message_top);
+        mMessageBottom = (TextView) mRootView.findViewById(R.id.message_bottom);
+        mContact = (EditText) mRootView.findViewById(R.id.contact);
+        mSend = (Button) mRootView.findViewById(R.id.send);
+        //mWebSite = (Button) mRootView.findViewById(R.id.website);
+        //mCall = (Button) mRootView.findViewById(R.id.call);
+    }
+
+    private void initListener() {
+
+    }
+
+    private void loadData() {
+
     }
 
     @Override
@@ -99,7 +113,7 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
                 // sendMail();
                 String contact = mContact.getText().toString();
                 if (contact.isEmpty()) {
-                    Toast.makeText(getActivity(), "請輸入聯絡方式!", Toast.LENGTH_LONG).show();
+                    DisplayUtils.makeToast(getActivity(), "請輸入聯絡方式!");
                 } else {
                     mSend.setEnabled(false);
                     sendServer(contact);
@@ -145,31 +159,12 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
             @Override
             public void done(ParseException e) {
                 if (e == null) {
-                    Toast.makeText(getActivity(), "寄送成功!", Toast.LENGTH_LONG).show();
+                    DisplayUtils.makeToast(getActivity(), "寄送成功!");
                 } else {
-                    Toast.makeText(getActivity(), "寄送失敗!", Toast.LENGTH_LONG).show();
+                    DisplayUtils.makeToast(getActivity(), "寄送失敗!");
                     mSend.setEnabled(true);
                 }
             }
         });
     }
-
-//	private void sendMail() {
-//		BackgroundMail bm = new BackgroundMail(getActivity());
-//		bm.setGmailUserName("soon530@gmail.com");
-//        //"DoE/GTiYpX5sz5zmTFuoHg==" is crypted "password"
-//		bm.setGmailPassword(Utils.decryptIt("pk6dEJB4trzLtCdnrKbvZQ==")); 
-//		bm.setMailTo("service@babytone.cc");
-//		bm.setFormSubject("聯絡方式：" + mContact.getText());
-//		bm.setFormBody("聯絡方式：" + mContact.getText());
-//		
-//		// this is optional
-//		//bm.setSendingMessage("寄送中...");
-//		//bm.setSendingMessageSuccess("您的聯絡方式已寄出!");
-//		// bm.setProcessVisibility(false);
-//		// bm.setAttachment(Environment.getExternalStorageDirectory().getPath()+File.pathSeparator+"somefile.txt");
-//		bm.send();
-//		
-//	}
-
 }

@@ -19,9 +19,13 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
+import tw.tasker.babysitter.Config;
+import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.view.ListDialogFragment;
 
 public class DisplayUtils {
@@ -152,6 +156,43 @@ public class DisplayUtils {
         } catch (JSONException x) {
             throw new RuntimeException("Something wrong with JSON", x);
         }
+    }
+
+    @DebugLog
+    public static int getPositionFromYear(Context context) {
+
+        String currentYear = Config.userInfo.getKidsAge();
+        if (!currentYear.isEmpty()) {
+            currentYear = Config.userInfo.getKidsAge().substring(0, 3);
+
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            currentYear = String.valueOf((calendar.get(Calendar.YEAR) - 1911));
+        }
+
+        String[] months = context.getResources().getStringArray(R.array.kids_age_year);
+        int position = Arrays.asList(months).indexOf(currentYear);
+
+        return position;
+    }
+
+    @DebugLog
+    public static int getPositionFromMonth(Context context) {
+
+        String currentMonth = Config.userInfo.getKidsAge();
+        if (!currentMonth.isEmpty()) {
+            currentMonth = Config.userInfo.getKidsAge().substring(3, 5);
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM");
+            currentMonth = simpleDateFormat.format(calendar.getTime());
+        }
+
+        String[] months = context.getResources().getStringArray(R.array.kids_age_month);
+        int position = Arrays.asList(months).indexOf(currentMonth);
+
+        return position;
     }
 
 }

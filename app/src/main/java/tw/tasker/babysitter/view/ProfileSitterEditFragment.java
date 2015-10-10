@@ -59,6 +59,7 @@ public class ProfileSitterEditFragment extends Fragment implements OnClickListen
     private ProgressDialog mRingProgressDialog;
     private PictureHelper mPictureHelper;
     private ScrollView mAllScreen;
+    private View mRootView;
 
     public ProfileSitterEditFragment() {
         // TODO Auto-generated constructor stub
@@ -73,9 +74,42 @@ public class ProfileSitterEditFragment extends Fragment implements OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_profile_sitter, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_edit_profile_sitter, container, false);
 
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        initView();
+        initListener();
+        initData();
+
+        return mRootView;
+    }
+
+    private void initView() {
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
+        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mNumber = (TextView) mRootView.findViewById(R.id.number);
+        mSitterName = (TextView) mRootView.findViewById(R.id.name);
+        //mSex = (TextView) mRootView.findViewById(R.id.sex);
+        //mAge = (TextView) mRootView.findViewById(R.id.age);
+        mEducation = (TextView) mRootView.findViewById(R.id.education);
+        mTel = (TextView) mRootView.findViewById(R.id.tel);
+        mAddress = (TextView) mRootView.findViewById(R.id.address);
+        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
+        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
+
+        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
+        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
+
+        mDayTime = (CheckBox) mRootView.findViewById(R.id.day_time);
+        mNightTime = (CheckBox) mRootView.findViewById(R.id.night_time);
+        mHalfDay = (CheckBox) mRootView.findViewById(R.id.half_day);
+        mFullDay = (CheckBox) mRootView.findViewById(R.id.full_day);
+        mPartTime = (CheckBox) mRootView.findViewById(R.id.part_time);
+        mInHouse = (CheckBox) mRootView.findViewById(R.id.in_house);
+
+    }
+
+    private void initListener() {
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -84,36 +118,9 @@ public class ProfileSitterEditFragment extends Fragment implements OnClickListen
                 return false;
             }
         });
-
-        mConfirm = (Button) rootView.findViewById(R.id.confirm);
         mConfirm.setOnClickListener(this);
 
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
         mAvatar.setOnClickListener(this);
-
-
-        mNumber = (TextView) rootView.findViewById(R.id.number);
-        mSitterName = (TextView) rootView.findViewById(R.id.name);
-        //mSex = (TextView) rootView.findViewById(R.id.sex);
-        //mAge = (TextView) rootView.findViewById(R.id.age);
-        mEducation = (TextView) rootView.findViewById(R.id.education);
-        mTel = (TextView) rootView.findViewById(R.id.tel);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-        mBabycareCount = (RatingBar) rootView.findViewById(R.id.babycareCount);
-        mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-
-        mSkillNumber = (TextView) rootView.findViewById(R.id.skillNumber);
-        mCommunityName = (TextView) rootView.findViewById(R.id.communityName);
-
-        mDayTime = (CheckBox) rootView.findViewById(R.id.day_time);
-        mNightTime = (CheckBox) rootView.findViewById(R.id.night_time);
-        mHalfDay = (CheckBox) rootView.findViewById(R.id.half_day);
-        mFullDay = (CheckBox) rootView.findViewById(R.id.full_day);
-        mPartTime = (CheckBox) rootView.findViewById(R.id.part_time);
-        mInHouse = (CheckBox) rootView.findViewById(R.id.in_house);
-
-        initData();
-        return rootView;
     }
 
     private void initData() {

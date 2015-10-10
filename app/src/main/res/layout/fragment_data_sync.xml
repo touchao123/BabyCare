@@ -116,7 +116,7 @@
                     android:textSize="16sp" />
 
                 <RatingBar
-                    android:id="@+id/babycareCount"
+                    android:id="@+id/babycare_count"
                     style="@style/BabyRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/skillNumber"
+                android:id="@+id/skill_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
@@ -162,7 +162,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/communityName"
+                android:id="@+id/community_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"

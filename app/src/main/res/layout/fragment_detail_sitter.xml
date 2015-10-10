@@ -71,7 +71,7 @@
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/age_time"
+                    android:id="@+id/babycare_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -100,7 +100,7 @@
                         android:textSize="16sp" />
 
                     <RatingBar
-                        android:id="@+id/babycareCount"
+                        android:id="@+id/babycare_count"
                         style="@style/BabyRatingBar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                 <ImageView
                     android:id="@+id/static_map"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
+                    android:layout_height="200dp"
                     android:scaleType="fitXY"
                     android:src="@drawable/sitter_map" />
             </LinearLayout>

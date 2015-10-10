@@ -116,11 +116,11 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
         List<String> users = conversation.getParticipants();
         for (int i = 0; i < users.size(); i++) {
             if (!users.get(i).equals(ParseUser.getCurrentUser().getObjectId())) {
-                //Format the String so there is a comma after every username
+                //Format the String so there is a comma after every account
                 if (participants.length() > 0)
                     participants += ", ";
 
-                //Add the human readable username to the String
+                //Add the human readable account to the String
                 participants += ParseImpl.getUsername(users.get(i));
             }
         }

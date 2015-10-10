@@ -11,11 +11,6 @@ import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.utils.AccountChecker;
 
 public class DataCheckActivity extends BaseActivity implements OnClickListener {
-    //	private SignUpListener mListener = new Listener();
-//	private Fragment mProfileSitterFragment;
-//	private Fragment mProfileParentFragment;
-//	private Fragment mProfileParentEditFragment;
-//	private Fragment mProfileSitterEditFragment;
     private FragmentTransaction mFragmentTransaction;
     private Fragment mDataCheckParentEditFragment;
 
@@ -23,12 +18,6 @@ public class DataCheckActivity extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
-
-//		mProfileSitterFragment = ProfileSitterFragment.newInstance(mListener);
-//		mProfileSitterEditFragment = ProfileSitterEditFragment.newInstance(mListener);
-
-//		mProfileParentFragment = ProfileParentFragment.newInstance(mListener);
-//		mProfileParentEditFragment = ProfileParentEditFragment.newInstance(mListener);
 
         mDataCheckParentEditFragment = DataCheckParentEditFragment.newInstance(null);
 
@@ -48,12 +37,7 @@ public class DataCheckActivity extends BaseActivity implements OnClickListener {
 
         }
 
-//		mEdit = (Button) findViewById(R.id.edit);
-//		mEdit.setOnClickListener(this);
-
-
     }
-
 
     @Override
     protected void onResume() {

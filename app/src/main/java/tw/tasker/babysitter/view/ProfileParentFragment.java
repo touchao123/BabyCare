@@ -34,6 +34,7 @@ public class ProfileParentFragment extends Fragment implements OnClickListener {
     private TextView mKidsGender;
     private Button mEdit;
     private CircleImageView mAvatar;
+    private View mRootView;
 
     public ProfileParentFragment() {
         // Required empty public constructor
@@ -53,27 +54,30 @@ public class ProfileParentFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_profile_parent, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_profile_parent, container, false);
 
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
-
-        mEdit = (Button) rootView.findViewById(R.id.edit);
-
-        mName = (TextView) rootView.findViewById(R.id.name);
-
-        mAccount = (TextView) rootView.findViewById(R.id.account);
-        mPassword = (TextView) rootView.findViewById(R.id.password);
-        mPhone = (TextView) rootView.findViewById(R.id.phone);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-
-        mKidsAge = (TextView) rootView.findViewById(R.id.kids_age);
-        mKidsGender = (TextView) rootView.findViewById(R.id.kids_gender);
-
-        mEdit.setOnClickListener(this);
-
+        initView();
+        initListener();
         initData();
 
-        return rootView;
+        return mRootView;
+    }
+
+    private void initListener() {
+        mEdit.setOnClickListener(this);
+    }
+
+    private void initView() {
+        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mEdit = (Button) mRootView.findViewById(R.id.edit);
+        mName = (TextView) mRootView.findViewById(R.id.name);
+        mAccount = (TextView) mRootView.findViewById(R.id.account);
+        mPassword = (TextView) mRootView.findViewById(R.id.password);
+        mPhone = (TextView) mRootView.findViewById(R.id.phone);
+        mAddress = (TextView) mRootView.findViewById(R.id.address);
+
+        mKidsAge = (TextView) mRootView.findViewById(R.id.kids_age);
+        mKidsGender = (TextView) mRootView.findViewById(R.id.kids_gender);
     }
 
     protected void initData() {

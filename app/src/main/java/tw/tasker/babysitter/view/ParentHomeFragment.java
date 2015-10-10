@@ -174,7 +174,7 @@ public class ParentHomeFragment extends Fragment implements
             @Override
             public void done(ParseGeoPoint parseGeoPoint) {
                 Config.MY_LOCATION = parseGeoPoint;
-                UdateMyLocaton.save();
+                UpdateMyLocaton.save();
                 doListQuery();
                 // Config.MY_LOCATION = Config.MY_TEST_LOCATION;
                 // LogUtils.LOGD("vic",
@@ -292,7 +292,7 @@ public class ParentHomeFragment extends Fragment implements
         startActivityForResult(IntentUtil.startSitterDetailActivity(), 1);
     }
 
-    private static class UdateMyLocaton {
+    private static class UpdateMyLocaton {
 
         public static void save() {
             if (ParseUser.getCurrentUser() != null) {

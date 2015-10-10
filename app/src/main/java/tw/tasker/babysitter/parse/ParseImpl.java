@@ -107,7 +107,7 @@ public class ParseImpl {
 
         ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
         // just only for test
-        userQuery.whereContains("username", "vic");
+        userQuery.whereContains("account", "vic");
         userQuery.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> results, ParseException e) {
                 if (e == null) {
@@ -129,7 +129,7 @@ public class ParseImpl {
         return friends;
     }
 
-    //Takes a ParseObject id and returns the associated username (handle) for display purposes
+    //Takes a ParseObject id and returns the associated account (handle) for display purposes
     public static String getUsername(String id) {
 
         //Does this id appear in the "all users" list?

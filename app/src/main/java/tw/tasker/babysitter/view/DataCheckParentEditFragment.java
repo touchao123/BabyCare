@@ -57,6 +57,7 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
     private ScrollView mAllScreen;
     private TextView mJob;
     private TextView mNote;
+    private View mRootView;
 
     public DataCheckParentEditFragment() {
         // Required empty public constructor
@@ -76,9 +77,16 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_parent_check_data, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_edit_parent_check_data, container, false);
 
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        initView();
+        initListener();
+        initData();
+
+        return mRootView;
+    }
+
+    private void initListener() {
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -88,41 +96,24 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
             }
         });
 
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
         mAvatar.setOnClickListener(this);
-
-        mName = (TextView) rootView.findViewById(R.id.parents_name);
-        mPhone = (TextView) rootView.findViewById(R.id.parents_phone);
-        mAddress = (TextView) rootView.findViewById(R.id.parents_address);
-        mJob = (TextView) rootView.findViewById(R.id.parents_job);
-
-        //mKidsAge = (TextView) rootView.findViewById(R.id.kids_age);
-        mKidsAgeYear = (Spinner) rootView.findViewById(R.id.kids_age_year);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.kids_age_year, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mKidsAgeYear.setAdapter(adapter);
-        mKidsAgeYear.setSelection(getPositionFromYear());
-
-
-        mKidsAgeMonth = (Spinner) rootView.findViewById(R.id.kids_age_month);
-        adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.kids_age_month, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mKidsAgeMonth.setAdapter(adapter);
-        mKidsAgeMonth.setSelection(getPositionFromMonth());
-
-        //mKidsGender = (TextView) rootView.findViewById(R.id.kids_gender);
-
-        mNote = (TextView) rootView.findViewById(R.id.parents_note);
-
-        mConfirm = (Button) rootView.findViewById(R.id.confirm);
         mConfirm.setOnClickListener(this);
 
+    }
 
-        //initData();
-
-        return rootView;
+    private void initView() {
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mName = (TextView) mRootView.findViewById(R.id.parents_name);
+        mPhone = (TextView) mRootView.findViewById(R.id.parents_phone);
+        mAddress = (TextView) mRootView.findViewById(R.id.parents_address);
+        mJob = (TextView) mRootView.findViewById(R.id.parents_job);
+        mKidsAgeMonth = (Spinner) mRootView.findViewById(R.id.kids_age_month);
+        //mKidsAge = (TextView) mRootView.findViewById(R.id.kids_age);
+        mKidsAgeYear = (Spinner) mRootView.findViewById(R.id.kids_age_year);
+        //mKidsGender = (TextView) mRootView.findViewById(R.id.kids_gender);
+        mNote = (TextView) mRootView.findViewById(R.id.parents_note);
+        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
     }
 
     private int getPositionFromYear() {
@@ -164,12 +155,20 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
 
 
     protected void initData() {
-        mName.setText("");
-        mPhone.setText("");
-        mAddress.setText("");
 
-        //mKidsAge.setText("");
-        //mKidsGender.setText("");
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.kids_age_year, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mKidsAgeYear.setAdapter(adapter);
+        mKidsAgeYear.setSelection(getPositionFromYear());
+
+
+        adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.kids_age_month, R.layout.spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mKidsAgeMonth.setAdapter(adapter);
+        mKidsAgeMonth.setSelection(getPositionFromMonth());
+
     }
 
 

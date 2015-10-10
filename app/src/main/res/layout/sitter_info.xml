@@ -54,7 +54,7 @@
         android:src="@drawable/gray_line" />
 
     <TextView
-        android:id="@+id/skillNumber"
+        android:id="@+id/skill_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
@@ -84,7 +84,7 @@
         android:src="@drawable/gray_line" />
 
     <TextView
-        android:id="@+id/communityName"
+        android:id="@+id/community_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"

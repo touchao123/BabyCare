@@ -312,7 +312,7 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         //Grab a list of all friends
         Set friends = ParseImpl.getAllFriends();
 
-        //A Map of the CheckBox with the human readable username and the Parse Object ID
+        //A Map of the CheckBox with the human readable account and the Parse Object ID
         final HashMap<CheckBox, String> allUsers = new HashMap<>();
 
         //Create the list of participants if it hasn't been instantiated

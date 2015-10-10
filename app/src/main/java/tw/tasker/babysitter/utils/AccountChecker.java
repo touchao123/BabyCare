@@ -1,14 +1,23 @@
 package tw.tasker.babysitter.utils;
 
-import android.widget.EditText;
+import android.content.Context;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.layer.LayerImpl;
 
 public class AccountChecker {
+
+    public static boolean isNull(Object object) {
+        if (object == null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public static boolean isSuccess(ParseException e) {
         if (e == null) {
@@ -18,16 +27,8 @@ public class AccountChecker {
         }
     }
 
-    public static boolean isEmpty(EditText etText) {
-        if (etText.getText().toString().trim().length() > 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean isMatching(EditText etText1, EditText etText2) {
-        if (etText1.getText().toString().equals(etText2.getText().toString())) {
+    public static boolean isMatching(String value1, String value2) {
+        if (value1.equals(value2)) {
             return true;
         } else {
             return false;
@@ -54,14 +55,6 @@ public class AccountChecker {
         }
     }
 
-    public static boolean isNull(Object object) {
-        if (object == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public static boolean isSitter() {
         String userType = ParseUser.getCurrentUser().getString("userType");
         LogUtils.LOGD("userType", userType);
@@ -80,4 +73,83 @@ public class AccountChecker {
             LayerImpl.getLayerClient().deauthenticate();
         }
     }
+
+    public static String isValidationError(Context context, String account, String password) {
+        boolean validationError = false;
+        StringBuilder mValidationErrorMessage;
+
+        mValidationErrorMessage = new StringBuilder(context.getResources().getString(
+                R.string.error_intro));
+
+        if (account.isEmpty()) {
+            validationError = true;
+            mValidationErrorMessage.append(context.getResources().getString(
+                    R.string.error_blank_username));
+        }
+
+        if (password.isEmpty()) {
+            if (validationError) {
+                mValidationErrorMessage.append(context.getResources().getString(
+                        R.string.error_join));
+            }
+            validationError = true;
+            mValidationErrorMessage.append(context.getResources().getString(
+                    R.string.error_blank_password));
+        }
+
+        mValidationErrorMessage.append(context.getResources().getString(
+                R.string.error_end));
+
+
+        if (validationError) {
+            return mValidationErrorMessage.toString();
+        } else {
+            return "";
+        }
+    }
+
+    public static boolean isAccountOK(Context context, String account, String password, String passwordAgain) {
+        // Validate the sign up data
+        boolean validationError = false;
+        StringBuilder validationErrorMessage = new StringBuilder(context.getResources()
+                .getString(R.string.error_intro));
+
+        if (account.isEmpty()) {
+            validationError = true;
+            validationErrorMessage.append(context.getResources().getString(
+                    R.string.error_blank_username));
+        }
+
+        if (password.isEmpty()) {
+            if (validationError) {
+                validationErrorMessage.append(context.getResources().getString(
+                        R.string.error_join));
+            }
+            validationError = true;
+            validationErrorMessage.append(context.getResources().getString(
+                    R.string.error_blank_password));
+        }
+
+        if (!AccountChecker.isMatching(password, passwordAgain)) {
+            if (validationError) {
+                validationErrorMessage.append(context.getResources().getString(
+                        R.string.error_join));
+            }
+            validationError = true;
+            validationErrorMessage.append(context.getResources().getString(
+                    R.string.error_mismatched_passwords));
+        }
+
+        validationErrorMessage.append(context.getResources().getString(
+                R.string.error_end));
+
+        // If there is a validation error, display the error
+        if (validationError) {
+            DisplayUtils.makeToast(context, validationErrorMessage.toString());
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

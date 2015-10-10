@@ -50,6 +50,7 @@ public class VerifyCodeFragment extends Fragment implements OnClickListener {
     private Button mSend;
     private TextView mPhone;
     private ScrollView mAllScreen;
+    private View mRootView;
 
     public VerifyCodeFragment() {
         // Required empty public constructor
@@ -86,9 +87,27 @@ public class VerifyCodeFragment extends Fragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_code_verify, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_code_verify, container, false);
 
-        mAllScreen = (ScrollView) rootView.findViewById(R.id.all_screen);
+        initView();
+        initListener();
+        initData();
+
+        return mRootView;
+    }
+
+    private void initView() {
+        mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
+        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
+        mChangePhone = (TextView) mRootView.findViewById(R.id.change_phone);
+        mVerifyCode = (EditText) mRootView.findViewById(R.id.verify_code);
+        mError = (TextView) mRootView.findViewById(R.id.error);
+        mSend = (Button) mRootView.findViewById(R.id.send);
+        mPhone = (TextView) mRootView.findViewById(R.id.phone);
+    }
+
+    private void initListener() {
+        mConfirm.setOnClickListener(this);
         mAllScreen.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -97,34 +116,25 @@ public class VerifyCodeFragment extends Fragment implements OnClickListener {
                 return false;
             }
         });
-
-        mConfirm = (Button) rootView.findViewById(R.id.confirm);
-        mConfirm.setOnClickListener(this);
-        mConfirm.setVisibility(View.INVISIBLE);
-
-        mChangePhone = (TextView) rootView.findViewById(R.id.change_phone);
         mChangePhone.setOnClickListener(this);
+        mSend.setOnClickListener(this);
+    }
+
+    private void initData() {
         SpannableString content = new SpannableString("不是這隻號碼?");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         mChangePhone.setText(content);
-
-        mVerifyCode = (EditText) rootView.findViewById(R.id.verify_code);
         mSmsreceiver.setFragment(this);
-
-        mError = (TextView) rootView.findViewById(R.id.error);
         mError.setVisibility(View.INVISIBLE);
+        mConfirm.setVisibility(View.INVISIBLE);
 
-        mSend = (Button) rootView.findViewById(R.id.send);
-        mSend.setOnClickListener(this);
-
-        mPhone = (TextView) rootView.findViewById(R.id.phone);
         String phone = Config.sitterInfo.getTel();
         Pattern p = Pattern.compile("\\d{10}");
         Matcher m = p.matcher(phone);
         if (m.find()) {
             mPhone.setText(m.group());
         }
-        return rootView;
+
     }
 
     @Override
