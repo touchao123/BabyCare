@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -34,6 +35,7 @@ public class ImagePageActivity extends BaseActivity {
         //pager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
         pager.setCurrentItem(0);
 
+        FlurryAgent.logEvent("see sitter image page.");
     }
 
     private static class ImageAdapter extends PagerAdapter {

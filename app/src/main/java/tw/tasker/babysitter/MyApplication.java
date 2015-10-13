@@ -3,6 +3,7 @@ package tw.tasker.babysitter;
 import android.app.Application;
 import android.content.Context;
 
+import com.flurry.android.FlurryAgent;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -28,6 +29,7 @@ import tw.tasker.babysitter.utils.LogUtils;
 public class MyApplication extends Application {
     private static final String APPLICATION_ID = "NJFvH3uzP9EHAKydw7iSIICBBU4AfAHvhJzuTawu";
     private static final String CLIENT_KEY = "FOwFRZ8hqGZ4NdZflfeLINvBQehNXOlihdEKnwTU";
+    private static final String FLURRY_APIKEY = "7BKXKHQVR8TSF65XCV6N";
 
     public static void initImageLoader(Context context) {
         // This configuration tuning is custom. You can tune every option, you may tune some of them,
@@ -78,6 +80,12 @@ public class MyApplication extends Application {
         initImageLoader(getApplicationContext());
 
         //throw new RuntimeException("Test Exception!");
+
+        // configure Flurry
+        FlurryAgent.setLogEnabled(true);
+
+        // init Flurry
+        FlurryAgent.init(this, FLURRY_APIKEY);
 
     }
 

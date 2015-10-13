@@ -15,6 +15,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.flurry.android.FlurryAgent;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -221,6 +222,7 @@ public class ParentHomeFragment extends Fragment implements
         switch (id) {
 
             case R.id.message:
+                FlurryAgent.logEvent("see parent message.");
                 startActivity(IntentUtil.startConversationActivity());
                 break;
 
@@ -289,6 +291,7 @@ public class ParentHomeFragment extends Fragment implements
 
     @Override
     public void onDetailClick() {
+        FlurryAgent.logEvent("see sitter detail.");
         startActivityForResult(IntentUtil.startSitterDetailActivity(), 1);
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_stop);
     }

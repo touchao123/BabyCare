@@ -15,6 +15,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.flurry.android.FlurryAgent;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -213,6 +214,8 @@ public class SitterHomeFragment extends Fragment implements
         switch (id) {
 
             case R.id.message:
+                FlurryAgent.logEvent("see sitter message.");
+
                 startActivity(IntentUtil.startConversationActivity());
                 break;
 

@@ -39,8 +39,9 @@ dependencies {
     //compile 'com.android.support:support-v4:22.2.+'
 
     // Google Play Service
-    compile 'com.google.android.gms:play-services-gcm:7.5.0'
-    compile 'com.google.android.gms:play-services-location:7.5.0'
+    compile 'com.google.android.gms:play-services-gcm:8.1.0'
+    compile 'com.google.android.gms:play-services-location:8.1.0'
+    compile 'com.google.android.gms:play-services-analytics:8.1.0'
 
     // Parse
     compile files('libs/Parse-1.8.0.jar')
@@ -49,6 +50,9 @@ dependencies {
 
     // Layer
     compile files('libs/layer-sdk-0.13.2.jar')
+
+    // Flurry
+    compile files('libs/FlurryAnalytics-6.1.0.jar')
 
     // Log
     compile 'org.slf4j:slf4j-api:1.7.12'
