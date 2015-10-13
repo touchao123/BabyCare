@@ -15,6 +15,7 @@ import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter.ViewHolder;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
+import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
 
 public class SitterConfirm implements Confirm {
@@ -23,6 +24,17 @@ public class SitterConfirm implements Confirm {
     public String getParticipatsTitle() {
         String participatsTitle = "爸媽:";
         return participatsTitle;
+    }
+
+    @Override
+    public String getName(String conversationId) {
+        for (BabysitterFavorite favorite : Config.favorites) {
+            if (favorite.getConversationId().equals(conversationId)) {
+                UserInfo parent = favorite.getUserInfo();
+                return parent.getName();
+            }
+        }
+        return "";
     }
 
     @Override
@@ -53,6 +65,7 @@ public class SitterConfirm implements Confirm {
 //            query.whereEqualTo("UserInfo", Config.userInfo);
 //        } else if (AccountChecker.getUserType() == UserType.SITTER) {
         query.whereEqualTo("Babysitter", sitter);
+        query.include("UserInfo");
 //        }
 
         query.findInBackground(new FindCallback<BabysitterFavorite>() {

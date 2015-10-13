@@ -125,7 +125,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
             }
         }
 
-        viewHolder.participants.setText(mConfirm.getParticipatsTitle() + participants);
+        viewHolder.participants.setText(mConfirm.getParticipatsTitle() + mConfirm.getName(conversation.getId().toString()));
 
         //Grab the last message in the conversation and show it in the format "sender: last message content"
         Message message = conversation.getLastMessage();
@@ -180,7 +180,6 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
 
 
     }
-
 
     //This example app only has one kind of view type, but you could support different TYPES of
     // Conversations if you were so inclined

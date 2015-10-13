@@ -12,6 +12,7 @@ import java.util.List;
 
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
+import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
@@ -22,6 +23,17 @@ public class ParentConfirm implements Confirm {
     public String getParticipatsTitle() {
         String participatsTitle = "保母:";
         return participatsTitle;
+    }
+
+    @Override
+    public String getName(String conversationId) {
+        for (BabysitterFavorite favorite : Config.favorites) {
+            if (favorite.getConversationId().equals(conversationId)) {
+                Babysitter sitter = favorite.getBabysitter();
+                return sitter.getName();
+            }
+        }
+        return "";
     }
 
     @Override
@@ -51,7 +63,9 @@ public class ParentConfirm implements Confirm {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
 
 //        if (AccountChecker.getUserType() == PARENT) {
+        // TODO Need to change the flow.
         query.whereEqualTo("UserInfo", parent);
+        query.include("Babysitter");
 ////        } else if (AccountChecker.getUserType() == UserType.SITTER) {
 //        query.whereEqualTo("Babysitter", parent);
 ////        }

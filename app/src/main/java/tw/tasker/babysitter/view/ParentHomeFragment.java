@@ -373,6 +373,7 @@ public class ParentHomeFragment extends Fragment implements
         private static void loadParentsFavoriteData(UserInfo userInfo) {
             ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
             query.whereEqualTo("UserInfo", userInfo);
+            query.include("Babysitter");
             query.findInBackground(new FindCallback<BabysitterFavorite>() {
 
                 @Override

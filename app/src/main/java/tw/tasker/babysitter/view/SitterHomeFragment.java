@@ -286,6 +286,7 @@ public class SitterHomeFragment extends Fragment implements
         private static void loadSitterFavoriteData(Babysitter sitter) {
             ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
             query.whereEqualTo("Babysitter", sitter);
+            query.include("UserInfo");
             query.findInBackground(new FindCallback<BabysitterFavorite>() {
 
                 @Override

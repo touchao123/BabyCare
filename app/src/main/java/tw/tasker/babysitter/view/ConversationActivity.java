@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.layer.sdk.exceptions.LayerException;
 import com.layer.sdk.messaging.Conversation;
 
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
@@ -155,7 +156,21 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
                 ) {
             Intent intent = new Intent(ConversationActivity.this, MessageActivity.class);
             intent.putExtra("conversation-id", conversation.getId());
+
+
+            getSitterInfoWithConversation(conversation.getId().toString());
+
             startActivity(intent);
+        }
+
+    }
+
+    @DebugLog
+    private void getSitterInfoWithConversation(String conversationId) {
+        for (BabysitterFavorite favorite : Config.favorites) {
+            if (favorite.getConversationId().equals(conversationId)) {
+                Config.sitterInfo = favorite.getBabysitter();
+            }
         }
 
     }

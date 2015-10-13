@@ -9,4 +9,6 @@ public interface Confirm {
     void loadStatus(ConversationQueryAdapter.ViewHolder viewHolder);
 
     String getParticipatsTitle();
+
+    String getName(String conversationId);
 }
