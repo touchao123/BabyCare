@@ -26,6 +26,7 @@ import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -373,6 +374,7 @@ public class ParentHomeFragment extends Fragment implements
         private static void loadParentsFavoriteData(UserInfo userInfo) {
             ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
             query.whereEqualTo("UserInfo", userInfo);
+            query.whereEqualTo("isSitterConfirm", true);
             query.include("Babysitter");
             query.findInBackground(new FindCallback<BabysitterFavorite>() {
 
@@ -383,9 +385,25 @@ public class ParentHomeFragment extends Fragment implements
 
                     } else {
                         Config.favorites = favorites;
+
+                        addConversations(favorites.size());
+
+
                     }
                 }
             });
+        }
+
+
+        @DebugLog
+        private static void addConversations(int size) {
+            List<String> conversations = new ArrayList<>();
+
+            for (BabysitterFavorite favorite : Config.favorites) {
+                conversations.add(favorite.getConversationId());
+                Config.conversations = conversations;
+            }
+
         }
 
     }

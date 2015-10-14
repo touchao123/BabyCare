@@ -50,4 +50,5 @@ public class Config {
     public static Babysitter sitterInfo;
     public static UserInfo userInfo;
     public static List<BabysitterFavorite> favorites;
+    public static List<String> conversations;
 }

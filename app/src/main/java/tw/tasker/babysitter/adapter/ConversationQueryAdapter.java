@@ -15,12 +15,14 @@ import com.layer.sdk.LayerClient.DeletionMode;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.SortDescriptor;
 import com.parse.ParseUser;
 
 import java.util.List;
 
+import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.layer.LayerImpl;
@@ -54,6 +56,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
     //Sorts all conversations by last message received (ie, downloaded to the device)
     public ConversationQueryAdapter(Context context, LayerClient client, ConversationClickHandler conversationClickHandler, Callback callback) {
         super(client, Query.builder(Conversation.class)
+                .predicate(new Predicate(Conversation.Property.ID, Predicate.Operator.IN, Config.conversations))
                 .sortDescriptor(new SortDescriptor(Conversation.Property.LAST_MESSAGE_RECEIVED_AT, SortDescriptor.Order.DESCENDING))
                 .build(), callback);
 
