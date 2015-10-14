@@ -44,6 +44,7 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.GetLocation;
 import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.MyLocation;
+import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.ProgressBarUtils;
 
 import static tw.tasker.babysitter.utils.LogUtils.LOGD;
@@ -109,6 +110,15 @@ public class ParentHomeFragment extends Fragment implements
         DisplayUtils.makeToast(getActivity(), "Error: " + parseException.getMessage());
     }
 
+    public void onEvent(UserInfo parent) {
+        ParseHelper.pinParent(parent);
+        ParseHelper.loadParentFavoriteData(parent);
+    }
+
+    public void onEvent(List<BabysitterFavorite> favorites) {
+        ParseHelper.pinFavorites(favorites);
+    }
+
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
@@ -164,8 +174,8 @@ public class ParentHomeFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initLocation();
-        ParentData.load();
-
+        ParseHelper.loadParentsProfileData();
+        //ParentData.load();
     }
 
     private void initLocation() {
@@ -393,7 +403,6 @@ public class ParentHomeFragment extends Fragment implements
                 }
             });
         }
-
 
         @DebugLog
         private static void addConversations(int size) {

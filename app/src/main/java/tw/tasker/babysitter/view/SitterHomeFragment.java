@@ -16,10 +16,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.flurry.android.FlurryAgent;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
@@ -38,6 +35,7 @@ import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
+import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.ProgressBarUtils;
 
 public class SitterHomeFragment extends Fragment implements
@@ -99,6 +97,15 @@ public class SitterHomeFragment extends Fragment implements
 
     public void onEvent(ParseException parseException) {
         DisplayUtils.makeToast(getActivity(), "Error: " + parseException.getMessage());
+    }
+
+    public void onEvent(Babysitter sitter) {
+        ParseHelper.pinSitter(sitter);
+        ParseHelper.loadSitterFavoriteData(sitter);
+    }
+
+    public void onEvent(List<BabysitterFavorite> favorites) {
+        ParseHelper.pinFavorites(favorites);
     }
 
     @Override
@@ -174,7 +181,7 @@ public class SitterHomeFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         doListQuery();
-        SitterData.load();
+        ParseHelper.loadSitterProfileData();
     }
 
     private void doListQuery() {
@@ -258,48 +265,5 @@ public class SitterHomeFragment extends Fragment implements
 
     protected void hideLoading() {
         ProgressBarUtils.hide(getActivity());
-    }
-
-    private static class SitterData {
-        public static void load() {
-            loadSitterProfileData();
-        }
-
-        private static void loadSitterProfileData() {
-            ParseQuery<Babysitter> query = Babysitter.getQuery();
-            query.whereEqualTo("user", ParseUser.getCurrentUser());
-            query.getFirstInBackground(new GetCallback<Babysitter>() {
-
-                @Override
-                public void done(Babysitter sitter, ParseException exception) {
-                    if (sitter == null) {
-                        // DisplayUtils.makeToast(getActivity(), "查不到你的資料!");
-
-                    } else {
-                        Config.sitterInfo = sitter;
-                        loadSitterFavoriteData(sitter);
-                    }
-                }
-            });
-        }
-
-        private static void loadSitterFavoriteData(Babysitter sitter) {
-            ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
-            query.whereEqualTo("Babysitter", sitter);
-            query.include("UserInfo");
-            query.findInBackground(new FindCallback<BabysitterFavorite>() {
-
-                @Override
-                public void done(List<BabysitterFavorite> favorites, ParseException e) {
-                    if (AccountChecker.isNull(favorites)) {
-                        //DisplayUtils.makeToast(this, "查不到你的資料!");
-
-                    } else {
-                        Config.favorites = favorites;
-                    }
-                }
-            });
-        }
-
     }
 }

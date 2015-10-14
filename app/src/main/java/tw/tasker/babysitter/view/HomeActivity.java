@@ -4,12 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.parse.ParseAnalytics;
-import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.utils.AccountChecker;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class HomeActivity extends BaseActivity {
     @Override
@@ -38,15 +37,7 @@ public class HomeActivity extends BaseActivity {
         // mUserInfo.setText("使用者資訊(" + user.getObjectId() + ")："+
         // user.getUsername() );
 
-        addUserToInstallation();
-    }
-
-    private void addUserToInstallation() {
-        if (ParseUser.getCurrentUser() != null) {
-            ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-            installation.put("user", ParseUser.getCurrentUser());
-            installation.saveInBackground();
-        }
+        ParseHelper.addUserToInstallation();
     }
 
     @Override

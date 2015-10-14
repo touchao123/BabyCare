@@ -22,12 +22,12 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 /*
  * ConversationQueryAdapter.java
@@ -55,10 +55,10 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
     //Constructor for the ConversationQueryAdapter
     //Sorts all conversations by last message received (ie, downloaded to the device)
     public ConversationQueryAdapter(Context context, LayerClient client, ConversationClickHandler conversationClickHandler, Callback callback) {
-        super(client, Query.builder(Conversation.class)
-                .predicate(new Predicate(Conversation.Property.ID, Predicate.Operator.IN, Config.conversations))
-                .sortDescriptor(new SortDescriptor(Conversation.Property.LAST_MESSAGE_RECEIVED_AT, SortDescriptor.Order.DESCENDING))
-                .build(), callback);
+        super(client,
+                getQuery()
+
+                , callback);
 
         //Sets the LayoutInflator and Click callback handler
         mInflater = LayoutInflater.from(context);
@@ -78,6 +78,24 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
                 mConfirm = new ParentConfirm();
                 break;
         }
+    }
+
+    private static Query<Conversation> getQuery() {
+        Predicate predicate = new Predicate(
+                Conversation.Property.ID,
+                Predicate.Operator.IN,
+                ParseHelper.findConversations()
+        );
+
+        SortDescriptor sortDescriptor = new SortDescriptor(
+                Conversation.Property.LAST_MESSAGE_RECEIVED_AT,
+                SortDescriptor.Order.DESCENDING
+        );
+
+        return Query.builder(Conversation.class)
+                .predicate(predicate)
+                .sortDescriptor(sortDescriptor)
+                .build();
     }
 
 

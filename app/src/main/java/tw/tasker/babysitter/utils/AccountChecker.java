@@ -2,7 +2,6 @@ package tw.tasker.babysitter.utils;
 
 import android.content.Context;
 
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import tw.tasker.babysitter.R;
@@ -13,14 +12,6 @@ public class AccountChecker {
 
     public static boolean isNull(Object object) {
         if (object == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public static boolean isSuccess(ParseException e) {
-        if (e == null) {
             return true;
         } else {
             return false;

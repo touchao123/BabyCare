@@ -21,6 +21,7 @@ import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class LogInActivity extends BaseActivity implements OnTouchListener,
         OnClickListener, LayerCallbacks {
@@ -110,7 +111,7 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
 
             @Override
             public void done(ParseUser user, ParseException e) {
-                if (AccountChecker.isSuccess(e)) {
+                if (ParseHelper.isSuccess(e)) {
                     logInSuccess();
                 } else {
                     logInFail();

@@ -27,6 +27,7 @@ import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class CreateAccountFragment extends Fragment implements OnClickListener {
 
@@ -143,7 +144,7 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
 
             @Override
             public void done(ParseException e) {
-                if (AccountChecker.isSuccess(e)) {
+                if (ParseHelper.isSuccess(e)) {
                     startActivity(IntentUtil.startDispatchActivity());
                 } else {
                     DisplayUtils.makeToast(getActivity(), "註冊失敗");
