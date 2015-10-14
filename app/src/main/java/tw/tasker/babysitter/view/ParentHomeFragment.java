@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.flurry.android.FlurryAgent;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -26,7 +25,6 @@ import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -357,64 +355,4 @@ public class ParentHomeFragment extends Fragment implements
         }
 
     }
-
-    private static class ParentData {
-        public static void load() {
-            loadParentsProfileData();
-        }
-
-        private static void loadParentsProfileData() {
-            ParseQuery<UserInfo> query = UserInfo.getQuery();
-            query.whereEqualTo("user", ParseUser.getCurrentUser());
-            query.getFirstInBackground(new GetCallback<UserInfo>() {
-
-                @Override
-                public void done(UserInfo userInfo, ParseException exception) {
-                    if (userInfo == null) {
-                        // DisplayUtils.makeToast(getActivity(), "查不到你的資料!");
-
-                    } else {
-                        Config.userInfo = userInfo;
-                        loadParentsFavoriteData(userInfo);
-                    }
-                }
-            });
-        }
-
-        private static void loadParentsFavoriteData(UserInfo userInfo) {
-            ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
-            query.whereEqualTo("UserInfo", userInfo);
-            query.whereEqualTo("isSitterConfirm", true);
-            query.include("Babysitter");
-            query.findInBackground(new FindCallback<BabysitterFavorite>() {
-
-                @Override
-                public void done(List<BabysitterFavorite> favorites, ParseException e) {
-                    if (AccountChecker.isNull(favorites)) {
-                        //DisplayUtils.makeToast(this, "查不到你的資料!");
-
-                    } else {
-                        Config.favorites = favorites;
-
-                        addConversations(favorites.size());
-
-
-                    }
-                }
-            });
-        }
-
-        @DebugLog
-        private static void addConversations(int size) {
-            List<String> conversations = new ArrayList<>();
-
-            for (BabysitterFavorite favorite : Config.favorites) {
-                conversations.add(favorite.getConversationId());
-                Config.conversations = conversations;
-            }
-
-        }
-
-    }
-
 }
