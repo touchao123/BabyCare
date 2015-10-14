@@ -34,10 +34,12 @@ import java.util.Set;
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.adapter.MessageQueryAdapter;
 import tw.tasker.babysitter.adapter.QueryAdapter;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.parse.ParseImpl;
+import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.IntentUtil;
 
 /*
@@ -69,8 +71,7 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
     // is only created when the first message is sent
     private ArrayList<String> mTargetParticipants;
 
-    private Dialog mSitterDialog;
-    private Dialog mParentDialog;
+    private Dialog mInfoDialog;
 
 
     //Grab all the view objects on the message_screen layout when the Activity starts
@@ -99,13 +100,19 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         // the bottom of the view so the latest message is always displayed
         attachKeyboardListeners(mMessagesView);
 
-        mSitterDialog = getSitterDailog();
+
+        UserType userType = AccountChecker.getUserType();
+        if (userType == UserType.PARENT) { // 爸媽，抓保母資料
+            mInfoDialog = getSitterDailog();
+        } else {
+            mInfoDialog = getParentDailog();
+        }
     }
 
     private Dialog getSitterDailog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.activity_message_dialog);
+        dialog.setContentView(R.layout.dialog_message_sitter);
 
         Button ok = (Button) dialog.findViewById(R.id.ok);
         TextView detail = (TextView) dialog.findViewById(R.id.detail);
@@ -141,6 +148,37 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         return dialog;
     }
 
+    private Dialog getParentDailog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_message_parent);
+
+        Button ok = (Button) dialog.findViewById(R.id.ok);
+
+        // adjust dialog width
+        Point size = new Point();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        int width = size.x;
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        //lp.width = (int) (width - (width * 0.07) );
+        lp.width = width;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        //mSignupDialogLogin.setOnClickListener(this);
+
+        return dialog;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -149,7 +187,7 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
 
     @DebugLog
     public void onEvent(Message message) {
-        mSitterDialog.show();
+        mInfoDialog.show();
     }
 
 
