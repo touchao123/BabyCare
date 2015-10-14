@@ -104,15 +104,18 @@ public class ParentHomeFragment extends Fragment implements
         }
     }
 
+    @DebugLog
     public void onEvent(ParseException parseException) {
         DisplayUtils.makeToast(getActivity(), "Error: " + parseException.getMessage());
     }
 
+    @DebugLog
     public void onEvent(UserInfo parent) {
         ParseHelper.pinParent(parent);
         ParseHelper.loadParentFavoriteData(parent);
     }
 
+    @DebugLog
     public void onEvent(List<BabysitterFavorite> favorites) {
         ParseHelper.pinFavorites(favorites);
     }

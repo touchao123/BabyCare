@@ -12,14 +12,11 @@ import android.widget.TextView;
 import com.layer.sdk.exceptions.LayerException;
 import com.layer.sdk.messaging.Conversation;
 
-import hugo.weaving.DebugLog;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
 import tw.tasker.babysitter.adapter.QueryAdapter;
 import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
-import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.LogUtils;
@@ -151,42 +148,12 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
     @Override
     public void onConversationClick(Conversation conversation) {
         //If the Conversation is valid, start the MessageActivity and pass in the Conversation ID
-        if (conversation != null && conversation.getId() != null && !conversation.isDeleted()
-                && isConfirmBothParentAndSitter(conversation.getId().toString())
-                ) {
+        if (conversation != null && conversation.getId() != null && !conversation.isDeleted()) {
             Intent intent = new Intent(ConversationActivity.this, MessageActivity.class);
             intent.putExtra("conversation-id", conversation.getId());
 
-
-            getSitterInfoWithConversation(conversation.getId().toString());
-
             startActivity(intent);
         }
-
-    }
-
-    @DebugLog
-    private void getSitterInfoWithConversation(String conversationId) {
-        for (BabysitterFavorite favorite : Config.favorites) {
-            if (favorite.getConversationId().equals(conversationId)) {
-                Config.sitterInfo = favorite.getBabysitter();
-            }
-        }
-
-    }
-
-
-    private boolean isConfirmBothParentAndSitter(String conversationId) {
-        for (BabysitterFavorite favorite : Config.favorites) {
-//			/String favoriteUserId = favorite.getUser().getObjectId();
-            String favoriteConversationId = favorite.getConversationId();
-
-            if (favoriteConversationId.equals(conversationId) &&
-                    favorite.getIsParentConfirm() && favorite.getIsSitterConfirm()) {
-                return true;
-            }
-        }
-        return false;
 
     }
 

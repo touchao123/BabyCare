@@ -72,7 +72,7 @@ public class MyApplication extends Application {
         if (isRelease())
             ParseCrashReporting.enable(this);
 
-        //Parse.enableLocalDatastore(this);
+        Parse.enableLocalDatastore(this);
         Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
 
         enablePushNotifications();

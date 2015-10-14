@@ -55,10 +55,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
     //Constructor for the ConversationQueryAdapter
     //Sorts all conversations by last message received (ie, downloaded to the device)
     public ConversationQueryAdapter(Context context, LayerClient client, ConversationClickHandler conversationClickHandler, Callback callback) {
-        super(client,
-                getQuery()
-
-                , callback);
+        super(client, getQuery(), callback);
 
         //Sets the LayoutInflator and Click callback handler
         mInflater = LayoutInflater.from(context);
@@ -127,9 +124,12 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
 
         Log.d("Activity", "binding conversation: " + conversation.getId() + " with participants: " + conversation.getParticipants().toString());
 
+        //viewHolder.favorite = ParseHelper.getFavorite(conversation.getId().toString());
+
         //Set the Conversation (so when this item is clicked, we can start a ConversationActivity and
         // show all the messages associated with it)
         viewHolder.conversation = conversation;
+        mConfirm.loadStatus(viewHolder);
 
         //Go through all the User IDs in the Conversation and find the matching human readable
         // handles from Parse
@@ -146,7 +146,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
             }
         }
 
-        viewHolder.participants.setText(mConfirm.getParticipatsTitle() + mConfirm.getName(conversation.getId().toString()));
+        viewHolder.participants.setText(mConfirm.getParticipatsTitle() + mConfirm.getName());
 
         //Grab the last message in the conversation and show it in the format "sender: last message content"
         Message message = conversation.getLastMessage();
@@ -197,9 +197,6 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
 //			viewHolder.cancel.setVisibility(View.VISIBLE);
 //		}
 
-        mConfirm.loadStatus(viewHolder);
-
-
     }
 
     //This example app only has one kind of view type, but you could support different TYPES of
@@ -231,6 +228,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
         public Conversation conversation;
         public Button match;
         public Button cancel;
+        //public BabysitterFavorite favorite;
 
         //Registers the click listener callback handler
         public ViewHolder(View itemView, ConversationClickHandler conversationClickHandler) {

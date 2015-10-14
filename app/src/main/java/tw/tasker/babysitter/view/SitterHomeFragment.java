@@ -24,6 +24,7 @@ import com.parse.ParseUser;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.adapter.ParentsParseQueryAdapter;
@@ -99,11 +100,13 @@ public class SitterHomeFragment extends Fragment implements
         DisplayUtils.makeToast(getActivity(), "Error: " + parseException.getMessage());
     }
 
+    @DebugLog
     public void onEvent(Babysitter sitter) {
         ParseHelper.pinSitter(sitter);
         ParseHelper.loadSitterFavoriteData(sitter);
     }
 
+    @DebugLog
     public void onEvent(List<BabysitterFavorite> favorites) {
         ParseHelper.pinFavorites(favorites);
     }

@@ -14,7 +14,6 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
@@ -46,13 +45,8 @@ public class ParseHelper {
             public void done(Babysitter sitter, ParseException parseException) {
                 if (isSuccess(parseException)) {
                     EventBus.getDefault().post(sitter);
-
-                    // Config.sitterInfo = sitter;
-                    // loadSitterFavoriteData(sitter);
-
                 } else {
                     EventBus.getDefault().post(parseException);
-                    // DisplayUtils.makeToast(getActivity(), "查不到你的資料!");
                 }
             }
         });
@@ -82,10 +76,8 @@ public class ParseHelper {
             public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
                 if (isSuccess(parseException)) {
                     EventBus.getDefault().post(favorites);
-                    //Config.favorites = favorites;
                 } else {
                     EventBus.getDefault().post(parseException);
-                    //DisplayUtils.makeToast(this, "查不到你的資料!");
                 }
             }
         });
@@ -101,11 +93,8 @@ public class ParseHelper {
             public void done(UserInfo parent, ParseException parseException) {
                 if (isSuccess(parseException)) {
                     EventBus.getDefault().post(parent);
-                    //Config.userInfo = userInfo;
-                    //loadParentFavoriteData(userInfo);
                 } else {
                     EventBus.getDefault().post(parseException);
-                    // DisplayUtils.makeToast(getActivity(), "查不到你的資料!");
                 }
             }
         });
@@ -138,9 +127,6 @@ public class ParseHelper {
                     EventBus.getDefault().post(favorites);
                 } else {
                     EventBus.getDefault().post(favorites);
-                    //Config.favorites = favorites;
-                    //addConversations(favorites.size());
-                    //DisplayUtils.makeToast(this, "查不到你的資料!");
                 }
             }
         });
@@ -152,26 +138,21 @@ public class ParseHelper {
 
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.fromLocalDatastore();
-        query.findInBackground(new FindCallback<BabysitterFavorite>() {
-            @Override
-            public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
-                if (isSuccess(parseException)) {
 
-                    for (BabysitterFavorite favorite : Config.favorites) {
-                        conversations.add(favorite.getConversationId());
-                        //Config.conversations = conversations;
-                    }
-
-                } else {
-                    EventBus.getDefault().post(parseException);
-                }
+        try {
+            List<BabysitterFavorite> favorites = query.find();
+            for (BabysitterFavorite favorite : favorites) {
+                conversations.add(favorite.getConversationId());
             }
-        });
+
+        } catch (ParseException parseException) {
+
+        }
 
         return conversations;
     }
 
-
+    @DebugLog
     public static void pinFavorites(List<BabysitterFavorite> favorites) {
         ParseObject.pinAllInBackground(favorites, new SaveCallback() {
             @Override
