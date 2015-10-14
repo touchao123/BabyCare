@@ -30,5 +30,6 @@
 
     <!-- Content descriptions -->
     <string name="descr_image">圖片</string>
+    <string name="ok">確定</string>
 
 </resources>

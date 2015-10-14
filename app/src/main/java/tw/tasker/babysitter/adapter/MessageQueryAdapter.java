@@ -16,6 +16,7 @@ import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.SortDescriptor;
 
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.layer.LayerImpl;
@@ -52,10 +53,7 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
     //Sorts all messages belonging to this conversation by its position. This will guarantee all
     // messages will appear "in order"
     public MessageQueryAdapter(Context context, LayerClient client, ViewGroup recyclerView, Conversation conversation, MessageClickHandler messageClickHandler, Callback callback) {
-        super(client, Query.builder(Message.class)
-                .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO, conversation))
-                .sortDescriptor(new SortDescriptor(Message.Property.POSITION, SortDescriptor.Order.ASCENDING))
-                .build(), callback);
+        super(client, getQuery(conversation), callback);
 
         //Sets the LayoutInflator, Click callback handler, and the view parent
         mInflater = LayoutInflater.from(context);
@@ -64,6 +62,13 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
 
         mLeftColor = context.getResources().getColor(R.color.gray_light);
         mRightColor = context.getResources().getColor(R.color.primary_dark);
+    }
+
+    private static Query<Message> getQuery(Conversation conversation) {
+        return Query.builder(Message.class)
+                .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO, conversation))
+                .sortDescriptor(new SortDescriptor(Message.Property.POSITION, SortDescriptor.Order.ASCENDING))
+                .build();
     }
 
     //When a Message is added to this conversation, a new ViewHolder is created
@@ -88,7 +93,7 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
     }
 
     //After the ViewHolder is created, we need to populate the fields with information from the Message
-    public void onBindViewHolder(ViewHolder viewHolder, Message message) {
+    public void onBindViewHolder(ViewHolder viewHolder, final Message message) {
         if (message == null) {
             // If the item no longer exists, the ID probably migrated.
             refresh();
@@ -120,6 +125,13 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
             viewHolder.timeRight.setVisibility(View.VISIBLE);
 
             viewHolder.avatar.setVisibility(View.VISIBLE);
+
+            viewHolder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EventBus.getDefault().post(message);
+                }
+            });
         } else {
             params.gravity = Gravity.RIGHT;
 
@@ -141,9 +153,9 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
     }
 
     public static interface MessageClickHandler {
-        public void onMessageClick(Message message);
+        void onMessageClick(Message message);
 
-        public boolean onMessageLongClick(Message message);
+        boolean onMessageLongClick(Message message);
     }
 
     //For each Message item in the RecyclerView list, we show the sender, time, and contents of the
