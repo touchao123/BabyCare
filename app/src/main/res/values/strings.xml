@@ -12,14 +12,6 @@
     <string name="prompt_password_again">請再輸入一次您的密碼</string>
     <string name="action_sign_in_short">登入</string>
 
-    <!-- Error messages -->
-    <string name="error_intro">"請 "</string>
-    <string name="error_blank_username">輸入帳號</string>
-    <string name="error_blank_password">輸入密碼</string>
-    <string name="error_mismatched_passwords">再輸入一次密碼</string>
-    <string name="error_join">", 並 "</string>
-    <string name="error_end">.</string>
-
     <!-- Sitter list  -->
     <string name="contact">媒合保母</string>
     <string name="contact_sent">已傳送媒合邀請</string>
@@ -30,6 +22,23 @@
 
     <!-- Content descriptions -->
     <string name="descr_image">圖片</string>
-    <string name="ok">確定</string>
+
+    <!-- Dialog -->
+    <string name="remind_you">提醒您</string>
+    <string name="please_wait">登入中，請稍等...</string>
+    <string name="agree">確定</string>
+
+    <!-- Error messages -->
+    <string name="error_intro">"請 "</string>
+    <string name="error_blank_username">輸入帳號</string>
+    <string name="error_blank_password">輸入密碼</string>
+    <string name="error_mismatched_passwords">再輸入一次密碼</string>
+    <string name="error_join">"， 並 "</string>
+    <string name="error_end">。</string>
+
+    <string name="error_no_network">網路連線不通，請確認網路狀態或稍後再試。</string>
+    <string name="error_account_or_password_wrong">帳號或密碼錯誤，請重新確認後再試。</string>
+    <string name="cancel">取消</string>
+
 
 </resources>

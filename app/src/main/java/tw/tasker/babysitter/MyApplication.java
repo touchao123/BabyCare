@@ -27,6 +27,11 @@ import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.LogUtils;
 
 public class MyApplication extends Application {
+    // BabyCareTest
+    private static final String APPLICATION_ID_TEST = "sw3a8bDWAD49U1PL3GMMMxq8eYzI3m1Qi43OPLuo";
+    private static final String CLIENT_KEY_TEST = "gUDCDLLuLQu4c9YtuPpVwPuOIECw9m2LUnj3Af8H";
+
+    // BabyCare
     private static final String APPLICATION_ID = "NJFvH3uzP9EHAKydw7iSIICBBU4AfAHvhJzuTawu";
     private static final String CLIENT_KEY = "FOwFRZ8hqGZ4NdZflfeLINvBQehNXOlihdEKnwTU";
     private static final String FLURRY_APIKEY = "7BKXKHQVR8TSF65XCV6N";
@@ -73,7 +78,12 @@ public class MyApplication extends Application {
             ParseCrashReporting.enable(this);
 
         Parse.enableLocalDatastore(this);
-        Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
+
+        if (isRelease()) {
+            Parse.initialize(this, APPLICATION_ID, CLIENT_KEY);
+        } else {
+            Parse.initialize(this, APPLICATION_ID_TEST, CLIENT_KEY_TEST);
+        }
 
         enablePushNotifications();
 

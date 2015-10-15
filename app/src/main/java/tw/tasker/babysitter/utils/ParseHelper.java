@@ -2,6 +2,7 @@ package tw.tasker.babysitter.utils;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
@@ -52,6 +53,7 @@ public class ParseHelper {
         });
 
     }
+
 
     public static void pinSitter(Babysitter sitter) {
         sitter.pinInBackground(new SaveCallback() {
@@ -166,5 +168,19 @@ public class ParseHelper {
         });
     }
 
+    public static void runLogin(String account, String password) {
+        ParseUser.logInInBackground(account, password, new LogInCallback() {
+
+            @Override
+            public void done(ParseUser user, ParseException parseException) {
+                if (ParseHelper.isSuccess(parseException)) {
+                    EventBus.getDefault().post(user);
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+
+    }
 }
 

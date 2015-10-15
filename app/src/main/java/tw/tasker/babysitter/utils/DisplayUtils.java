@@ -9,9 +9,12 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import org.json.JSONException;
@@ -162,6 +165,7 @@ public class DisplayUtils {
     public static int getPositionFromYear(Context context) {
 
         String currentYear = Config.userInfo.getKidsAge();
+
         if (!currentYear.isEmpty()) {
             currentYear = Config.userInfo.getKidsAge().substring(0, 3);
 
@@ -195,4 +199,53 @@ public class DisplayUtils {
         return position;
     }
 
+    public static int getPositionFromNowYear(Context context) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        String currentYear = String.valueOf((calendar.get(Calendar.YEAR) - 1911));
+        String[] months = context.getResources().getStringArray(R.array.kids_age_year);
+        int position = Arrays.asList(months).indexOf(currentYear);
+
+        return position;
+    }
+
+
+    public static int getPositionFromNowMonth(Context context) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM");
+        String currentMonth = simpleDateFormat.format(calendar.getTime());
+        String[] months = context.getResources().getStringArray(R.array.kids_age_month);
+        int position = Arrays.asList(months).indexOf(currentMonth);
+
+        return position;
+    }
+
+    public static String getErrorMessage(Context context, ParseException parseException) {
+        String errorMessage;
+        switch (parseException.getCode()) {
+            case 100:
+                errorMessage = context.getString(R.string.error_no_network);
+                break;
+
+            case 101:
+                errorMessage = context.getString(R.string.error_account_or_password_wrong);
+                break;
+
+            default:
+                errorMessage =  parseException.getMessage() + "(" +parseException.getCode() + ")";
+                break;
+        }
+
+        return errorMessage;
+    }
+
+    public static MaterialDialog getMaterialProgressDialog(Context context) {
+        return new MaterialDialog.Builder(context)
+                .title(R.string.remind_you)
+                .content(R.string.please_wait)
+                .progress(true, 0)
+                .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
+                .build();
+
+    }
 }

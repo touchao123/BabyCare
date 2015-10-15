@@ -9,11 +9,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.layer.sdk.exceptions.LayerException;
-import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import de.greenrobot.event.EventBus;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
@@ -34,6 +36,7 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
     private Button mLogIn;
     private Button mLater;
     private Button mSignUp;
+    private MaterialDialog mMaterialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
         mSignUp = (Button) findViewById(R.id.sign_up);
         mLater = (Button) findViewById(R.id.later);
 
+        mMaterialDialog = DisplayUtils.getMaterialProgressDialog(this);
     }
 
     private void initListener() {
@@ -62,6 +66,17 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
         mLater.setOnClickListener(this);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     @Override
     public void onClick(View v) {
@@ -87,7 +102,8 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
                     return;
                 }
 
-                runLogin();
+                mMaterialDialog.show();
+                ParseHelper.runLogin(account, password);
                 break;
 
             case R.id.all_screen:
@@ -99,39 +115,23 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
         }
     }
 
-    private void runLogin() {
+    public void onEvent(ParseUser user) {
 
-        showDialog("登入中", "請稍候...");
-
-        String userName = mAccount.getText().toString();
-        String password = mPassword.getText().toString();
-
-        // Call the Parse login method
-        ParseUser.logInInBackground(userName, password, new LogInCallback() {
-
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (ParseHelper.isSuccess(e)) {
-                    logInSuccess();
-                } else {
-                    logInFail();
-                }
-            }
-        });
-    }
-
-    private void logInSuccess() {
         if (LayerImpl.isAuthenticated()) {
             onUserAuthenticated(ParseImpl.getRegisteredUser().getObjectId());
         } else {
             LayerImpl.authenticateUser();
         }
+
+        mMaterialDialog.dismiss();
     }
 
-    private void logInFail() {
-        DisplayUtils.makeToast(this, "登入錯誤!");
+    @DebugLog
+    public void onEvent(ParseException parseException) {
+        mMaterialDialog.dismiss();
+        String errorMessage = DisplayUtils.getErrorMessage(this, parseException);
+        DisplayUtils.makeToast(this, errorMessage);
     }
-
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -160,7 +160,6 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
 
     @Override
     public void onUserAuthenticated(String id) {
-        hideDialog();
         startActivity(IntentUtil.startDispatchActivity());
     }
 
