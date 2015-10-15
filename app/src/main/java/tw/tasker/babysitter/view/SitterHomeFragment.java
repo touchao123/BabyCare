@@ -97,7 +97,8 @@ public class SitterHomeFragment extends Fragment implements
     }
 
     public void onEvent(ParseException parseException) {
-        DisplayUtils.makeToast(getActivity(), "Error: " + parseException.getMessage());
+        String errorMessage = DisplayUtils.getErrorMessage(getActivity(), parseException);
+        DisplayUtils.makeToast(getActivity(), errorMessage);
     }
 
     @DebugLog

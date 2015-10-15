@@ -106,7 +106,8 @@ public class ParentHomeFragment extends Fragment implements
 
     @DebugLog
     public void onEvent(ParseException parseException) {
-        DisplayUtils.makeToast(getActivity(), "Error: " + parseException.getMessage());
+        String errorMessage = DisplayUtils.getErrorMessage(getActivity(), parseException);
+        DisplayUtils.makeToast(getActivity(), errorMessage);
     }
 
     @DebugLog
