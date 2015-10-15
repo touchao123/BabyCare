@@ -24,9 +24,11 @@
     <string name="descr_image">圖片</string>
 
     <!-- Dialog -->
-    <string name="remind_you">提醒您</string>
-    <string name="please_wait">登入中，請稍等...</string>
-    <string name="agree">確定</string>
+    <string name="dialog_remind_you">提醒您</string>
+    <string name="dialog_agree">確定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_login_please_wait">登入中，請稍等...</string>
+    <string name="dialog_signup_please_wait">註冊中，請稍等...</string>
 
     <!-- Error messages -->
     <string name="error_intro">"請 "</string>
@@ -38,7 +40,7 @@
 
     <string name="error_no_network">網路連線不通，請確認網路狀態或稍後再試。</string>
     <string name="error_account_or_password_wrong">帳號或密碼錯誤，請重新確認後再試。</string>
-    <string name="cancel">取消</string>
+    <string name="error_signup_account_already_taken">此帳號已經存在，請重新命名。</string>
 
 
 </resources>

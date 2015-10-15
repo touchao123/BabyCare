@@ -11,6 +11,8 @@ public class HomeEvent {
     public static final int ACTION_TOGGLE_KEYPAD = 4;
     public static final int ACTION_PUSH = 5;
     public static final int ACTION_SEND = 6;
+    public static final int ACTION_SIGNUP_DONE = 7;
+    public static final int ACTION_ADD_USER_INFO_DOEN = 8;
     private int mAction;
 
     public HomeEvent(int action) {
@@ -50,6 +52,12 @@ public class HomeEvent {
                 break;
             case ACTION_SEND:
                 actionName = "ACTION_SEND";
+                break;
+            case ACTION_SIGNUP_DONE:
+                actionName = "ACTION_SIGNUP_DONE";
+                break;
+            case ACTION_ADD_USER_INFO_DOEN:
+                actionName = "ACTION_ADD_USER_INFO_DOEN";
                 break;
             default:
                 actionName = "Please add action [" + mAction + "] name.";

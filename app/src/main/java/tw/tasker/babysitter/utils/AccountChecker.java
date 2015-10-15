@@ -47,13 +47,17 @@ public class AccountChecker {
     }
 
     public static boolean isSitter() {
-        String userType = ParseUser.getCurrentUser().getString("userType");
-        LogUtils.LOGD("userType", userType);
-        if (userType.equals("sitter")) {
-            return true;
-        } else {
+        try {
+            String userType = ParseUser.getCurrentUser().getString("userType");
+            if (userType.equals("sitter")) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) { // Default parent if userType is null.
             return false;
         }
+
     }
 
     public static void logout() {

@@ -56,7 +56,7 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
         mSignUp = (Button) findViewById(R.id.sign_up);
         mLater = (Button) findViewById(R.id.later);
 
-        mMaterialDialog = DisplayUtils.getMaterialProgressDialog(this);
+        mMaterialDialog = DisplayUtils.getMaterialProgressDialog(this, R.string.dialog_login_please_wait);
     }
 
     private void initListener() {

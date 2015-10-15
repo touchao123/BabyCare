@@ -9,6 +9,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
+import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 
 public class ParseHelper {
@@ -182,5 +184,40 @@ public class ParseHelper {
         });
 
     }
+
+    public static void doSignUpParent(String account, String password) {
+        ParseUser user = new ParseUser();
+        user.setUsername(account);
+        user.setPassword(account);
+        user.put("userType", "parent");
+
+        user.signUpInBackground(new SignUpCallback() {
+
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_SIGNUP_DONE));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
+
+    public static void addUserInfo(UserInfo userInfo) {
+
+        userInfo.saveInBackground(new SaveCallback() {
+
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_ADD_USER_INFO_DOEN));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
+
 }
 

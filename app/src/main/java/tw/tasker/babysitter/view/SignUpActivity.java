@@ -1,6 +1,5 @@
 package tw.tasker.babysitter.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -78,8 +77,6 @@ public class SignUpActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        String uri = "";
-        Intent intent;
 
         switch (id) {
             case android.R.id.home:

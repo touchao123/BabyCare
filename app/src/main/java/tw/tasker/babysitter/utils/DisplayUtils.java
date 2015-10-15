@@ -231,6 +231,10 @@ public class DisplayUtils {
                 errorMessage = context.getString(R.string.error_account_or_password_wrong);
                 break;
 
+            case 202:
+                errorMessage = context.getString(R.string.error_signup_account_already_taken);
+                break;
+
             default:
                 errorMessage =  parseException.getMessage() + "(" +parseException.getCode() + ")";
                 break;
@@ -239,10 +243,10 @@ public class DisplayUtils {
         return errorMessage;
     }
 
-    public static MaterialDialog getMaterialProgressDialog(Context context) {
+    public static MaterialDialog getMaterialProgressDialog(Context context, int content) {
         return new MaterialDialog.Builder(context)
-                .title(R.string.remind_you)
-                .content(R.string.please_wait)
+                .title(R.string.dialog_remind_you)
+                .content(content)
                 .progress(true, 0)
                 .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
                 .build();
