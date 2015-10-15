@@ -112,13 +112,13 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
                 R.array.kids_age_year, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeYear.setAdapter(adapter);
-        mKidsAgeYear.setSelection(DisplayUtils.getPositionFromYear(getActivity()));
+        mKidsAgeYear.setSelection(DisplayUtils.getPositionFromNowYear(getActivity()));
 
         adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.kids_age_month, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeMonth.setAdapter(adapter);
-        mKidsAgeMonth.setSelection(DisplayUtils.getPositionFromMonth(getActivity()));
+        mKidsAgeMonth.setSelection(DisplayUtils.getPositionFromNowMonth(getActivity()));
 
         if (BuildConfig.DEBUG)
             loadTestData();
