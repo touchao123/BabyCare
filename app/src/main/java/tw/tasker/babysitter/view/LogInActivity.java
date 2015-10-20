@@ -123,7 +123,6 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
             LayerImpl.authenticateUser();
         }
 
-        mMaterialDialog.dismiss();
     }
 
     @DebugLog
@@ -160,6 +159,7 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
 
     @Override
     public void onUserAuthenticated(String id) {
+        mMaterialDialog.dismiss();
         startActivity(IntentUtil.startDispatchActivity());
     }
 
