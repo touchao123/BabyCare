@@ -59,7 +59,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
                 ParseQuery<Babysitter> query = Babysitter.getQuery();
 
-                query.whereEqualTo("skillNumber", "154-056893");
+                //query.whereEqualTo("skillNumber", "154-056893");
 
                 boolean mDayTime = sharedPreferences.getBoolean("mDayTime", false);
                 if (mDayTime) {
@@ -169,7 +169,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
         }
 
         initView(rootView);
-        //initData(babysitter);
+        initData(babysitter);
         initListener(babysitter);
 
         return rootView;
@@ -201,7 +201,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     private void initData(Babysitter babysitter) {
         loadOldAvator(babysitter);
         mName.setText(babysitter.getName());
-        mBabysitterNumber.setText("保母證號：" + babysitter.getSkillNumber());
+        //mBabysitterNumber.setText("保母證號：" + babysitter.getSkillNumber());
         mAge.setText("(" + babysitter.getAge() + ")");
         mEducation.setText("教育程度：" + babysitter.getEducation());
         mAddress.setText(babysitter.getAddress());
@@ -214,9 +214,9 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
         SpannableString content = new SpannableString(babysitter.getCommunityName());
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        mCommunityName.setText(content);
+        //mCommunityName.setText(content);
 
-        initContactStatus(babysitter);
+        //initContactStatus(babysitter);
     }
 
 
