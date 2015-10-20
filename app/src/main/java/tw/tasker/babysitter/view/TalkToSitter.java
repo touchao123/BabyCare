@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
@@ -25,6 +24,7 @@ import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 class TalkToSitter {
     // private ParentHomeFragment parentHomeFragment;
@@ -114,7 +114,7 @@ class TalkToSitter {
 
     private void addFavorite(String sitterObjectId) {
         Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, sitterObjectId);
-        UserInfo userInfo = ParseObject.createWithoutData(UserInfo.class, Config.userInfo.getObjectId());
+        UserInfo userInfo = ParseObject.createWithoutData(UserInfo.class, ParseHelper.getParent().getObjectId());
 
         BabysitterFavorite babysitterfavorite = new BabysitterFavorite();
 

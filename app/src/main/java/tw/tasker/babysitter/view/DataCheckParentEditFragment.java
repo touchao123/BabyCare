@@ -27,16 +27,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.PictureHelper;
 
 public class DataCheckParentEditFragment extends Fragment implements OnClickListener {
@@ -116,43 +113,6 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
         mConfirm = (Button) mRootView.findViewById(R.id.confirm);
     }
 
-    private int getPositionFromYear() {
-
-        String currentYear = Config.userInfo.getKidsAge();
-        if (!currentYear.isEmpty()) {
-            currentYear = Config.userInfo.getKidsAge().substring(0, 3);
-
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-            currentYear = String.valueOf((calendar.get(Calendar.YEAR) - 1911));
-        }
-
-        String[] months = getResources().getStringArray(R.array.kids_age_year);
-        int position = Arrays.asList(months).indexOf(currentYear);
-
-        LogUtils.LOGD("vic", "year: " + position);
-        return position;
-    }
-
-    private int getPositionFromMonth() {
-
-        String currentMonth = Config.userInfo.getKidsAge();
-        if (!currentMonth.isEmpty()) {
-            currentMonth = Config.userInfo.getKidsAge().substring(3, 5);
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM");
-            currentMonth = simpleDateFormat.format(calendar.getTime());
-        }
-
-        String[] months = getResources().getStringArray(R.array.kids_age_month);
-        int position = Arrays.asList(months).indexOf(currentMonth);
-
-        //LogUtils.LOGD("vic", "month: " + position);
-        return position;
-    }
-
 
     protected void initData() {
 
@@ -160,14 +120,14 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
                 R.array.kids_age_year, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeYear.setAdapter(adapter);
-        mKidsAgeYear.setSelection(getPositionFromYear());
+        mKidsAgeYear.setSelection(DisplayUtils.getPositionFromYear(getActivity()));
 
 
         adapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.kids_age_month, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mKidsAgeMonth.setAdapter(adapter);
-        mKidsAgeMonth.setSelection(getPositionFromMonth());
+        mKidsAgeMonth.setSelection(DisplayUtils.getPositionFromMonth(getActivity()));
 
     }
 
@@ -176,7 +136,7 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        fillDataToUI(Config.userInfo);
+        fillDataToUI(ParseHelper.getParent());
 
     }
 
@@ -353,7 +313,7 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
             if (e == null) {
                 Toast.makeText(getActivity().getApplicationContext(),
                         "大頭照已上傳..", Toast.LENGTH_SHORT).show();
-                saveComment(Config.userInfo);
+                saveComment(ParseHelper.getParent());
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error saving: " + e.getMessage(),

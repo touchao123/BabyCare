@@ -11,7 +11,6 @@ import java.util.List;
 
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
-import tw.tasker.babysitter.model.UserInfo;
 
 public class Config {
     public static final String BABYSITTER_OBJECT_ID = "babysitterObjectId";
@@ -48,7 +47,7 @@ public class Config {
     // if we can't get the user location.
     public static ParseGeoPoint MY_LOCATION = new ParseGeoPoint(LAT, LNG);
     public static Babysitter sitterInfo;
-    public static UserInfo userInfo;
+    //public static UserInfo userInfo;
     public static List<BabysitterFavorite> favorites;
     public static List<String> conversations;
 }

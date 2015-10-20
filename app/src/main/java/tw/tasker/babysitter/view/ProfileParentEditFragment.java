@@ -34,6 +34,7 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.PictureHelper;
 
 public class ProfileParentEditFragment extends Fragment implements OnClickListener {
@@ -133,7 +134,7 @@ public class ProfileParentEditFragment extends Fragment implements OnClickListen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        fillDataToUI(Config.userInfo);
+        fillDataToUI(ParseHelper.getParent());
     }
 
     protected void fillDataToUI(UserInfo userInfo) {
@@ -170,7 +171,7 @@ public class ProfileParentEditFragment extends Fragment implements OnClickListen
                 break;
 
             case R.id.confirm:
-                saveUserInfo(Config.userInfo);
+                saveUserInfo(ParseHelper.getParent());
 
             default:
                 break;
@@ -308,7 +309,7 @@ public class ProfileParentEditFragment extends Fragment implements OnClickListen
             if (e == null) {
                 Toast.makeText(getActivity().getApplicationContext(),
                         "大頭照已上傳..", Toast.LENGTH_SHORT).show();
-                saveComment(Config.userInfo);
+                saveComment(ParseHelper.getParent());
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Error saving: " + e.getMessage(),

@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.List;
 
 import hugo.weaving.DebugLog;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.view.ListDialogFragment;
 
@@ -164,10 +163,10 @@ public class DisplayUtils {
     @DebugLog
     public static int getPositionFromYear(Context context) {
 
-        String currentYear = Config.userInfo.getKidsAge();
+        String currentYear = ParseHelper.getParent().getKidsAge();
 
         if (!currentYear.isEmpty()) {
-            currentYear = Config.userInfo.getKidsAge().substring(0, 3);
+            currentYear = ParseHelper.getParent().getKidsAge().substring(0, 3);
 
         } else {
             Calendar calendar = Calendar.getInstance();
@@ -184,9 +183,9 @@ public class DisplayUtils {
     @DebugLog
     public static int getPositionFromMonth(Context context) {
 
-        String currentMonth = Config.userInfo.getKidsAge();
+        String currentMonth = ParseHelper.getParent().getKidsAge();
         if (!currentMonth.isEmpty()) {
-            currentMonth = Config.userInfo.getKidsAge().substring(3, 5);
+            currentMonth = ParseHelper.getParent().getKidsAge().substring(3, 5);
         } else {
             Calendar calendar = Calendar.getInstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM");

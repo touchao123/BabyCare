@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
@@ -26,6 +25,7 @@ import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class TalkToParent {
     // message
@@ -114,7 +114,7 @@ public class TalkToParent {
 
     private void addFavorite(String parentObjectId) {
 
-        Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, Config.sitterInfo.getObjectId());
+        Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, ParseHelper.getParent().getObjectId());
         UserInfo userInfo = ParseObject.createWithoutData(UserInfo.class, parentObjectId);
 
         BabysitterFavorite babysitterfavorite = new BabysitterFavorite();
