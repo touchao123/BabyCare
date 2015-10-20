@@ -118,6 +118,21 @@ public class ParseHelper {
 
     }
 
+    public static UserInfo getParent() {
+        UserInfo parent = new UserInfo();
+
+        ParseQuery<UserInfo> query = UserInfo.getQuery();
+        query.fromLocalDatastore();
+
+        try {
+            return query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return parent;
+    }
+
     public static void loadParentFavoriteData(UserInfo parent) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.whereEqualTo("UserInfo", parent);
