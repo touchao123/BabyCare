@@ -18,6 +18,10 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.utils.IntentUtil;
 
 public class SignUpActivity extends BaseActivity {
+    public static final int STEP_CREATE_ACCOUNT = 0;
+    public static final int STEP_CHANGE_PHONE = 1;
+    public static final int STEP_VERIFY_CODE = -1;
+
     private PagerSlidingTabStrip tabs;
     private ViewPager pager;
     private MyPagerAdapter adapter;
@@ -157,30 +161,30 @@ public class SignUpActivity extends BaseActivity {
 
         @Override
         public int getItemPosition(Object object) {
-            if (object instanceof SyncDataFragment
-                    && mFragmentAtPos1 instanceof VerifyCodeFragment) {
-                return POSITION_NONE;
-            }
+//            if (object instanceof SyncDataFragment
+//                    && mFragmentAtPos1 instanceof VerifyCodeFragment) {
+//                return POSITION_NONE;
+//            }
 
-            if (object instanceof SyncDataFragment
-                    && mFragmentAtPos1 instanceof ChangePhoneFragment) {
-                return POSITION_NONE;
-            }
+//            if (object instanceof SyncDataFragment
+//                    && mFragmentAtPos1 instanceof ChangePhoneFragment) {
+//                return POSITION_NONE;
+//            }
 
             if (object instanceof SyncDataFragment
                     && mFragmentAtPos1 instanceof CreateAccountFragment) {
                 return POSITION_NONE;
             }
 
-            if (object instanceof VerifyCodeFragment
-                    && mFragmentAtPos1 instanceof CreateAccountFragment) {
-                return POSITION_NONE;
-            }
+//            if (object instanceof VerifyCodeFragment
+//                    && mFragmentAtPos1 instanceof CreateAccountFragment) {
+//                return POSITION_NONE;
+//            }
 
-            if (object instanceof VerifyCodeFragment
-                    && mFragmentAtPos1 instanceof ChangePhoneFragment) {
-                return POSITION_NONE;
-            }
+//            if (object instanceof VerifyCodeFragment
+//                    && mFragmentAtPos1 instanceof ChangePhoneFragment) {
+//                return POSITION_NONE;
+//            }
 
             return POSITION_UNCHANGED;
         }
@@ -191,19 +195,19 @@ public class SignUpActivity extends BaseActivity {
                         .commit();
 
                 if (mFragmentAtPos1 instanceof SyncDataFragment) { // Page2
-                    if (type == -1)
-                        mFragmentAtPos1 = VerifyCodeFragment.newInstance(mListener);
-                    else if (type == 1) {
-                        mFragmentAtPos1 = ChangePhoneFragment.newInstance();
-                    }
-                    //mFragmentAtPos1 = CreateAccountFragment.newInstance();
+//                    if (type == STEP_VERIFY_CODE)
+//                        mFragmentAtPos1 = VerifyCodeFragment.newInstance(mListener);
+//                    else if (type == STEP_CHANGE_PHONE) {
+//                        mFragmentAtPos1 = ChangePhoneFragment.newInstance();
+//                    }
+                    mFragmentAtPos1 = CreateAccountFragment.newInstance();
 
 
                 } else if (mFragmentAtPos1 instanceof VerifyCodeFragment) { // Page3
-                    if (type == 0) // confirm
+                    if (type == STEP_CREATE_ACCOUNT) // confirm
                     {
                         mFragmentAtPos1 = CreateAccountFragment.newInstance();
-                    } else if (type == 1) { // change_phone
+                    } else if (type == STEP_CHANGE_PHONE) { // change_phone
                         mFragmentAtPos1 = ChangePhoneFragment.newInstance();
                     }
 
