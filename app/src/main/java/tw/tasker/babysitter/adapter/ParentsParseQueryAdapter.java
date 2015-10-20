@@ -56,7 +56,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 
                 ParseQuery<UserInfo> query = UserInfo.getQuery();
 
-                query.whereEqualTo("objectId", "HOAbpeWVF3");
+                //query.whereEqualTo("objectId", "HOAbpeWVF3");
 //				boolean mDayTime = sharedPreferences.getBoolean("mDayTime", false);
 //				if (mDayTime) {
 //					query.whereContains("babycareTime", "白天");
@@ -166,8 +166,8 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         }
 
         initView(rootView);
-        //initData(userInfo);
         initListener(userInfo);
+        initData(userInfo);
 
 
         return rootView;
@@ -175,7 +175,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 
     private void initView(View rootView) {
         mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
-        mName = (TextView) rootView.findViewById(R.id.name);
+        mName = (TextView) rootView.findViewById(R.id.parent_name);
 //        mBabysitterNumber = (TextView) rootView.findViewById(R.id.babysitterNumber);
         mAge = (TextView) rootView.findViewById(R.id.age);
         mEducation = (TextView) rootView.findViewById(R.id.education);
@@ -196,8 +196,10 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 
     }
 
-//    private void initData(UserInfo userInfo) {
-//        loadOldAvator(userInfo);
+    private void initData(UserInfo userInfo) {
+        mName.setText(userInfo.getName());
+
+        //loadOldAvator(userInfo);
 //        mName.setText(userInfo.getName());
 //        mBabysitterNumber.setText("保母證號：" + userInfo.getSkillNumber());
 //        mAge.setText("(" + userInfo.getAge() + ")");
@@ -215,7 +217,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 //        mCommunityName.setText(content);
 //
 //        initContactStatus(userInfo);
-//    }
+    }
 
 
     private void initContactStatus(Babysitter babysitter) {
