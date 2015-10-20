@@ -20,25 +20,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.GetCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.BuildConfig;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.GovDataHelper;
 
 //import android.app.Fragment;
 
@@ -81,6 +77,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private View mRootView;
+    private Babysitter mSitter;
 
     public SyncDataFragment() {
         // Required empty public constructor
@@ -170,7 +167,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
     private void loadData() {
         if (BuildConfig.DEBUG) {
             // mNumber.setText("031080");
-            mNumber.setText("154-056893");
+            mNumber.setText("北府社兒托10300591");
         }
     }
 
@@ -179,13 +176,15 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.confirm:
-                String tel = Config.sitterInfo.getTel();
+                //String tel = Config.sitterInfo.getTel();
 
-                if (tel.indexOf("09") > -1) {
-                    mListener.onSwitchToNextFragment(-1);
-                } else {
-                    mListener.onSwitchToNextFragment(1);
-                }
+                //if (tel.indexOf("09") > -1) {
+                //    mListener.onSwitchToNextFragment(SignUpActivity.STEP_VERIFY_CODE);
+                //} else {
+                //    mListener.onSwitchToNextFragment(SignUpActivity.STEP_CHANGE_PHONE);
+                //}
+
+                mListener.onSwitchToNextFragment(SignUpActivity.STEP_CREATE_ACCOUNT);
 
                 break;
 
@@ -205,27 +204,33 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
             Toast.makeText(getActivity(), "資料同步...", Toast.LENGTH_LONG).show();
         }
 
+        //fillUI(babysitter);
+        //Config.sitterInfo = babysitter;
+        //mSyncLayout.setVisibility(View.GONE);
+        runGovData(skillNumber);
+
+
         ParseQuery<Babysitter> query = Babysitter.getQuery();
         query.whereEqualTo("skillNumber", skillNumber);
-        query.getFirstInBackground(new GetCallback<Babysitter>() {
-
-            @Override
-            public void done(Babysitter babysitter, ParseException e) {
-                LogUtils.LOGD("vic", "syncData()" + babysitter);
-
-                if (babysitter == null) {
-                    Toast.makeText(getActivity(), "查不到此證號!", Toast.LENGTH_LONG).show();
-
-                } else {
-                    fillUI(babysitter);
-                    Config.sitterInfo = babysitter;
-                    //mSyncLayout.setVisibility(View.GONE);
-                    runGovData(babysitter.getBabysitterNumber());
-                }
-
-            }
-
-        });
+//        query.getFirstInBackground(new GetCallback<Babysitter>() {
+//
+//            @Override
+//            public void done(Babysitter babysitter, ParseException e) {
+//                LogUtils.LOGD("vic", "syncData()" + babysitter);
+//
+//                if (babysitter == null) {
+//                    Toast.makeText(getActivity(), "查不到此證號!", Toast.LENGTH_LONG).show();
+//
+//                } else {
+//                    fillUI(babysitter);
+//                    Config.sitterInfo = babysitter;
+//                    //mSyncLayout.setVisibility(View.GONE);
+//                    runGovData(babysitter.getBabysitterNumber());
+//                }
+//
+//            }
+//
+//        });
     }
 
     protected void runGovData(String babysitterNumber) {
@@ -233,45 +238,30 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
         govAsyncTask.execute(babysitterNumber);
     }
 
+    @DebugLog
     protected String syncGovData(String babysitterNumber) {
-        //String sitterNumber = "29144";
-        String url = "http://cwisweb.sfaa.gov.tw/04nanny/02_2map.jsp";
-        String sn = "";
-        String phone = "";
+        String cwregno = "北府社兒托";
+        String cwregno2 = "10300591";
 
         try {
-            Document doc = Jsoup.connect(url).data("sysnums", babysitterNumber).timeout(3000).post();
+            Document snPage = GovDataHelper.getSNPageFromGovWebSite(cwregno, cwregno2);
+            String sn = GovDataHelper.getSN(snPage);
 
-            sn = getSnNumber(doc);
-            phone = getPhone(sn);
-            LogUtils.LOGD("vic", "your phone: " + phone);
+            Document sitterInfoPage = GovDataHelper.getSitterInfoFromGovWebSite(sn);
+            Elements sitterInfos = GovDataHelper.getSitterInfos(sitterInfoPage);
+            Elements sitterInfoItems = GovDataHelper.getSitterItems(sitterInfos);
+
+            Babysitter sitter = GovDataHelper.createSitterWithData(sitterInfoItems);
+            mSitter = sitter;
+            Config.sitterInfo = sitter;
+            return "ok";
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        return phone;
-    }
-
-    private String getSnNumber(Document doc) {
-        Element item = doc.select("input[name=sn]").first();
-        String sn = item.attr("value");
-
-        return sn;
-    }
-
-    private String getPhone(String sn) throws IOException {
-        String url = "http://cwisweb.sfaa.gov.tw/04nanny/03view.jsp";
-        Document doc = Jsoup.connect(url).data("sn", sn).timeout(3000).post();
-        String html = doc.toString();
-
-        Pattern p = Pattern.compile("09[0-9]{8}");
-        Matcher m = p.matcher(html);
-        String tel = "";
-        if (m.find()) {
-            tel = m.group(0);
+            return "";
         }
 
-        return tel;
+
     }
 
     private void fillUI(Babysitter babysitter) {
@@ -289,13 +279,13 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
         mCommunityName.setText(babysitter.getCommunityName());
         mBabycareTime.setText("托育時段：" + babysitter.getBabycareTime());
 
-        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
-        String parseUrl = babysitter.getImageUrl();
-        if (parseUrl.equals("../img/photo_mother_no.jpg")) {
+//        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
+//        String parseUrl = babysitter.getImageUrl();
+//        if (parseUrl.equals("../img/photo_mother_no.jpg")) {
             mAvator.setImageResource(R.drawable.profile);
-        } else {
-            imageLoader.displayImage(websiteUrl + parseUrl, mAvator, Config.OPTIONS, null);
-        }
+//        } else {
+//            imageLoader.displayImage(websiteUrl + parseUrl, mAvator, Config.OPTIONS, null);
+//        }
 
         //mBabycareTime.setText(babysitter.getBabycareTime());
     }
@@ -310,8 +300,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
 
         @Override
         protected String doInBackground(String... babysitterNumber) {
-            String phone = syncGovData(babysitterNumber[0]);
-            return phone;
+            return syncGovData(babysitterNumber[0]);
         }
 
         @Override
@@ -319,10 +308,13 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
             super.onPostExecute(result);
 
             if (result.isEmpty()) {
+                DisplayUtils.makeToast(getActivity(), "網站發生錯誤，請再試一次。");
 
             } else {
-                mTel.setText("聯絡電話：" + result);
-                Config.sitterInfo.setTel(result);
+                fillUI(mSitter);
+
+                //mTel.setText("聯絡電話：" + result);
+                //Config.sitterInfo.setTel(result);
                 mDataLayout.setVisibility(View.VISIBLE);
             }
         }
