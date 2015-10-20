@@ -198,4 +198,25 @@ public class Babysitter extends ParseObject {
     public void setAvatarFile(ParseFile file) {
         put("avatar", file);
     }
+
+    @Override
+    public String toString() {
+
+        String s = super.toString() + ", "
+                + getName() + ", "
+                + getSkillNumber() + ", "
+                + getBabysitterNumber() + ", "
+                + getSex() + ", "
+                + getTel() + ", "
+                + getAddress() + ", "
+                + getAge() + ", "
+                + getEducation() + ", "
+                + getBabycareTime() + ", "
+                + getBabycareCount() + ", "
+                + getCommunityName() + ", "
+                + getCommunityTel() + ", "
+                + getCommunityAddress() + ", ";
+
+        return s;
+    }
 }
