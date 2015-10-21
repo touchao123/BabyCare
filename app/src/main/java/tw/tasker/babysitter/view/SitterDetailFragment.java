@@ -28,6 +28,7 @@ import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class SitterDetailFragment extends Fragment implements OnClickListener {
 
@@ -115,10 +116,12 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (Config.sitterInfo == null) {
+        Babysitter sitter = ParseHelper.getSitter();
+
+        if (sitter == null) {
             loadProfileData();
         } else {
-            //fillDataToUI(Config.sitterInfo);
+            fillDataToUI(sitter);
         }
 
     }

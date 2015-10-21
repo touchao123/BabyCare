@@ -30,11 +30,11 @@ import java.io.IOException;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.BuildConfig;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.GovDataHelper;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 //import android.app.Fragment;
 
@@ -77,7 +77,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private View mRootView;
-    private Babysitter mSitter;
+    //private Babysitter mSitter;
 
     public SyncDataFragment() {
         // Required empty public constructor
@@ -204,7 +204,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
             Toast.makeText(getActivity(), "資料同步...", Toast.LENGTH_LONG).show();
         }
 
-        //fillUI(babysitter);
+        //fillDataToUI(babysitter);
         //Config.sitterInfo = babysitter;
         //mSyncLayout.setVisibility(View.GONE);
         runGovData(skillNumber);
@@ -222,7 +222,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
 //                    Toast.makeText(getActivity(), "查不到此證號!", Toast.LENGTH_LONG).show();
 //
 //                } else {
-//                    fillUI(babysitter);
+//                    fillDataToUI(babysitter);
 //                    Config.sitterInfo = babysitter;
 //                    //mSyncLayout.setVisibility(View.GONE);
 //                    runGovData(babysitter.getBabysitterNumber());
@@ -252,8 +252,9 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
             Elements sitterInfoItems = GovDataHelper.getSitterItems(sitterInfos);
 
             Babysitter sitter = GovDataHelper.createSitterWithData(sitterInfoItems);
-            mSitter = sitter;
-            Config.sitterInfo = sitter;
+            //mSitter = sitter;
+            //Config.sitterInfo = sitter;
+            ParseHelper.pinSitter(sitter);
             return "ok";
 
         } catch (IOException e) {
@@ -264,7 +265,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
 
     }
 
-    private void fillUI(Babysitter babysitter) {
+    private void fillDataToUI(Babysitter babysitter) {
         mSitterName.setText(babysitter.getName());
         //mSex.setText(babysitter.getSex());
         //mAge.setText(babysitter.getAge());
@@ -311,7 +312,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
                 DisplayUtils.makeToast(getActivity(), "網站發生錯誤，請再試一次。");
 
             } else {
-                fillUI(mSitter);
+                fillDataToUI(ParseHelper.getSitter());
 
                 //mTel.setText("聯絡電話：" + result);
                 //Config.sitterInfo.setTel(result);

@@ -30,11 +30,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import tw.tasker.babysitter.BuildConfig;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.SmsReceiver;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class VerifyCodeFragment extends Fragment implements OnClickListener {
 
@@ -128,7 +128,7 @@ public class VerifyCodeFragment extends Fragment implements OnClickListener {
         mError.setVisibility(View.INVISIBLE);
         mConfirm.setVisibility(View.INVISIBLE);
 
-        String phone = Config.sitterInfo.getTel();
+        String phone = ParseHelper.getSitter().getTel();
         Pattern p = Pattern.compile("\\d{10}");
         Matcher m = p.matcher(phone);
         if (m.find()) {

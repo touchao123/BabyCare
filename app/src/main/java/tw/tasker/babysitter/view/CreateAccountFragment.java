@@ -20,7 +20,6 @@ import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import tw.tasker.babysitter.BuildConfig;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.AccountChecker;
@@ -138,7 +137,7 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
     }
 
     private void addSitterInfo() {
-        Babysitter sitterInfo = Config.sitterInfo;
+        Babysitter sitterInfo = ParseHelper.getSitter();
         sitterInfo.setUser(ParseUser.getCurrentUser());
         sitterInfo.saveInBackground(new SaveCallback() {
 

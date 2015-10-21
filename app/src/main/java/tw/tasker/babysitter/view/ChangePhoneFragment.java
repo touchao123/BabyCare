@@ -16,11 +16,11 @@ import android.widget.TextView;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.Sitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ChangePhoneFragment extends Fragment implements OnClickListener {
 
@@ -66,7 +66,7 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
         //mWebSite.setOnClickListener(this);
         //mCall.setOnClickListener(this);
 
-        String tel = Config.sitterInfo.getTel();
+        String tel = ParseHelper.getSitter().getTel();
 
         if (tel.indexOf("09") > -1) {
             mMessageTop.setText("目前您在保母系統登錄的電話為：");
@@ -137,7 +137,7 @@ public class ChangePhoneFragment extends Fragment implements OnClickListener {
     }
 
     private void sendServer(String contact) {
-        Babysitter babysitter = Config.sitterInfo;
+        Babysitter babysitter = ParseHelper.getSitter();
         Sitter sitter = new Sitter();
         sitter.setContact(contact);
 

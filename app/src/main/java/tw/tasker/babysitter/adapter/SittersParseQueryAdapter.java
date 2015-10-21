@@ -169,8 +169,8 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
         }
 
         initView(rootView);
-        initData(babysitter);
         initListener(babysitter);
+        initData(babysitter);
 
         return rootView;
     }
@@ -245,8 +245,8 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
             @Override
             public void onClick(View v) {
-                mSitterListClickHandler.onDetailClick();
-                Config.sitterInfo = babysitter;
+                mSitterListClickHandler.onDetailClick(babysitter);
+                //Config.sitterInfo = babysitter;
             }
         });
 
@@ -288,7 +288,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     public static interface SitterListClickHandler {
         public void onContactClick(View v, Babysitter babysitter);
 
-        public void onDetailClick();
+        public void onDetailClick(Babysitter babysitter);
     }
 
 }

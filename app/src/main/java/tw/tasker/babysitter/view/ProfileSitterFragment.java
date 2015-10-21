@@ -22,6 +22,7 @@ import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ProfileSitterFragment extends Fragment implements OnClickListener {
 
@@ -97,11 +98,12 @@ public class ProfileSitterFragment extends Fragment implements OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Babysitter sitter = ParseHelper.getSitter();
 
-        if (Config.sitterInfo == null) {
-            loadProfileData();
+        if (sitter == null) {
+            //loadProfileData();
         } else {
-            fillDataToUI(Config.sitterInfo);
+            fillDataToUI(sitter);
         }
 
     }
@@ -117,7 +119,7 @@ public class ProfileSitterFragment extends Fragment implements OnClickListener {
                     Toast.makeText(getActivity(), "唉唷~產生一些錯誤了~", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Config.sitterInfo = sitter;
+                    //Config.sitterInfo = sitter;
                     fillDataToUI(sitter);
                 }
             }

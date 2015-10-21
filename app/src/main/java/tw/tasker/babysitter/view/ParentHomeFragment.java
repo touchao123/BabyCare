@@ -303,8 +303,9 @@ public class ParentHomeFragment extends Fragment implements
     }
 
     @Override
-    public void onDetailClick() {
+    public void onDetailClick(Babysitter sitter) {
         FlurryAgent.logEvent("see sitter detail.");
+        ParseHelper.pinSitter(sitter);
         startActivityForResult(IntentUtil.startSitterDetailActivity(), 1);
         getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_stop);
     }

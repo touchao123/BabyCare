@@ -16,6 +16,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
+import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.HomeEvent;
@@ -56,8 +57,9 @@ public class ParseHelper {
 
     }
 
-
+    @DebugLog
     public static void pinSitter(Babysitter sitter) {
+        Config.sitterObjectId = sitter.getObjectId();
         sitter.pinInBackground(new SaveCallback() {
             @Override
             public void done(ParseException parseException) {
@@ -68,6 +70,24 @@ public class ParseHelper {
                 }
             }
         });
+    }
+
+    @DebugLog
+    public static Babysitter getSitter() {
+        String sitterObjectId = Config.sitterObjectId;
+        Babysitter sitter = new Babysitter();
+
+        ParseQuery<Babysitter> query = Babysitter.getQuery();
+        query.fromLocalDatastore();
+
+        try {
+            System.out.println(query.find().size());
+            return query.get(sitterObjectId);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return sitter;
     }
 
     public static void loadSitterFavoriteData(Babysitter sitter) {
