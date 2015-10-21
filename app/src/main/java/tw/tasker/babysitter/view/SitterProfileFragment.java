@@ -24,7 +24,7 @@ import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class ProfileSitterFragment extends Fragment implements OnClickListener {
+public class SitterProfileFragment extends Fragment implements OnClickListener {
 
     private static SignUpListener mListener;
     private TextView mNumber;
@@ -41,12 +41,12 @@ public class ProfileSitterFragment extends Fragment implements OnClickListener {
     private Button mEidt;
     private View mRootView;
 
-    public ProfileSitterFragment() {
+    public SitterProfileFragment() {
         // TODO Auto-generated constructor stub
     }
 
     public static Fragment newInstance(SignUpListener listener) {
-        Fragment fragment = new ProfileSitterFragment();
+        Fragment fragment = new SitterProfileFragment();
         mListener = listener;
         return fragment;
     }

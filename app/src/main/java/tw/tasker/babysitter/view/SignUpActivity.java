@@ -144,11 +144,11 @@ public class SignUpActivity extends BaseActivity {
 
             switch (position) {
                 case 0:
-                    return SignUpParentFragment.newInstance();
+                    return ParentSignUpFragment.newInstance();
 
                 case 1:
                     if (mFragmentAtPos1 == null) {
-                        mFragmentAtPos1 = SyncDataFragment.newInstance(mListener);
+                        mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener);
                         // mFragmentAtPos1 = VerifyCodeFragment.newInstance(mListener);
                         // mFragmentAtPos1 = CreateAccountFragment.newInstance();
 
@@ -171,8 +171,8 @@ public class SignUpActivity extends BaseActivity {
 //                return POSITION_NONE;
 //            }
 
-            if (object instanceof SyncDataFragment
-                    && mFragmentAtPos1 instanceof CreateAccountFragment) {
+            if (object instanceof SitterSyncDataFragment
+                    && mFragmentAtPos1 instanceof SitterSignUpFragment) {
                 return POSITION_NONE;
             }
 
@@ -194,25 +194,25 @@ public class SignUpActivity extends BaseActivity {
                 mFragmentManager.beginTransaction().remove(mFragmentAtPos1)
                         .commit();
 
-                if (mFragmentAtPos1 instanceof SyncDataFragment) { // Page2
+                if (mFragmentAtPos1 instanceof SitterSyncDataFragment) { // Page2
 //                    if (type == STEP_VERIFY_CODE)
 //                        mFragmentAtPos1 = VerifyCodeFragment.newInstance(mListener);
 //                    else if (type == STEP_CHANGE_PHONE) {
 //                        mFragmentAtPos1 = ChangePhoneFragment.newInstance();
 //                    }
-                    mFragmentAtPos1 = CreateAccountFragment.newInstance();
+                    mFragmentAtPos1 = SitterSignUpFragment.newInstance();
 
 
                 } else if (mFragmentAtPos1 instanceof VerifyCodeFragment) { // Page3
                     if (type == STEP_CREATE_ACCOUNT) // confirm
                     {
-                        mFragmentAtPos1 = CreateAccountFragment.newInstance();
+                        mFragmentAtPos1 = SitterSignUpFragment.newInstance();
                     } else if (type == STEP_CHANGE_PHONE) { // change_phone
                         mFragmentAtPos1 = ChangePhoneFragment.newInstance();
                     }
 
                 } else {
-                    mFragmentAtPos1 = SyncDataFragment.newInstance(mListener); // Page1
+                    mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener); // Page1
                 }
 
                 notifyDataSetChanged();

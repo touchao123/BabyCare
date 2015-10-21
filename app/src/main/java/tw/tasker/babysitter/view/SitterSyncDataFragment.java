@@ -40,10 +40,10 @@ import tw.tasker.babysitter.utils.ParseHelper;
 
 /**
  * A simple {@link Fragment} subclass. Use the
- * {@link SyncDataFragment#newInstance} factory method to create an
+ * {@link SitterSyncDataFragment#newInstance} factory method to create an
  * instance of this fragment.
  */
-public class SyncDataFragment extends Fragment implements OnClickListener {
+public class SitterSyncDataFragment extends Fragment implements OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -79,13 +79,13 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
     private View mRootView;
     //private Babysitter mSitter;
 
-    public SyncDataFragment() {
+    public SitterSyncDataFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
     public static Fragment newInstance(SignUpListener listener) {
-        Fragment fragment = new SyncDataFragment();
+        Fragment fragment = new SitterSyncDataFragment();
         mListener = listener;
 
         return fragment;

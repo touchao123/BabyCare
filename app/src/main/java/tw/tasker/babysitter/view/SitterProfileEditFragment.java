@@ -36,7 +36,7 @@ import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.PictureHelper;
 
-public class ProfileSitterEditFragment extends Fragment implements OnClickListener {
+public class SitterProfileEditFragment extends Fragment implements OnClickListener {
 
     private static SignUpListener mListner;
     private TextView mNumber;
@@ -62,12 +62,12 @@ public class ProfileSitterEditFragment extends Fragment implements OnClickListen
     private ScrollView mAllScreen;
     private View mRootView;
 
-    public ProfileSitterEditFragment() {
+    public SitterProfileEditFragment() {
         // TODO Auto-generated constructor stub
     }
 
     public static Fragment newInstance(SignUpListener listener) {
-        Fragment fragment = new ProfileSitterEditFragment();
+        Fragment fragment = new SitterProfileEditFragment();
         mListner = listener;
         return fragment;
     }

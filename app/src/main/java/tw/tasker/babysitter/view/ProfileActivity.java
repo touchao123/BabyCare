@@ -24,11 +24,11 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
-        mProfileSitterFragment = ProfileSitterFragment.newInstance(mListener);
-        mProfileSitterEditFragment = ProfileSitterEditFragment.newInstance(mListener);
+        mProfileSitterFragment = SitterProfileFragment.newInstance(mListener);
+        mProfileSitterEditFragment = SitterProfileEditFragment.newInstance(mListener);
 
-        mProfileParentFragment = ProfileParentFragment.newInstance(mListener);
-        mProfileParentEditFragment = ProfileParentEditFragment.newInstance(mListener);
+        mProfileParentFragment = ParentProfileFragment.newInstance(mListener);
+        mProfileParentEditFragment = ParentProfileEditFragment.newInstance(mListener);
 
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
 

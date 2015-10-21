@@ -20,7 +20,7 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class ProfileParentFragment extends Fragment implements OnClickListener {
+public class ParentProfileFragment extends Fragment implements OnClickListener {
 
     private static SignUpListener mListener;
     private ImageLoader imageLoader = ImageLoader.getInstance();
@@ -35,12 +35,12 @@ public class ProfileParentFragment extends Fragment implements OnClickListener {
     private CircleImageView mAvatar;
     private View mRootView;
 
-    public ProfileParentFragment() {
+    public ParentProfileFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance(SignUpListener listener) {
-        Fragment fragment = new ProfileParentFragment();
+        Fragment fragment = new ParentProfileFragment();
         mListener = listener;
         return fragment;
     }

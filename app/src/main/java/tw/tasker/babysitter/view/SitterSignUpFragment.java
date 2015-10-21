@@ -27,7 +27,7 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class CreateAccountFragment extends Fragment implements OnClickListener {
+public class SitterSignUpFragment extends Fragment implements OnClickListener {
 
     private EditText mAccount;
     private EditText mPassword;
@@ -37,11 +37,11 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
     private View mRootView;
     private MaterialDialog mMaterialDialog;
 
-    public CreateAccountFragment() {
+    public SitterSignUpFragment() {
     }
 
     public static Fragment newInstance() {
-        Fragment fragment = new CreateAccountFragment();
+        Fragment fragment = new SitterSignUpFragment();
         return fragment;
     }
 
