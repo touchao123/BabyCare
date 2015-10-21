@@ -164,9 +164,9 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
     }
 
     @Override
-    public void onUserAuthenticatedError(LayerException e) {
-        // TODO Auto-generated method stub
-
+    public void onUserAuthenticatedError(LayerException layerException) {
+        mMaterialDialog.dismiss();
+        DisplayUtils.makeToast(this, layerException.getMessage());
     }
 
     @Override
