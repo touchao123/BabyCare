@@ -215,12 +215,17 @@ public class ParentHomeFragment extends Fragment implements
         MenuItem logoutItem = subMenu.findItem(R.id.action_logout);
         MenuItem profileItem = subMenu.findItem(R.id.action_profile);
 
-        if (ParseUser.getCurrentUser() == null) {
+        if (AccountChecker.isLogin()) {
+            logoutItem.setTitle("登出");
+        } else {
             logoutItem.setTitle("登入");
             profileItem.setVisible(false);
+        }
 
-        } else {
-            logoutItem.setTitle("登出");
+        MenuItem itemMessage = menu.findItem(R.id.action_message);
+
+        if (AccountChecker.isLogin()) {
+            itemMessage.setVisible(true);
         }
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -230,8 +235,6 @@ public class ParentHomeFragment extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        Intent intent;
-
         switch (id) {
 
             case R.id.action_message:
@@ -282,13 +285,17 @@ public class ParentHomeFragment extends Fragment implements
 
     @Override
     public void onContactClick(View v, Babysitter babysitter) {
-        mSitter = babysitter;
+        if (AccountChecker.isLogin()) {
+            mSitter = babysitter;
 
-        Button contact = (Button) v;
-        contact.setText("已送出媒合邀請");
-        contact.setEnabled(false);
+            Button contact = (Button) v;
+            contact.setText("已送出媒合邀請");
+            contact.setEnabled(false);
 
-        startActivityForResult(IntentUtil.startDataCheckActivity(), REQUEST_DATA_CHECK);
+            startActivityForResult(IntentUtil.startDataCheckActivity(), REQUEST_DATA_CHECK);
+        } else {
+            startActivity(IntentUtil.startDispatchActivity());
+        }
     }
 
     @DebugLog

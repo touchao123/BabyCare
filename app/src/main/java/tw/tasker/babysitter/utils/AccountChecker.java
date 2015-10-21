@@ -61,9 +61,7 @@ public class AccountChecker {
     }
 
     public static void logout() {
-        if (ParseUser.getCurrentUser() == null) { // 沒有登入
-        } else { // 有登入
-            // Call the Parse log out method
+        if (isLogin()) {
             ParseUser.logOut();
             LayerImpl.getLayerClient().deauthenticate();
         }

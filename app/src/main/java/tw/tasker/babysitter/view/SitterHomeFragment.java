@@ -1,6 +1,5 @@
 package tw.tasker.babysitter.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -114,14 +113,19 @@ public class SitterHomeFragment extends Fragment implements
 
     @Override
     public void onContactClick(View v, UserInfo userInfo) {
-        mUserInfo = userInfo;
 
-        Button contact = (Button) v;
-        contact.setText("已送出媒合邀請");
-        contact.setEnabled(false);
+        if (AccountChecker.isLogin()) {
+            mUserInfo = userInfo;
 
-        TalkToParent talkToParent = new TalkToParent();
-        talkToParent.send(mUserInfo);
+            Button contact = (Button) v;
+            contact.setText("已送出媒合邀請");
+            contact.setEnabled(false);
+
+            TalkToParent talkToParent = new TalkToParent();
+            talkToParent.send(mUserInfo);
+        } else {
+            startActivity(IntentUtil.startDispatchActivity());
+        }
     }
 
     @Override
@@ -213,6 +217,12 @@ public class SitterHomeFragment extends Fragment implements
             logoutItem.setTitle("登出");
         }
 
+        MenuItem itemMessage = menu.findItem(R.id.action_message);
+        if (ParseUser.getCurrentUser() == null) {
+            itemMessage.setVisible(false);
+        }
+
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -220,8 +230,6 @@ public class SitterHomeFragment extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        Intent intent;
-
         switch (id) {
 
             case R.id.action_message:

@@ -58,7 +58,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
                         .getDefaultSharedPreferences(context);
 
                 ParseQuery<Babysitter> query = Babysitter.getQuery();
-
+                query.whereExists("user");
                 //query.whereEqualTo("skillNumber", "154-056893");
 
                 boolean mDayTime = sharedPreferences.getBoolean("mDayTime", false);
@@ -128,7 +128,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
                 }
 
                 if (Config.keyWord.equals("")) {
-                    query.whereNear("location", Config.MY_LOCATION);
+//                    query.whereNear("location", Config.MY_LOCATION);
                 } else {
                     String keyword = Config.keyWord;
                     keyword = keyword.replace("台", "臺");
