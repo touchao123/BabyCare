@@ -21,26 +21,37 @@ class AddressPanelView implements View.OnClickListener, View.OnFocusChangeListen
     private EditText mAddressEdit;
     private ImageView mLocation;
     private Button mCancel;
+    private Button mAgree;
 
     public AddressPanelView(View rootView) {
         mRootView = rootView;
 
-        mAddressPanel = (LinearLayout) rootView
-                .findViewById(R.id.address_panel);
+        initView();
+        initListener();
+        initData();
+    }
 
-        mAddressText = (TextView) rootView.findViewById(R.id.address_text);
+    private void initView() {
+        mAddressPanel = (LinearLayout) mRootView.findViewById(R.id.address_panel);
+
+        mAddressText = (TextView) mRootView.findViewById(R.id.address_text);
+        mAddressEdit = (EditText) mRootView.findViewById(R.id.address_edit);
+        mAgree = (Button) mRootView.findViewById(R.id.agree);
+        mCancel = (Button) mRootView.findViewById(R.id.cancel);
+        mLocation = (ImageView) mRootView.findViewById(R.id.location);
+
+    }
+
+    private void initListener() {
         mAddressText.setOnClickListener(this);
-
-        // Address
-        mAddressEdit = (EditText) rootView.findViewById(R.id.address_edit);
         mAddressEdit.setOnFocusChangeListener(this);
         mAddressEdit.setOnEditorActionListener(this);
-
-        mCancel = (Button) rootView.findViewById(R.id.cancel);
+        mAgree.setOnClickListener(this);
         mCancel.setOnClickListener(this);
+    }
 
-        mLocation = (ImageView) rootView.findViewById(R.id.location);
-
+    private void initData() {
+        mAgree.setVisibility(View.GONE);
         mCancel.setVisibility(View.GONE);
         mAddressEdit.setVisibility(View.GONE);
     }
@@ -54,8 +65,14 @@ class AddressPanelView implements View.OnClickListener, View.OnFocusChangeListen
                 changeToAddressEditMode();
                 break;
 
+            case R.id.agree:
+                searchAddress();
+                break;
+
             case R.id.cancel:
-                changeToAndressTextMode();
+                mAddressEdit.setText("");
+                searchAddress();
+                //changeToAndressTextMode();
                 break;
 
             default:
@@ -66,6 +83,7 @@ class AddressPanelView implements View.OnClickListener, View.OnFocusChangeListen
     private void changeToAndressTextMode() {
         mAddressText.setVisibility(View.VISIBLE);
         mAddressEdit.setVisibility(View.GONE);
+        mAgree.setVisibility(View.GONE);
         mCancel.setVisibility(View.GONE);
         mLocation.setVisibility(View.VISIBLE);
 
@@ -77,6 +95,7 @@ class AddressPanelView implements View.OnClickListener, View.OnFocusChangeListen
         mAddressEdit.setVisibility(View.VISIBLE);
         mLocation.setVisibility(View.GONE);
         mAddressEdit.requestFocus();
+        mAgree.setVisibility(View.VISIBLE);
         mCancel.setVisibility(View.VISIBLE);
 
         EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_TOGGLE_KEYPAD));
@@ -92,6 +111,11 @@ class AddressPanelView implements View.OnClickListener, View.OnFocusChangeListen
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        searchAddress();
+        return true;
+    }
+
+    private void searchAddress() {
         String addr = mAddressEdit.getText().toString();
 
         if (addr.isEmpty()) {
@@ -108,7 +132,6 @@ class AddressPanelView implements View.OnClickListener, View.OnFocusChangeListen
         EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_TOGGLE_KEYPAD));
         EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_QUERY));
 
-        return true;
     }
 
     public void show() {
