@@ -23,6 +23,19 @@ import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 
 public class ParseHelper {
+
+    // Only for signing up
+    public static Babysitter mSitter;
+    public static UserInfo mParent;
+
+    public static void pinSitterToCache(Babysitter sitter) {
+        mSitter = sitter;
+    }
+
+    public static Babysitter getSitterFromCache() {
+        return mSitter;
+    }
+
     public static boolean isSuccess(ParseException e) {
         if (e == null) {
             return true;
@@ -220,7 +233,7 @@ public class ParseHelper {
 
     }
 
-    public static void doSignUpParent(String account, String password) {
+    public static void doParentSignUp(String account, String password) {
         ParseUser user = new ParseUser();
         user.setUsername(account);
         user.setPassword(account);
@@ -231,13 +244,33 @@ public class ParseHelper {
             @Override
             public void done(ParseException parseException) {
                 if (isSuccess(parseException)) {
-                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_SIGNUP_DONE));
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_PARENT_SIGNUP_DONE));
                 } else {
                     EventBus.getDefault().post(parseException);
                 }
             }
         });
     }
+
+    public static void doSitterSignUp(String account, String password) {
+        ParseUser user = new ParseUser();
+        user.setUsername(account);
+        user.setPassword(account);
+        user.put("userType", "sitter");
+
+        user.signUpInBackground(new SignUpCallback() {
+
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_SITTER_SIGNUP_DONE));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
+
 
     public static void addUserInfo(UserInfo userInfo) {
 
@@ -246,7 +279,7 @@ public class ParseHelper {
             @Override
             public void done(ParseException parseException) {
                 if (isSuccess(parseException)) {
-                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_ADD_USER_INFO_DOEN));
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_ADD_PARENT_INFO_DOEN));
                 } else {
                     EventBus.getDefault().post(parseException);
                 }
@@ -254,5 +287,18 @@ public class ParseHelper {
         });
     }
 
+    public static void addSittrInfo(Babysitter sitterInfo) {
+        sitterInfo.saveInBackground(new SaveCallback() {
+
+            @Override
+            public void done(ParseException parseException) {
+                if (ParseHelper.isSuccess(parseException)) {
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_ADD_SITTER_INFO_DOEN));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
 }
 

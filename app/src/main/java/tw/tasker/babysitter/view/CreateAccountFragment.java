@@ -1,6 +1,5 @@
 package tw.tasker.babysitter.view;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,20 +11,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-import com.parse.SignUpCallback;
 
+import de.greenrobot.event.EventBus;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.BuildConfig;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
+import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
-import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class CreateAccountFragment extends Fragment implements OnClickListener {
@@ -36,6 +35,7 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
     private Button mCreate;
     private ScrollView mAllScreen;
     private View mRootView;
+    private MaterialDialog mMaterialDialog;
 
     public CreateAccountFragment() {
     }
@@ -65,6 +65,7 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
         mPassword = (EditText) mRootView.findViewById(R.id.password);
         mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
         mCreate = (Button) mRootView.findViewById(R.id.create);
+        mMaterialDialog = DisplayUtils.getMaterialProgressDialog(getActivity(), R.string.dialog_signup_please_wait);
     }
 
     private void initListener() {
@@ -93,63 +94,59 @@ public class CreateAccountFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String account = mAccount.getText().toString();
-        String password = mPassword.getText().toString();
-        String passwordAgain = mPasswordAgain.getText().toString();
-        if (AccountChecker.isAccountOK(getActivity(), account, password, passwordAgain)) {
-            signUpSitter();
+
+        switch (v.getId()) {
+            case R.id.create:
+                String account = mAccount.getText().toString();
+                String password = mPassword.getText().toString();
+                String passwordAgain = mPasswordAgain.getText().toString();
+                if (AccountChecker.isAccountOK(getActivity(), account, password, passwordAgain)) {
+                    mMaterialDialog.show();
+                    ParseHelper.doSitterSignUp(account, password);
+                }
+                break;
         }
+
     }
 
-    private void signUpSitter() {
-        // Set up a progress dialog
-        final ProgressDialog dlg = new ProgressDialog(getActivity());
-        dlg.setTitle("註冊中");
-        dlg.setMessage("請稍候...");
-        dlg.show();
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
-        // Set up a new Parse user
-        ParseUser user = new ParseUser();
-        user.setUsername(mAccount.getText().toString());
-        user.setPassword(mPassword.getText().toString());
-        user.put("userType", "sitter");
+    @DebugLog
+    public void onEvent(HomeEvent homeEvent) {
 
-        // Call the Parse signup method
-        user.signUpInBackground(new SignUpCallback() {
+        switch (homeEvent.getAction()) {
+            case HomeEvent.ACTION_SITTER_SIGNUP_DONE:
+                addSitterInfo();
+                break;
 
-            @Override
-            public void done(ParseException e) {
-                dlg.dismiss();
-                if (e != null) {
-                    // Show the error message
-                    Toast.makeText(getActivity(), "註冊錯誤!" /* e.getMessage() */,
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    // Start an intent for the dispatch activity
-                    LogUtils.LOGD("vic", "user object id"
-                            + ParseUser.getCurrentUser().getObjectId());
-
-                    addSitterInfo();
-                }
-            }
-        });
+            case HomeEvent.ACTION_ADD_SITTER_INFO_DOEN:
+                mMaterialDialog.dismiss();
+                startActivity(IntentUtil.startDispatchActivity());
+                break;
+        }
 
     }
 
     private void addSitterInfo() {
-        Babysitter sitterInfo = ParseHelper.getSitter();
+        Babysitter sitterInfo = ParseHelper.getSitterFromCache();
         sitterInfo.setUser(ParseUser.getCurrentUser());
-        sitterInfo.saveInBackground(new SaveCallback() {
-
-            @Override
-            public void done(ParseException e) {
-                if (ParseHelper.isSuccess(e)) {
-                    startActivity(IntentUtil.startDispatchActivity());
-                } else {
-                    DisplayUtils.makeToast(getActivity(), "註冊失敗");
-                }
-            }
-        });
+        ParseHelper.addSittrInfo(sitterInfo);
     }
 
+    @DebugLog
+    public void onEvent(ParseException parseException) {
+        mMaterialDialog.dismiss();
+        String errorMessage = DisplayUtils.getErrorMessage(getActivity(), parseException);
+        DisplayUtils.makeToast(getActivity(), errorMessage);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 }

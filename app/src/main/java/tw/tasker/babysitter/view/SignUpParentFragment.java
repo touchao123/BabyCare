@@ -154,7 +154,7 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
 
                 if (AccountChecker.isAccountOK(getActivity(), account, password, passwordAgain)) {
                     mMaterialDialog.show();
-                    ParseHelper.doSignUpParent(account, password);
+                    ParseHelper.doParentSignUp(account, password);
                 }
 
                 break;
@@ -185,11 +185,12 @@ public class SignUpParentFragment extends Fragment implements OnClickListener {
     public void onEvent(HomeEvent homeEvent) {
 
         switch (homeEvent.getAction()) {
-            case HomeEvent.ACTION_SIGNUP_DONE:
+            case HomeEvent.ACTION_PARENT_SIGNUP_DONE:
                 addUserInfo();
                 break;
 
-            case HomeEvent.ACTION_ADD_USER_INFO_DOEN:
+            case HomeEvent.ACTION_ADD_PARENT_INFO_DOEN:
+                mMaterialDialog.dismiss();
                 startActivity(IntentUtil.startDispatchActivity());
                 break;
         }
