@@ -136,12 +136,9 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
-                <ImageView
-                    android:id="@+id/static_map"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/sitter_map" />
+                <include layout="@layout/sitter_map" />
+
+
             </LinearLayout>
 
             <include layout="@layout/sitter_info" />

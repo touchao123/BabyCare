@@ -28,6 +28,7 @@ import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.MapHelper;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class SitterDetailFragment extends Fragment implements OnClickListener {
@@ -48,6 +49,8 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     private ImageView mStaticMap;
     private ViewPager mPager;
     private View mRootView;
+    private TextView mStaticMapAddr;
+    private TextView mStaticMapDistance;
 
     public SitterDetailFragment() {
         // TODO Auto-generated constructor stub
@@ -89,6 +92,8 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
 
         mPager = (ViewPager) mRootView.findViewById(R.id.pager);
         mStaticMap = (ImageView) mRootView.findViewById(R.id.static_map);
+        mStaticMapAddr = (TextView) mRootView.findViewById(R.id.static_map_addr);
+        mStaticMapDistance = (TextView) mRootView.findViewById(R.id.static_map_distance);
 
     }
 
@@ -109,7 +114,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
 //        mEducation.setText("教育程度：");
 //        mCommunityName.setText("");
 
-        showStaticMap();
+
     }
 
     @Override
@@ -167,12 +172,17 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         } else {
             getNewAvatar(sitter);
         }
+
+        String staticMapUrl = MapHelper.getStaticMapUrl(sitter.getAddress());
+        ImageLoader.getInstance().displayImage(staticMapUrl, mStaticMap, Config.OPTIONS);
+
+        mStaticMapAddr.setText(sitter.getAddress());
+
+        float distance = (float) sitter.getLocation()
+                .distanceInKilometersTo(Config.MY_LOCATION);
+        mStaticMapDistance.setText("距離您的位置：" + DisplayUtils.showDistance(distance));
     }
 
-    private void showStaticMap() {
-        String staticMapUrl = "http://maps.googleapis.com/maps/api/staticmap?&scale=2&language=tw&center=%E9%AB%98%E9%9B%84%E5%B8%82%E9%B3%B3%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E8%B7%AF&zoom=16&scale=false&size=400x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:A%7C%E9%AB%98%E9%9B%84%E5%B8%82%E9%B3%B3%E5%B1%B1%E5%8D%80%E5%85%89%E5%BE%A9%E8%B7%AF";
-        ImageLoader.getInstance().displayImage(staticMapUrl, mStaticMap, Config.OPTIONS);
-    }
 
     private void getOldAvatar(Babysitter sitter) {
         String websiteUrl = "http://cwisweb.sfaa.gov.tw/";

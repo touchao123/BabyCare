@@ -20,6 +20,7 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -250,5 +251,17 @@ public class DisplayUtils {
                 .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
                 .build();
 
+    }
+
+    public static String showDistance(float distance) {
+        String showDistance = "";
+        DecimalFormat df = new DecimalFormat("##");
+        if (distance < 1) {
+            showDistance = showDistance + df.format((distance * 1000)) + "公尺";
+        } else {
+            showDistance = showDistance + df.format(distance) + "公里";
+        }
+
+        return showDistance;
     }
 }
