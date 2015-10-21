@@ -1,0 +1,94 @@
+{
+  "results": [
+    {
+      "address_components": [
+        {
+          "long_name": "37",
+          "short_name": "37",
+          "types": [
+            "street_number"
+          ]
+        },
+        {
+          "long_name": "建國路一段31巷",
+          "short_name": "建國路一段31巷",
+          "types": [
+            "route"
+          ]
+        },
+        {
+          "long_name": "埤頂里",
+          "short_name": "埤頂里",
+          "types": [
+            "administrative_area_level_4",
+            "political"
+          ]
+        },
+        {
+          "long_name": "鳳山區",
+          "short_name": "鳳山區",
+          "types": [
+            "administrative_area_level_3",
+            "political"
+          ]
+        },
+        {
+          "long_name": "高雄市",
+          "short_name": "高雄市",
+          "types": [
+            "administrative_area_level_1",
+            "political"
+          ]
+        },
+        {
+          "long_name": "台灣",
+          "short_name": "TW",
+          "types": [
+            "country",
+            "political"
+          ]
+        },
+        {
+          "long_name": "830",
+          "short_name": "830",
+          "types": [
+            "postal_code"
+          ]
+        }
+      ],
+      "formatted_address": "830台灣高雄市鳳山區建國路一段31巷37號",
+      "geometry": {
+        "bounds": {
+          "northeast": {
+            "lat": 22.6350117,
+            "lng": 120.3776739
+          },
+          "southwest": {
+            "lat": 22.6350045,
+            "lng": 120.3776572
+          }
+        },
+        "location": {
+          "lat": 22.6350117,
+          "lng": 120.3776739
+        },
+        "location_type": "RANGE_INTERPOLATED",
+        "viewport": {
+          "northeast": {
+            "lat": 22.6363570802915,
+            "lng": 120.3790145302915
+          },
+          "southwest": {
+            "lat": 22.6336591197085,
+            "lng": 120.3763165697085
+          }
+        }
+      },
+      "place_id": "EjQ4MzDlj7DngaPpq5jpm4TluILps7PlsbHljYDlu7rlnIvot6_kuIDmrrUzMeW3tzM36Jmf",
+      "types": [
+        "street_address"
+      ]
+    }
+  ],
+  "status": "OK"
+}
