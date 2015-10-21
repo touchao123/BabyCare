@@ -198,25 +198,27 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
     }
 
-    private void initData(Babysitter babysitter) {
-        loadOldAvator(babysitter);
-        mName.setText(babysitter.getName());
-        //mBabysitterNumber.setText("保母證號：" + babysitter.getSkillNumber());
-        mAge.setText("(" + babysitter.getAge() + ")");
-        mEducation.setText("教育程度：" + babysitter.getEducation());
-        mAddress.setText(babysitter.getAddress());
+    private void initData(Babysitter sitter) {
+        loadOldAvator(sitter);
+        mName.setText(sitter.getName());
+        //mBabysitterNumber.setText("保母證號：" + sitter.getSkillNumber());
+        mAge.setText("(" + sitter.getAge() + ")");
+        mEducation.setText("教育程度：" + sitter.getEducation());
 
-        String changeText = DisplayUtils.getChangeText(babysitter.getBabycareTime());
+        float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+        mAddress.setText(sitter.getAddress() + "(" + DisplayUtils.showDistance(distance) + ")");
+
+        String changeText = DisplayUtils.getChangeText(sitter.getBabycareTime());
         mBabycareTime.setText(changeText);
 
-        int babyCount = DisplayUtils.getBabyCount(babysitter.getBabycareCount());
+        int babyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
         mBabyCount.setRating(babyCount);
 
-        SpannableString content = new SpannableString(babysitter.getCommunityName());
+        SpannableString content = new SpannableString(sitter.getCommunityName());
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         //mCommunityName.setText(content);
 
-        //initContactStatus(babysitter);
+        //initContactStatus(sitter);
     }
 
 
