@@ -83,10 +83,7 @@ public class GovDataHelper {
         return tel;
     }
 
-
-    public static Babysitter createSitterWithData(Elements sitterInfosItems) {
-        Babysitter sitter = new Babysitter();
-
+    public static void addSitterInfos(Babysitter sitter, Elements sitterInfosItems) {
         for (Element item : sitterInfosItems) {
             String title = item.select("th").text();
             String value = item.select("td").last().text();
@@ -128,6 +125,13 @@ public class GovDataHelper {
                 System.out.println(", value: " + value);
             }
         }
-        return sitter;
+    }
+
+    public static void addSitterLocation(Babysitter sitter) {
+        sitter.setLocation(MapHelper.getLocationFromGoogleMap(sitter.getAddress()));
+    }
+
+    public static String getImageUrl(Document doc) {
+        return doc.select("div[style=width:170px;float:left;]").select("img").attr("src");
     }
 }

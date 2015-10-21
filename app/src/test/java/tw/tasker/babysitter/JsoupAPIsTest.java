@@ -163,16 +163,32 @@ public class JsoupAPIsTest {
     }
 
     @Test
-    public void testCreateSitterWithData() {
+    public void testAddSitterInfos() {
         ParseObject.registerSubclass(Babysitter.class);
 
         try {
             Document doc = GovDataHelper.getSitterInfoFromFile();
             Elements sitterInfos = GovDataHelper.getSitterInfos(doc);
             Elements sitterInfosItems = GovDataHelper.getSitterItems(sitterInfos);
-            Babysitter sitter = GovDataHelper.createSitterWithData(sitterInfosItems);
+
+            Babysitter sitter = new Babysitter();
+            GovDataHelper.addSitterInfos(sitter, sitterInfosItems);
 
             System.out.println("sitter info: " + sitter);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testGetImageUrl() {
+
+        try {
+            Document doc = GovDataHelper.getSitterInfoFromFile();
+            String imageUrl = GovDataHelper.getImageUrl(doc);
+
+            System.out.println("imageUrl: " + imageUrl);
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -176,7 +176,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.confirm:
-                //String tel = Config.sitterInfo.getTel();
+                //String tel = Config.sitter.getTel();
 
                 //if (tel.indexOf("09") > -1) {
                 //    mListener.onSwitchToNextFragment(SignUpActivity.STEP_VERIFY_CODE);
@@ -205,7 +205,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
         }
 
         //fillDataToUI(babysitter);
-        //Config.sitterInfo = babysitter;
+        //Config.sitter = babysitter;
         //mSyncLayout.setVisibility(View.GONE);
         runGovData(skillNumber);
 
@@ -223,7 +223,7 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
 //
 //                } else {
 //                    fillDataToUI(babysitter);
-//                    Config.sitterInfo = babysitter;
+//                    Config.sitter = babysitter;
 //                    //mSyncLayout.setVisibility(View.GONE);
 //                    runGovData(babysitter.getBabysitterNumber());
 //                }
@@ -248,13 +248,22 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
             String sn = GovDataHelper.getSN(snPage);
 
             Document sitterInfoPage = GovDataHelper.getSitterInfoFromGovWebSite(sn);
-            Elements sitterInfos = GovDataHelper.getSitterInfos(sitterInfoPage);
-            Elements sitterInfoItems = GovDataHelper.getSitterItems(sitterInfos);
 
-            Babysitter sitter = GovDataHelper.createSitterWithData(sitterInfoItems);
-            //mSitter = sitter;
-            //Config.sitterInfo = sitter;
-            ParseHelper.pinSitter(sitter);
+            Babysitter sitter = new Babysitter();
+
+            // Step1 Add sitter avatar
+            sitter.setImageUrl(GovDataHelper.getImageUrl(sitterInfoPage));
+
+            // Step2 Add sitter infos
+            Elements sitterInfos = GovDataHelper.getSitterInfos(sitterInfoPage);
+            Elements sitterInfosItems = GovDataHelper.getSitterItems(sitterInfos);
+            GovDataHelper.addSitterInfos(sitter, sitterInfosItems);
+
+            // Step3 Add sitter location
+            GovDataHelper.addSitterLocation(sitter);
+
+            ParseHelper.pinSitterToCache(sitter);
+
             return "ok";
 
         } catch (IOException e) {
@@ -312,10 +321,10 @@ public class SyncDataFragment extends Fragment implements OnClickListener {
                 DisplayUtils.makeToast(getActivity(), "網站發生錯誤，請再試一次。");
 
             } else {
-                fillDataToUI(ParseHelper.getSitter());
+                fillDataToUI(ParseHelper.getSitterFromCache());
 
                 //mTel.setText("聯絡電話：" + result);
-                //Config.sitterInfo.setTel(result);
+                //Config.sitter.setTel(result);
                 mDataLayout.setVisibility(View.VISIBLE);
             }
         }

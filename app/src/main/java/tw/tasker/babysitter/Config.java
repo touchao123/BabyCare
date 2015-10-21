@@ -45,9 +45,9 @@ public class Config {
     //public static Sitter tmpSiterInfo;
     // if we can't get the user location.
     public static ParseGeoPoint MY_LOCATION = new ParseGeoPoint(LAT, LNG);
+
     public static String sitterObjectId;
-    //public static Babysitter sitterInfo;
-    //public static UserInfo userInfo;
     public static List<BabysitterFavorite> favorites;
     public static List<String> conversations;
+
 }
