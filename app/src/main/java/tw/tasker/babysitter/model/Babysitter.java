@@ -202,7 +202,9 @@ public class Babysitter extends ParseObject {
     @Override
     public String toString() {
 
-        String s = super.toString() + ", "
+        String s = super.toString() + ", ["
+                + getObjectId() + "], "
+                + getImageUrl() + ", "
                 + getName() + ", "
                 + getSkillNumber() + ", "
                 + getBabysitterNumber() + ", "
@@ -215,7 +217,8 @@ public class Babysitter extends ParseObject {
                 + getBabycareCount() + ", "
                 + getCommunityName() + ", "
                 + getCommunityTel() + ", "
-                + getCommunityAddress() + ", ";
+                + getCommunityAddress() + ", "
+                + getLocation();
 
         return s;
     }
