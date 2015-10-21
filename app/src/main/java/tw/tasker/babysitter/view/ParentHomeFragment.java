@@ -209,7 +209,7 @@ public class ParentHomeFragment extends Fragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.home, menu);
 
-        MenuItem item = menu.findItem(R.id.action_settings);
+        MenuItem item = menu.findItem(R.id.action_more);
 
         SubMenu subMenu = item.getSubMenu();
         MenuItem logoutItem = subMenu.findItem(R.id.action_logout);
@@ -234,7 +234,7 @@ public class ParentHomeFragment extends Fragment implements
 
         switch (id) {
 
-            case R.id.message:
+            case R.id.action_message:
                 FlurryAgent.logEvent("see parent message.");
                 startActivity(IntentUtil.startConversationActivity());
                 break;

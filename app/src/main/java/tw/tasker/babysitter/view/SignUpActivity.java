@@ -59,9 +59,9 @@ public class SignUpActivity extends BaseActivity {
 
         MenuInflater inflater = getMenuInflater();
 
-        inflater.inflate(R.menu.home, menu);
+        inflater.inflate(R.menu.sign_up, menu);
 
-        mItem = menu.findItem(R.id.action_settings);
+        mItem = menu.findItem(R.id.action_more);
         mSubMenu = mItem.getSubMenu();
         mLogoutItem = mSubMenu.findItem(R.id.action_logout);
         mProfileItem = mSubMenu.findItem(R.id.action_profile);
