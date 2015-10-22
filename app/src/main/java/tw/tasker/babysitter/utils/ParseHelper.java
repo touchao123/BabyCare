@@ -45,10 +45,18 @@ public class ParseHelper {
     }
 
     public static void addUserToInstallation() {
-        if (ParseUser.getCurrentUser() != null) {
+
+        if (AccountChecker.isLogin()) {
             ParseInstallation installation = ParseInstallation.getCurrentInstallation();
             installation.put("user", ParseUser.getCurrentUser());
-            installation.saveInBackground();
+            installation.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException parseException) {
+                    if (ParseHelper.isSuccess(parseException)) {
+                    } else {
+                    }
+                }
+            });
         }
     }
 
