@@ -114,7 +114,7 @@ public class TalkToParent {
 
     private void addFavorite(String parentObjectId) {
 
-        Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, ParseHelper.getParent().getObjectId());
+        Babysitter babysitter = ParseObject.createWithoutData(Babysitter.class, ParseHelper.getSitter().getObjectId());
         UserInfo userInfo = ParseObject.createWithoutData(UserInfo.class, parentObjectId);
 
         BabysitterFavorite babysitterfavorite = new BabysitterFavorite();
