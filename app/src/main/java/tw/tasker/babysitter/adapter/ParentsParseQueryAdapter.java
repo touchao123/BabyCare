@@ -11,16 +11,17 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
-import tw.tasker.babysitter.utils.AccountChecker;
 
 public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     public ParentListClickHandler mParentListClickHandler;
@@ -216,28 +217,28 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 //        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 //        mCommunityName.setText(content);
 //
-//        initContactStatus(userInfo);
+        initContactStatus(userInfo);
     }
 
 
-    private void initContactStatus(Babysitter babysitter) {
-        if (isFavoriteSitter(babysitter)) {
+    private void initContactStatus(UserInfo parent) {
+        if (isTalkToSitter(parent)) {
             mContact.setEnabled(false);
             mContact.setText(R.string.contact_sent);
         } else {
             mContact.setEnabled(true);
-            mContact.setText(R.string.contact);
+            mContact.setText(R.string.parent_contact);
         }
 
     }
 
-    private void initListener(final UserInfo userInfo) {
+    private void initListener(final UserInfo parent) {
 
         mContact.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                mParentListClickHandler.onContactClick(v, userInfo);
+                mParentListClickHandler.onContactClick(v, parent);
             }
         });
 
@@ -252,21 +253,24 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 
     }
 
-    // TODO the system will be crashed sometimes.
-    private boolean isFavoriteSitter(Babysitter babysitter) {
+    @DebugLog
+    private boolean isTalkToSitter(UserInfo parent) {
 
-        if (AccountChecker.isNull(Config.favorites))
-            return false;
-
-        for (BabysitterFavorite favorite : Config.favorites) {
-            Babysitter favoriteSitter = favorite.getBabysitter();
-
-            if (favoriteSitter.getObjectId().equals(babysitter.getObjectId())) {
-                return true;
-            }
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.fromLocalDatastore();
+        query.whereEqualTo("UserInfo", parent);
+        BabysitterFavorite favorite = null;
+        try {
+            favorite = query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
+        //if (favorite != null) {
+        //    return true;
+        //} else {
         return false;
+        //}
     }
 
     private void loadOldAvator(Babysitter sitter) {

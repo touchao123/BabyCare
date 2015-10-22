@@ -11,14 +11,18 @@ import android.widget.TextView;
 
 import com.layer.sdk.exceptions.LayerException;
 import com.layer.sdk.messaging.Conversation;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
 import tw.tasker.babysitter.adapter.QueryAdapter;
 import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
+import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.parse.ParseImpl;
+import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
 
 public class ConversationActivity extends ActionBarActivity implements LayerCallbacks, ConversationQueryAdapter.ConversationClickHandler {
@@ -148,14 +152,39 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
     @Override
     public void onConversationClick(Conversation conversation) {
         //If the Conversation is valid, start the MessageActivity and pass in the Conversation ID
-        if (conversation != null && conversation.getId() != null && !conversation.isDeleted()) {
+        if (conversation != null && conversation.getId() != null && !conversation.isDeleted()
+                && isConfirmBothParentAndSitter(conversation.getId().toString())) {
             Intent intent = new Intent(ConversationActivity.this, MessageActivity.class);
             intent.putExtra("conversation-id", conversation.getId());
 
             startActivity(intent);
+        } else {
+            DisplayUtils.makeToast(this, "確認「媒合」後，才可以進行對話。");
         }
 
     }
+
+    private boolean isConfirmBothParentAndSitter(String conversationId) {
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.fromLocalDatastore();
+        query.whereEqualTo("conversationId", conversationId);
+        query.whereEqualTo("isParentConfirm", true);
+        query.whereEqualTo("isSitterConfirm", true);
+
+        BabysitterFavorite favorite = null;
+        try {
+            favorite = query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (favorite != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     @Override
     public boolean onConversationLongClick(Conversation conversation) {

@@ -22,11 +22,13 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
+import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 /*
@@ -104,7 +106,10 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
 
         //Tie the view elements to the fields in the actual view after it has been created
         ViewHolder holder = new ViewHolder(itemView, mConversationClickHandler);
-        holder.participants = (TextView) itemView.findViewById(R.id.participants);
+        holder.avatar = (CircleImageView) itemView.findViewById(R.id.avatar);
+        holder.title1 = (TextView) itemView.findViewById(R.id.title1);
+        holder.title2 = (TextView) itemView.findViewById(R.id.title2);
+        holder.note = (TextView) itemView.findViewById(R.id.note);
         holder.time = (TextView) itemView.findViewById(R.id.time);
         holder.lastMsgContent = (TextView) itemView.findViewById(R.id.message);
 
@@ -146,18 +151,22 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
             }
         }
 
-        viewHolder.participants.setText(mConfirm.getParticipatsTitle() + mConfirm.getName());
+        DisplayUtils.loadOldAvatorWithUrl(viewHolder.avatar, mConfirm.getAvatarUrl());
+
+        viewHolder.title1.setText(mConfirm.getTitle1());
 
         //Grab the last message in the conversation and show it in the format "sender: last message content"
         Message message = conversation.getLastMessage();
         if (message != null) {
-            viewHolder.lastMsgContent.setText(ParseImpl.getUsername(message.getSender().getUserId()) + ": " + LayerImpl.getMessageText(message));
+            viewHolder.lastMsgContent.setText(mConfirm.getTitle1() + ": " + LayerImpl.getMessageText(message));
         } else {
             viewHolder.lastMsgContent.setText("");
         }
 
+        viewHolder.title2.setText(mConfirm.getTitle2());
         //Draw the date the last message was received (downloaded from the server)
         viewHolder.time.setText(LayerImpl.getReceivedAtTime(message));
+        viewHolder.note.setText(mConfirm.getNote());
 
         viewHolder.match.setOnClickListener(new OnClickListener() {
 
@@ -185,18 +194,6 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
                 viewHolder.conversation.delete(DeletionMode.ALL_PARTICIPANTS);
             }
         });
-
-
-//		if (isUserSendRequest(viewHolder.conversation.getId().toString())) {
-//			LogUtils.LOGD("vic", "1.confirm button hide!");
-//			viewHolder.match.setVisibility(View.GONE);
-//			viewHolder.cancel.setVisibility(View.GONE);
-//		} else {
-//			LogUtils.LOGD("vic", "1.confirm button show!");
-//			viewHolder.match.setVisibility(View.VISIBLE);
-//			viewHolder.cancel.setVisibility(View.VISIBLE);
-//		}
-
     }
 
     //This example app only has one kind of view type, but you could support different TYPES of
@@ -222,8 +219,11 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
         //For each Conversation item in the RecyclerView list, we show the participants, time,
         // contents of the last message, and have a reference to the conversation so when it is
         // clicked we can start the ConversationActivity
-        public TextView participants;
+        public CircleImageView avatar;
+        public TextView title1;
+        public TextView title2;
         public TextView time;
+        public TextView note;
         public TextView lastMsgContent;
         public Conversation conversation;
         public Button match;

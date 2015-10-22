@@ -9,24 +9,29 @@ import com.parse.ParseQuery;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
-import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentConfirm extends Confirm {
 
     private Babysitter mSitter;
 
     @Override
-    public String getParticipatsTitle() {
-        return "保母:";
+    public String getTitle1() {
+        return mSitter == null ? "" : mSitter.getName();
     }
 
     @Override
-    public String getName() {
+    public String getTitle2() {
+        return mSitter == null ? "" : "(" + mSitter.getAge() + ")";
+    }
 
-        if (mSitter != null) {
-            return mSitter.getName();
-        }
-        return "";
+    @Override
+    public String getNote() {
+        return mSitter == null ? "" : mSitter.getBabycareTime();
+    }
+
+    @Override
+    public String getAvatarUrl() {
+        return mSitter == null ? "" : mSitter.getImageUrl();
     }
 
     @Override
@@ -37,28 +42,25 @@ public class ParentConfirm extends Confirm {
     private void loadParentFavoriteData(final ConversationQueryAdapter.ViewHolder viewHolder) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.fromLocalDatastore();
-        query.whereEqualTo("conversationId", viewHolder.conversation.getId());
+        String conversationId = viewHolder.conversation.getId().toString();
+        query.whereEqualTo("conversationId", conversationId);
         query.include("Babysitter");
-        query.getFirstInBackground(new GetCallback<BabysitterFavorite>() {
 
-            @Override
-            public void done(BabysitterFavorite favorite, ParseException parseException) {
-                if (ParseHelper.isSuccess(parseException)) {
-                    mSitter = favorite.getBabysitter();
-                    //Config.favorites = favorites;
+        BabysitterFavorite favorite = null;
+        try {
+            favorite = query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-                    if (isConfirmBothParentAndSitter(favorite) || isUserSendRequest(favorite)) {
-                        hideButton(viewHolder);
-                    } else {
-                        showButton(viewHolder);
-                    }
-
-                } else {
-                    //Toast.makeText(getActivity(), "查不到你的資料!", Toast.LENGTH_SHORT).show();
-
-                }
+        if (favorite != null) {
+            mSitter = favorite.getBabysitter();
+            if (isConfirmBothParentAndSitter(favorite) || isUserSendRequest(favorite)) {
+                hideButton(viewHolder);
+            } else {
+                showButton(viewHolder);
             }
-        });
+        }
     }
 
     @DebugLog

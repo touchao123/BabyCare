@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -27,7 +28,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
+import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.view.ListDialogFragment;
 
@@ -264,4 +267,16 @@ public class DisplayUtils {
 
         return showDistance;
     }
+
+    public static void loadOldAvatorWithUrl(CircleImageView avatar, String parseUrl) {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+
+        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
+        if (parseUrl.equals("../img/photo_mother_no.jpg")) {
+            avatar.setImageResource(R.drawable.profile);
+        } else {
+            imageLoader.displayImage(websiteUrl + parseUrl, avatar, Config.OPTIONS, null);
+        }
+    }
+
 }

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
@@ -23,14 +23,12 @@ import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
-import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 
 public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     public SitterListClickHandler mSitterListClickHandler;
     private RatingBar mBabyCount;
     private CircleImageView mAvatar;
-    private ImageLoader imageLoader = ImageLoader.getInstance();
     private TextView mAge;
     private TextView mName;
     private TextView mAddress;
@@ -199,7 +197,8 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     }
 
     private void initData(Babysitter sitter) {
-        loadOldAvator(sitter);
+
+        DisplayUtils.loadOldAvatorWithUrl(mAvatar, sitter.getImageUrl());
         mName.setText(sitter.getName());
         //mBabysitterNumber.setText("保母證號：" + sitter.getSkillNumber());
         mAge.setText("(" + sitter.getAge() + ")");
@@ -218,12 +217,12 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         //mCommunityName.setText(content);
 
-        //initContactStatus(sitter);
+        initContactStatus(sitter);
     }
 
 
     private void initContactStatus(Babysitter babysitter) {
-        if (isFavoriteSitter(babysitter)) {
+        if (isTalkToSitter(babysitter)) {
             mContact.setEnabled(false);
             mContact.setText(R.string.contact_sent);
         } else {
@@ -254,33 +253,25 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
     }
 
-
-    // TODO the system will be crashed sometimes.
-    private boolean isFavoriteSitter(Babysitter babysitter) {
-
-        if (AccountChecker.isNull(Config.favorites))
-            return false;
-
-        for (BabysitterFavorite favorite : Config.favorites) {
-            Babysitter favoriteSitter = favorite.getBabysitter();
-
-            if (favoriteSitter.getObjectId().equals(babysitter.getObjectId())) {
-                return true;
-            }
+    private boolean isTalkToSitter(Babysitter sitter) {
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.fromLocalDatastore();
+        query.whereEqualTo("Babysitter", sitter);
+        BabysitterFavorite favorite = null;
+        try {
+            favorite = query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
-        return false;
-    }
-
-    private void loadOldAvator(Babysitter sitter) {
-        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
-        String parseUrl = sitter.getImageUrl();
-        if (parseUrl.equals("../img/photo_mother_no.jpg")) {
-            mAvatar.setImageResource(R.drawable.profile);
+        if (favorite != null) {
+            return true;
         } else {
-            imageLoader.displayImage(websiteUrl + parseUrl, mAvatar, Config.OPTIONS, null);
+            return false;
         }
+
     }
+
 
 	/*
      * @Override public int getViewTypeCount() { return 2; }

@@ -10,9 +10,13 @@ public abstract class Confirm {
 
     abstract void loadStatus(ConversationQueryAdapter.ViewHolder viewHolder);
 
-    abstract String getParticipatsTitle();
+    public abstract String getTitle1();
 
-    abstract String getName();
+    public abstract String getTitle2();
+
+    public abstract String getNote();
+
+    public abstract String getAvatarUrl();
 
     @DebugLog
     boolean isConfirmBothParentAndSitter(BabysitterFavorite favorite) {
@@ -32,4 +36,5 @@ public abstract class Confirm {
         }
         return false;
     }
+
 }

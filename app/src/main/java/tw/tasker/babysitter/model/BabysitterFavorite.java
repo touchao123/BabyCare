@@ -63,4 +63,13 @@ public class BabysitterFavorite extends ParseObject {
     public void setConversationId(String value) {
         put("conversationId", value);
     }
+
+    @Override
+    public String toString() {
+        String s = super.toString() + ", ["
+                + getObjectId() + "], "
+                + getConversationId();
+
+        return s;
+    }
 }

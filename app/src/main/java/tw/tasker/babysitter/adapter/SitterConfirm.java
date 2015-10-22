@@ -10,22 +10,28 @@ import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter.ViewHolder;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
-import tw.tasker.babysitter.utils.ParseHelper;
 
 public class SitterConfirm extends Confirm {
 
     private UserInfo mParent;
 
     @Override
-    public String getParticipatsTitle() {
-        return "爸媽:";
+    public String getTitle1() {
+        return mParent == null ? "" : mParent.getName();
     }
 
     @Override
-    public String getName() {
-        if (mParent != null) {
-            return mParent.getName();
-        }
+    public String getTitle2() {
+        return mParent == null ? "" : mParent.getKidsGender() + "寶寶";
+    }
+
+    @Override
+    public String getNote() {
+        return "";
+    }
+
+    @Override
+    public String getAvatarUrl() {
         return "";
     }
 
@@ -34,29 +40,29 @@ public class SitterConfirm extends Confirm {
         loadSitterFavoriteData(viewHolder);
     }
 
+
     private void loadSitterFavoriteData(final ViewHolder viewHolder) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.fromLocalDatastore();
-        query.whereEqualTo("conversationId", viewHolder.conversation.getId());
+        String conversationId = viewHolder.conversation.getId().toString();
+        query.whereEqualTo("conversationId", conversationId);
         query.include("UserInfo");
-        query.getFirstInBackground(new GetCallback<BabysitterFavorite>() {
 
-            @Override
-            public void done(BabysitterFavorite favorite, ParseException parseException) {
-                if (ParseHelper.isSuccess(parseException)) {
-                    mParent = favorite.getUserInfo();
+        BabysitterFavorite favorite = null;
+        try {
+            favorite = query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-                    if (isConfirmBothParentAndSitter(favorite) || isUserSendRequest(favorite)) {
-                        hideButton(viewHolder);
-                    } else {
-                        showButton(viewHolder);
-                    }
-
-                } else {
-
-                }
+        if (favorite != null) {
+            mParent = favorite.getUserInfo();
+            if (isConfirmBothParentAndSitter(favorite) || isUserSendRequest(favorite)) {
+                hideButton(viewHolder);
+            } else {
+                showButton(viewHolder);
             }
-        });
+        }
     }
 
     @DebugLog
