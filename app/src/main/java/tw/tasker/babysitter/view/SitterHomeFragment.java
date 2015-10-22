@@ -218,10 +218,9 @@ public class SitterHomeFragment extends Fragment implements
         }
 
         MenuItem itemMessage = menu.findItem(R.id.action_message);
-        if (ParseUser.getCurrentUser() == null) {
-            itemMessage.setVisible(false);
+        if (AccountChecker.isLogin()) {
+            itemMessage.setVisible(true);
         }
-
 
         super.onCreateOptionsMenu(menu, inflater);
     }
