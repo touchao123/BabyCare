@@ -51,7 +51,6 @@ public class ParentHomeFragment extends Fragment implements
         OnQueryLoadListener<Babysitter>,
         SitterListClickHandler {
 
-    private static final int REQUEST_DATA_CHECK = 0;
     public ListView mListView;
     private FilterPanelView mFilterPanelView;
     private AddressPanelView mAddressPanelView;
@@ -292,7 +291,7 @@ public class ParentHomeFragment extends Fragment implements
             contact.setText("已送出媒合邀請");
             contact.setEnabled(false);
 
-            startActivityForResult(IntentUtil.startDataCheckActivity(), REQUEST_DATA_CHECK);
+            startActivityForResult(IntentUtil.startDataCheckActivity(), HomeActivity.REQUEST_DATA_CHECK);
         } else {
             startActivity(IntentUtil.startDispatchActivity());
         }
@@ -303,7 +302,7 @@ public class ParentHomeFragment extends Fragment implements
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_DATA_CHECK) {
+        if (requestCode == HomeActivity.REQUEST_DATA_CHECK) {
             TalkToSitter talkToSitter = new TalkToSitter();
             talkToSitter.send(mSitter);
         }

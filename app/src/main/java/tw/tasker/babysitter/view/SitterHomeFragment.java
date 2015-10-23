@@ -1,5 +1,6 @@
 package tw.tasker.babysitter.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -128,10 +129,20 @@ public class SitterHomeFragment extends Fragment implements
             contact.setText("已送出媒合邀請");
             contact.setEnabled(false);
 
-            TalkToParent talkToParent = new TalkToParent();
-            talkToParent.send(mUserInfo);
+            startActivityForResult(IntentUtil.startDataCheckActivity(), HomeActivity.REQUEST_DATA_CHECK);
+
         } else {
             mMaterialLoginDialog.show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == HomeActivity.REQUEST_DATA_CHECK) {
+            TalkToParent talkToParent = new TalkToParent();
+            talkToParent.send(mUserInfo);
         }
     }
 

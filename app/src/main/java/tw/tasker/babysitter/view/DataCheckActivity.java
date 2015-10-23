@@ -12,15 +12,11 @@ import tw.tasker.babysitter.utils.AccountChecker;
 
 public class DataCheckActivity extends BaseActivity implements OnClickListener {
     private FragmentTransaction mFragmentTransaction;
-    private Fragment mDataCheckParentEditFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
-
-        mDataCheckParentEditFragment = DataCheckParentEditFragment.newInstance(null);
-
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
 
         if (savedInstanceState == null) {
@@ -28,9 +24,11 @@ public class DataCheckActivity extends BaseActivity implements OnClickListener {
 
             UserType userType = AccountChecker.getUserType();
             if (userType == UserType.PARENT) {
-                fragment = mDataCheckParentEditFragment;
+                fragment = DataCheckParentEditFragment.newInstance(null);
+                ;
             } else if (userType == UserType.SITTER) {
-                fragment = mDataCheckParentEditFragment;
+                fragment = DataCheckSitterEditFragment.newInstance(null);
+                ;
             }
 
             mFragmentTransaction.add(R.id.container, fragment).commit();

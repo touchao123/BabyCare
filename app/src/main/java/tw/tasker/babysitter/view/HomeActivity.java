@@ -11,6 +11,8 @@ import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class HomeActivity extends BaseActivity {
+    public static final int REQUEST_DATA_CHECK = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

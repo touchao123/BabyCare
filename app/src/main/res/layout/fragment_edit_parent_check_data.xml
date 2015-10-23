@@ -18,12 +18,13 @@
             android:layout_height="wrap_content"
             android:text="請確認您的資料是否正確，以便讓保母能更了解您"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/normal_text" />
+            android:textColor="@color/primary" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="20dp"
             android:src="@drawable/profile" />
 
         <LinearLayout
@@ -233,13 +234,6 @@
             android:text="確認"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="不是您的資料?"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/normal_text" />
 
     </LinearLayout>
 
