@@ -19,11 +19,14 @@ import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
 import tw.tasker.babysitter.adapter.QueryAdapter;
 import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
+import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.parse.ParseImpl;
+import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ConversationActivity extends ActionBarActivity implements LayerCallbacks, ConversationQueryAdapter.ConversationClickHandler {
     public static final String PARSE_DATA_KEY = "com.parse.Data";
@@ -156,6 +159,15 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
                 && isConfirmBothParentAndSitter(conversation.getId().toString())) {
             Intent intent = new Intent(ConversationActivity.this, MessageActivity.class);
             intent.putExtra("conversation-id", conversation.getId());
+
+            String conversationId = conversation.getId().toString();
+            if (AccountChecker.isSitter()) {
+                UserInfo parent = ParseHelper.getParentrWithConversationId(conversationId);
+                ParseHelper.pinParentToCache(parent);
+            } else {
+                Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
+                ParseHelper.pinSitterToCache(sitter);
+            }
 
             startActivity(intent);
         } else {
