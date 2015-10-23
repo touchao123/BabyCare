@@ -20,6 +20,10 @@ import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.layer.LayerImpl;
+import tw.tasker.babysitter.model.UserInfo;
+import tw.tasker.babysitter.utils.AccountChecker;
+import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 /*
  * MessageQueryAdapter.java
@@ -85,7 +89,8 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
         holder.timeLeft = (TextView) itemView.findViewById(R.id.sendTime_left);
         holder.timeRight = (TextView) itemView.findViewById(R.id.sendTime_right);
 
-        holder.contentLayout = (LinearLayout) itemView.findViewById(R.id.contentLayout);
+        holder.contentLayout = (LinearLayout) itemView.findViewById(R.id.content_layout);
+        holder.itemLayout = (LinearLayout) itemView.findViewById(R.id.item_layout);
 
         holder.avatar = (CircleImageView) itemView.findViewById(R.id.avatar);
 
@@ -114,15 +119,25 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
 
         //Right align if the authenticated user (local user) sent the message, otherwise left align
         // the message box
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        //params.weight = 1.0f;
+        LinearLayout.LayoutParams itemLayoutparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         if (message != null && !senderId.equals(LayerImpl.getLayerClient().getAuthenticatedUserId())) {
-            params.gravity = Gravity.LEFT;
+            itemLayoutparams.gravity = Gravity.LEFT;
 
             viewHolder.content.setBackgroundColor(mLeftColor);
             //viewHolder.contentLayout.setBackgroundColor(mLeftColor);
             viewHolder.timeLeft.setVisibility(View.GONE);
             viewHolder.timeRight.setVisibility(View.VISIBLE);
+
+            String imageUrl = "";
+            if (AccountChecker.isSitter()) {
+                UserInfo parent = ParseHelper.getParentFromCache();
+                if (parent.getAvatorFile() != null) {
+                    imageUrl = parent.getAvatorFile().getUrl();
+                }
+            } else {
+                imageUrl = ParseHelper.getSitterFromCache().getImageUrl();
+            }
+            DisplayUtils.loadAvatorWithUrl(viewHolder.avatar, imageUrl);
 
             viewHolder.avatar.setVisibility(View.VISIBLE);
 
@@ -133,7 +148,7 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
                 }
             });
         } else {
-            params.gravity = Gravity.RIGHT;
+            itemLayoutparams.gravity = Gravity.RIGHT;
 
             viewHolder.content.setBackgroundColor(mRightColor);
             //viewHolder.contentLayout.setBackgroundColor(mRightColor);
@@ -142,7 +157,12 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
 
             viewHolder.avatar.setVisibility(View.GONE);
         }
-        viewHolder.contentLayout.setLayoutParams(params);
+        viewHolder.itemLayout.setLayoutParams(itemLayoutparams);
+
+        LinearLayout.LayoutParams contentLayoutparams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+        contentLayoutparams.weight = 1;
+        viewHolder.contentLayout.setLayoutParams(contentLayoutparams);
+
 
     }
 
@@ -165,13 +185,14 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
             implements View.OnClickListener, View.OnLongClickListener {
 
         public final MessageClickHandler messageClickHandler;
+        public LinearLayout contentLayout;
+        public LinearLayout itemLayout;
+        public CircleImageView avatar;
         public TextView sender;
         public TextView timeLeft;
         public TextView timeRight;
         public TextView content;
         public Message message;
-        public LinearLayout contentLayout;
-        public CircleImageView avatar;
 
         //Registers the click listener callback handler
         public ViewHolder(View itemView, MessageClickHandler messageClickHandler) {

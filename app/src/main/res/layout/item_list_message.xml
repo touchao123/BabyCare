@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootLayout"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="right"
     android:orientation="vertical"
     android:padding="10dp">
 
     <LinearLayout
-        android:id="@+id/contentLayout"
+        android:id="@+id/item_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -32,18 +31,24 @@
             android:textColor="@color/hint"
             android:textStyle="italic" />
 
-        <TextView
-            android:id="@+id/msgContent"
+        <LinearLayout
+            android:id="@+id/content_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:autoText="false"
-            android:nestedScrollingEnabled="true"
-            android:padding="5dp"
-            android:singleLine="false"
-            android:text="My message here. My message here. My message here. My message here. My message here. My message here."
-            android:textColor="#ff000000"
-            android:textSize="16dp" />
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/msgContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:singleLine="false"
+                android:text="My message here. My message here. My message here. My message here. My message here. My message here."
+                android:textColor="#ff000000"
+                android:textSize="16dp" />
+
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/sendTime_right"
