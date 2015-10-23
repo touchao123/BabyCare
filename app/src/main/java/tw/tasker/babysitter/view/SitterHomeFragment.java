@@ -14,6 +14,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.flurry.android.FlurryAgent;
 import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
@@ -48,12 +49,14 @@ public class SitterHomeFragment extends Fragment implements
     private ParseQueryAdapter<UserInfo> mAdapter;
 
     private UserInfo mUserInfo;
+    private MaterialDialog mMaterialLoginDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getActivity().setTitle("爸媽列表");
+        mMaterialLoginDialog = DisplayUtils.getMaterialLoignDialog(getContext(), R.string.remind_to_login);
     }
 
     @Override
@@ -92,6 +95,10 @@ public class SitterHomeFragment extends Fragment implements
             case HomeEvent.ACTION_SEND:
                 DisplayUtils.makeToast(getActivity(), "已送出媒合邀請");
                 break;
+
+            case HomeEvent.ACTION_DIALOG_AGREE:
+                startActivity(IntentUtil.startDispatchActivity());
+                break;
         }
     }
 
@@ -124,7 +131,7 @@ public class SitterHomeFragment extends Fragment implements
             TalkToParent talkToParent = new TalkToParent();
             talkToParent.send(mUserInfo);
         } else {
-            startActivity(IntentUtil.startDispatchActivity());
+            mMaterialLoginDialog.show();
         }
     }
 

@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
@@ -28,10 +29,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.view.ListDialogFragment;
 
 public class DisplayUtils {
@@ -248,12 +251,28 @@ public class DisplayUtils {
 
     public static MaterialDialog getMaterialProgressDialog(Context context, int content) {
         return new MaterialDialog.Builder(context)
+                .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
                 .title(R.string.dialog_remind_you)
                 .content(content)
                 .progress(true, 0)
-                .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
                 .build();
 
+    }
+
+    public static MaterialDialog getMaterialLoignDialog(Context context, int content) {
+        return new MaterialDialog.Builder(context)
+                .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
+                .title(R.string.dialog_remind_you)
+                .content(content)
+                .positiveText(R.string.log_in)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(MaterialDialog materialDialog, DialogAction dialogAction) {
+                        EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_DIALOG_AGREE));
+                    }
+                })
+                .negativeText(R.string.dialog_i_know)
+                .build();
     }
 
     public static String showDistance(float distance) {

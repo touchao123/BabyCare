@@ -17,6 +17,7 @@ public class HomeEvent {
 
     public static final int ACTION_ADD_PARENT_INFO_DOEN = 9;
     public static final int ACTION_ADD_SITTER_INFO_DOEN = 10;
+    public static final int ACTION_DIALOG_AGREE = 11;
     private int mAction;
 
     public HomeEvent(int action) {
@@ -69,6 +70,9 @@ public class HomeEvent {
                 break;
             case ACTION_ADD_SITTER_INFO_DOEN:
                 actionName = "ACTION_ADD_SITTER_INFO_DOEN";
+                break;
+            case ACTION_DIALOG_AGREE:
+                actionName = "ACTION_DIALOG_AGREE";
                 break;
 
             default:
