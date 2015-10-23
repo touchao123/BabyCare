@@ -36,6 +36,15 @@ public class ParseHelper {
         return mSitter;
     }
 
+    public static void pinParentToCache(UserInfo parent) {
+        mParent = parent;
+    }
+
+    public static UserInfo getParentFromCache() {
+        return mParent;
+    }
+
+
     public static boolean isSuccess(ParseException e) {
         if (e == null) {
             return true;
@@ -308,5 +317,46 @@ public class ParseHelper {
             }
         });
     }
+
+    public static Babysitter getSitterWithConversationId(String conversationId) {
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.fromLocalDatastore();
+        query.whereEqualTo("conversationId", conversationId);
+        //query.include("UserInfo");
+
+        BabysitterFavorite favorite = null;
+        try {
+            favorite = query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (favorite == null) {
+            return null;
+        } else {
+            return favorite.getBabysitter();
+        }
+    }
+
+    public static UserInfo getParentrWithConversationId(String conversationId) {
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.fromLocalDatastore();
+        query.whereEqualTo("conversationId", conversationId);
+        //query.include("UserInfo");
+
+        BabysitterFavorite favorite = null;
+        try {
+            favorite = query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (favorite == null) {
+            return null;
+        } else {
+            return favorite.getUserInfo();
+        }
+    }
+
 }
 
