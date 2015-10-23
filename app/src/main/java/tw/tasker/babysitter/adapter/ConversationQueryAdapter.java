@@ -151,7 +151,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
             }
         }
 
-        DisplayUtils.loadOldAvatorWithUrl(viewHolder.avatar, mConfirm.getAvatarUrl());
+        DisplayUtils.loadAvatorWithUrl(viewHolder.avatar, mConfirm.getAvatarUrl());
 
         viewHolder.title1.setText(mConfirm.getTitle1());
 

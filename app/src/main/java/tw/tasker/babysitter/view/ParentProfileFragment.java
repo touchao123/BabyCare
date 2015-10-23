@@ -18,6 +18,7 @@ import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.UserInfo;
+import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentProfileFragment extends Fragment implements OnClickListener {
@@ -149,12 +150,11 @@ public class ParentProfileFragment extends Fragment implements OnClickListener {
 
         mKidsGender.setText("小孩姓別：" + parent.getKidsGender());
 
+        String url = "";
         if (parent.getAvatorFile() != null) {
-            String url = parent.getAvatorFile().getUrl();
-            imageLoader.displayImage(url, mAvatar, Config.OPTIONS, null);
-        } else {
-            mAvatar.setImageResource(R.drawable.profile);
+            url = parent.getAvatorFile().getUrl();
         }
+        DisplayUtils.loadAvatorWithUrl(mAvatar, url);
     }
 
     @Override

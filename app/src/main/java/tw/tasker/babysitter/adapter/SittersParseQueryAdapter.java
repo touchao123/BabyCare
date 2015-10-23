@@ -198,7 +198,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
     private void initData(Babysitter sitter) {
 
-        DisplayUtils.loadOldAvatorWithUrl(mAvatar, sitter.getImageUrl());
+        DisplayUtils.loadAvatorWithUrl(mAvatar, sitter.getImageUrl());
         mName.setText(sitter.getName());
         //mBabysitterNumber.setText("保母證號：" + sitter.getSkillNumber());
         mAge.setText("(" + sitter.getAge() + ")");

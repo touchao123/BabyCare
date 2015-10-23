@@ -32,7 +32,16 @@ public class SitterConfirm extends Confirm {
 
     @Override
     public String getAvatarUrl() {
-        return "";
+        if (mParent == null) {
+            return "";
+        }
+
+        String url = "";
+        if (mParent.getAvatorFile() != null) {
+            url = mParent.getAvatorFile().getUrl();
+        }
+
+        return url;
     }
 
     @Override

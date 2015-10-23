@@ -19,21 +19,21 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
-import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
+import tw.tasker.babysitter.utils.DisplayUtils;
 
 public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     public ParentListClickHandler mParentListClickHandler;
     private RatingBar mBabyCount;
     private CircleImageView mAvatar;
     private ImageLoader imageLoader = ImageLoader.getInstance();
-    private TextView mAge;
+    private TextView mDistance;
     private TextView mName;
     private TextView mAddress;
-    private TextView mBabycareTime;
+    private TextView mBabyGender;
     private TextView mBabysitterNumber;
-    private TextView mEducation;
+    private TextView mBabyAge;
     private TextView mCommunityName;
     private TextView mKm;
     private ImageView mKmLine;
@@ -175,49 +175,30 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     }
 
     private void initView(View rootView) {
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
+        mAvatar = (CircleImageView) rootView.findViewById(R.id.parent_avatar);
         mName = (TextView) rootView.findViewById(R.id.parent_name);
-//        mBabysitterNumber = (TextView) rootView.findViewById(R.id.babysitterNumber);
-        mAge = (TextView) rootView.findViewById(R.id.age);
-        mEducation = (TextView) rootView.findViewById(R.id.education);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-        mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-        mBabyCount = (RatingBar) rootView.findViewById(R.id.babycare_count);
-        mCommunityName = (TextView) rootView.findViewById(R.id.community_name);
-
-//        mExpandable = (LinearLayout) rootView.findViewById(R.id.expandable);
-//        mExpandableToggle = (LinearLayout) rootView.findViewById(R.id.expandable_toggle_button);
-//        mArrow = (ImageView) rootView.findViewById(R.id.arrow);
-
-//        mKm = (TextView) rootView.findViewById(R.id.km);
-        mKmLine = (ImageView) rootView.findViewById(R.id.km_line);
-
+        mAddress = (TextView) rootView.findViewById(R.id.parent_address);
+        mBabyAge = (TextView) rootView.findViewById(R.id.parent_baby_age);
+        mBabyGender = (TextView) rootView.findViewById(R.id.parent_baby_gender);
         mContact = (Button) rootView.findViewById(R.id.contact);
-        mDetail = (TextView) rootView.findViewById(R.id.detail);
-
     }
 
-    private void initData(UserInfo userInfo) {
-        mName.setText(userInfo.getName());
+    private void initData(UserInfo parent) {
+        String url = "";
+        if (parent.getAvatorFile() != null) {
+            url = parent.getAvatorFile().getUrl();
+        }
+        DisplayUtils.loadAvatorWithUrl(mAvatar, url);
 
-        //loadOldAvator(userInfo);
-//        mName.setText(userInfo.getName());
-//        mBabysitterNumber.setText("保母證號：" + userInfo.getSkillNumber());
-//        mAge.setText("(" + userInfo.getAge() + ")");
-//        mEducation.setText("教育程度：" + userInfo.getEducation());
-//        mAddress.setText(userInfo.getAddress());
-//
-//        String changeText = DisplayUtils.getChangeText(userInfo.getBabycareTime());
-//        mBabycareTime.setText(changeText);
-//
-//        int babyCount = DisplayUtils.getBabyCount(userInfo.getBabycareCount());
-//        mBabyCount.setRating(babyCount);
-//
-//        SpannableString content = new SpannableString(userInfo.getCommunityName());
-//        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-//        mCommunityName.setText(content);
-//
-        initContactStatus(userInfo);
+        mName.setText(parent.getName());
+
+        float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+        mAddress.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
+
+        mBabyAge.setText(parent.getKidsAge());
+        mBabyGender.setText(parent.getKidsGender());
+
+        initContactStatus(parent);
     }
 
 
@@ -271,16 +252,6 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         //} else {
         return false;
         //}
-    }
-
-    private void loadOldAvator(Babysitter sitter) {
-        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
-        String parseUrl = sitter.getImageUrl();
-        if (parseUrl.equals("../img/photo_mother_no.jpg")) {
-            mAvatar.setImageResource(R.drawable.profile);
-        } else {
-            imageLoader.displayImage(websiteUrl + parseUrl, mAvatar, Config.OPTIONS, null);
-        }
     }
 
     /*

@@ -268,14 +268,16 @@ public class DisplayUtils {
         return showDistance;
     }
 
-    public static void loadOldAvatorWithUrl(CircleImageView avatar, String parseUrl) {
+    public static void loadAvatorWithUrl(CircleImageView avatar, String imageUrl) {
         ImageLoader imageLoader = ImageLoader.getInstance();
 
-        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
-        if (parseUrl.equals("../img/photo_mother_no.jpg")) {
+        if (imageUrl.equals("../img/photo_mother_no.jpg") || imageUrl.isEmpty()) {
             avatar.setImageResource(R.drawable.profile);
+        } else if (imageUrl.contains("../babysitterFiles")) {
+            String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
+            imageLoader.displayImage(websiteUrl + imageUrl, avatar, Config.OPTIONS, null);
         } else {
-            imageLoader.displayImage(websiteUrl + parseUrl, avatar, Config.OPTIONS, null);
+            imageLoader.displayImage(imageUrl, avatar, Config.OPTIONS, null);
         }
     }
 
