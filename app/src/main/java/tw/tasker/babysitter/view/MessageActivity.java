@@ -32,15 +32,21 @@ import java.util.List;
 import java.util.Set;
 
 import de.greenrobot.event.EventBus;
+import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
+import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.adapter.MessageQueryAdapter;
 import tw.tasker.babysitter.adapter.QueryAdapter;
 import tw.tasker.babysitter.layer.LayerImpl;
+import tw.tasker.babysitter.model.Babysitter;
+import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
+import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 /*
  * MessageActivity.java
@@ -100,16 +106,10 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         // the bottom of the view so the latest message is always displayed
         attachKeyboardListeners(mMessagesView);
 
-
-        UserType userType = AccountChecker.getUserType();
-        if (userType == UserType.PARENT) { // 爸媽，抓保母資料
-            mInfoDialog = getSitterDailog();
-        } else {
-            mInfoDialog = getParentDailog();
-        }
     }
 
-    private Dialog getSitterDailog() {
+    private Dialog getSitterDailog(String conversationId) {
+
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_message_sitter);
@@ -143,12 +143,30 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
             }
         });
 
+        CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.avatar);
+        TextView name = (TextView) dialog.findViewById(R.id.name);
+        TextView age = (TextView) dialog.findViewById(R.id.age);
+        TextView education = (TextView) dialog.findViewById(R.id.education);
+        TextView address = (TextView) dialog.findViewById(R.id.address);
+        TextView babycareTime = (TextView) dialog.findViewById(R.id.babycare_time);
+
+        //Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
+        Babysitter sitter = ParseHelper.getSitterFromCache();
+        if (sitter != null) {
+            DisplayUtils.loadAvatorWithUrl(avatar, sitter.getImageUrl());
+            name.setText(sitter.getName());
+            age.setText(sitter.getAge());
+            education.setText(sitter.getEducation());
+            address.setText(sitter.getAddress());
+            babycareTime.setText(sitter.getBabycareTime());
+        }
+
         //mSignupDialogLogin.setOnClickListener(this);
 
         return dialog;
     }
 
-    private Dialog getParentDailog() {
+    private Dialog getParentDailog(String conversationId) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_message_parent);
@@ -174,6 +192,29 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
             }
         });
 
+        CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.parent_avatar);
+        TextView name = (TextView) dialog.findViewById(R.id.parent_name);
+        TextView address = (TextView) dialog.findViewById(R.id.parent_address);
+        TextView babyAge = (TextView) dialog.findViewById(R.id.parent_baby_age);
+        TextView babyGender = (TextView) dialog.findViewById(R.id.parent_baby_gender);
+
+        UserInfo parent = ParseHelper.getParentFromCache();
+        if (parent != null) {
+            String url = "";
+            if (parent.getAvatorFile() != null) {
+                url = parent.getAvatorFile().getUrl();
+            }
+            DisplayUtils.loadAvatorWithUrl(avatar, url);
+
+            name.setText(parent.getName());
+
+            float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+            address.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
+
+            babyAge.setText(parent.getKidsAge());
+            babyGender.setText(parent.getKidsGender());
+        }
+
         //mSignupDialogLogin.setOnClickListener(this);
 
         return dialog;
@@ -187,6 +228,15 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
 
     @DebugLog
     public void onEvent(Message message) {
+        String conversationId = message.getConversation().getId().toString();
+
+        UserType userType = AccountChecker.getUserType();
+        if (userType == UserType.PARENT) { // 爸媽，抓保母資料
+            mInfoDialog = getSitterDailog(conversationId);
+        } else {
+            mInfoDialog = getParentDailog(conversationId);
+        }
+
         mInfoDialog.show();
     }
 
