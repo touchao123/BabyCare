@@ -30,7 +30,7 @@
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/avatar"
+                    android:id="@+id/parent_avatar"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:src="@drawable/profile" />
@@ -58,12 +58,13 @@
 
 
                     <TextView
-                        android:id="@+id/address"
+                        android:id="@+id/parent_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/demo_address"
+                        android:text="@string/demo_parent_address"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
+
 
                 </LinearLayout>
 
@@ -72,7 +73,6 @@
         <!-- Card Head End -->
 
         <ImageView
-            android:id="@+id/km_line"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/gray_line" />

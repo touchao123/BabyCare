@@ -22,5 +22,7 @@
     <string name="demo_parent_baby_gender">小孩姓別：女</string>
     <string name="demo_parent_babycare_count">希望保母照顧人數：</string>
     <string name="demo_parent_baby_age">小孩步數：1歲3月</string>
+    <string name="demo_parent_address">高雄市鳳山區光復路</string>
+    <string name="demo_parent_distance">(2km)</string>
 
 </resources>
