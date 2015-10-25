@@ -291,7 +291,13 @@ public class ParentHomeFragment extends Fragment implements
             contact.setText("已送出媒合邀請");
             contact.setEnabled(false);
 
-            startActivityForResult(IntentUtil.startDataCheckActivity(), HomeActivity.REQUEST_DATA_CHECK);
+            if (LocalData.getIsDataCheck(getContext())) {
+                TalkToSitter talkToSitter = new TalkToSitter();
+                talkToSitter.send(mSitter);
+            } else {
+                startActivityForResult(IntentUtil.startDataCheckActivity(), HomeActivity.REQUEST_DATA_CHECK);
+            }
+
         } else {
             startActivity(IntentUtil.startDispatchActivity());
         }
