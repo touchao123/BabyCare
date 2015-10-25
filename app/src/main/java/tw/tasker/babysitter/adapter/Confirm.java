@@ -6,7 +6,9 @@ import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 
 public abstract class Confirm {
-    abstract void updateConfirm(String conversationId);
+    abstract void agree(String conversationId);
+
+    abstract void cancel(String conversationId);
 
     abstract void loadStatus(ConversationQueryAdapter.ViewHolder viewHolder);
 

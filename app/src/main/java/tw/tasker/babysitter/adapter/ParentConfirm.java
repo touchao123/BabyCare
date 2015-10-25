@@ -5,10 +5,13 @@ import android.view.View;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
+import tw.tasker.babysitter.model.UserInfo;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentConfirm extends Confirm {
 
@@ -76,16 +79,38 @@ public class ParentConfirm extends Confirm {
     }
 
     @Override
-    public void updateConfirm(String conversationId) {
+    public void agree(String conversationId) {
+        UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
+        String pushMessage = "家長[" + ParseUser.getCurrentUser().getUsername() + "]，接受托育，開始聊天吧~";
+        ParseHelper.pushTextToParent(parent, pushMessage);
+
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.whereEqualTo("conversationId", conversationId);
+        query.fromLocalDatastore();
         query.getFirstInBackground(new GetCallback<BabysitterFavorite>() {
 
             @Override
             public void done(BabysitterFavorite favorite, ParseException exception) {
                 if (favorite != null) {
                     favorite.setIsParentConfirm(true);
-                    favorite.saveInBackground();
+                    favorite.saveEventually();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    void cancel(String conversationId) {
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.whereEqualTo("conversationId", conversationId);
+        query.fromLocalDatastore();
+        query.getFirstInBackground(new GetCallback<BabysitterFavorite>() {
+
+            @Override
+            public void done(BabysitterFavorite favorite, ParseException exception) {
+                if (favorite != null) {
+                    favorite.deleteEventually();
                 }
             }
         });
