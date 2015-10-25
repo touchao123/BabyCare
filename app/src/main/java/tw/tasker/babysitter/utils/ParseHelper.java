@@ -1,15 +1,20 @@
 package tw.tasker.babysitter.utils;
 
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 import com.parse.SignUpCallback;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,10 +125,12 @@ public class ParseHelper {
         return sitter;
     }
 
-    public static void loadSitterFavoriteData(Babysitter sitter) {
+    @DebugLog
+    public static void loadSitterFavoriteFromLocal(final Babysitter sitter) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.whereEqualTo("Babysitter", sitter);
         query.include("UserInfo");
+        query.fromLocalDatastore();
         query.findInBackground(new FindCallback<BabysitterFavorite>() {
 
             @Override
@@ -131,10 +138,31 @@ public class ParseHelper {
                 if (isSuccess(parseException)) {
                     EventBus.getDefault().post(favorites);
                 } else {
+                    loadSitterFavoriteFromServer(sitter);
+                }
+            }
+        });
+    }
+
+    @DebugLog
+    public static void loadSitterFavoriteFromServer(Babysitter sitter) {
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.whereEqualTo("Babysitter", sitter);
+        query.whereEqualTo("isParentConfirm", true);
+        query.include("UserInfo");
+        query.findInBackground(new FindCallback<BabysitterFavorite>() {
+
+            @Override
+            public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    pinFavorites(favorites);
+                    //EventBus.getDefault().post(favorites);
+                } else {
                     EventBus.getDefault().post(parseException);
                 }
             }
         });
+
     }
 
     // Parent
@@ -183,7 +211,26 @@ public class ParseHelper {
         return parent;
     }
 
-    public static void loadParentFavoriteData(UserInfo parent) {
+    public static void loadParentFavoriteFromLocal(final UserInfo parent) {
+        ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
+        query.whereEqualTo("UserInfo", parent);
+        query.whereEqualTo("isSitterConfirm", true);
+        query.include("Babysitter");
+        query.fromLocalDatastore();
+        query.findInBackground(new FindCallback<BabysitterFavorite>() {
+
+            @Override
+            public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    EventBus.getDefault().post(favorites);
+                } else {
+                    loadParentFavoriteFromServer(parent);
+                }
+            }
+        });
+    }
+
+    public static void loadParentFavoriteFromServer(UserInfo parent) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.whereEqualTo("UserInfo", parent);
         query.whereEqualTo("isSitterConfirm", true);
@@ -193,9 +240,36 @@ public class ParseHelper {
             @Override
             public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
                 if (isSuccess(parseException)) {
-                    EventBus.getDefault().post(favorites);
+                    pinFavorites(favorites);
+                    //EventBus.getDefault().post(favorites);
                 } else {
-                    EventBus.getDefault().post(favorites);
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
+
+    // Message
+    @DebugLog
+    public static void pinFavorites(List<BabysitterFavorite> favorites) {
+        ParseObject.unpinAllInBackground(favorites, new DeleteCallback() {
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+
+        ParseObject.pinAllInBackground(favorites, new SaveCallback() {
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+
+                } else {
+                    EventBus.getDefault().post(parseException);
                 }
             }
         });
@@ -219,20 +293,6 @@ public class ParseHelper {
         }
 
         return conversations;
-    }
-
-    @DebugLog
-    public static void pinFavorites(List<BabysitterFavorite> favorites) {
-        ParseObject.pinAllInBackground(favorites, new SaveCallback() {
-            @Override
-            public void done(ParseException parseException) {
-                if (isSuccess(parseException)) {
-
-                } else {
-                    EventBus.getDefault().post(parseException);
-                }
-            }
-        });
     }
 
     public static void runLogin(String account, String password) {
@@ -338,7 +398,7 @@ public class ParseHelper {
         }
     }
 
-    public static UserInfo getParentrWithConversationId(String conversationId) {
+    public static UserInfo getParentWithConversationId(String conversationId) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.fromLocalDatastore();
         query.whereEqualTo("conversationId", conversationId);
@@ -356,6 +416,52 @@ public class ParseHelper {
         } else {
             return favorite.getUserInfo();
         }
+    }
+
+    // push
+    public static void pushTextToSitter(Babysitter sitter, String pushMessage) {
+        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", sitter.getUser());
+
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        JSONObject data = DisplayUtils.getJSONDataMessageForIntent(pushMessage);
+        push.setData(data);
+        push.sendInBackground(new SendCallback() {
+
+            @Override
+            public void done(ParseException parseException) {
+                if (parseException == null) {
+                    //EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_PUSH));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+
+    }
+
+    @DebugLog
+    public static void pushTextToParent(UserInfo parent, String pushMessage) {
+
+        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
+        pushQuery.whereEqualTo("user", parent.getUser());
+
+        // Send push notification to query
+        ParsePush push = new ParsePush();
+        push.setQuery(pushQuery); // Set our Installation query
+        JSONObject data = DisplayUtils.getJSONDataMessageForIntent(pushMessage);
+        push.setData(data);
+        push.sendInBackground(new SendCallback() {
+
+            @Override
+            public void done(ParseException e) {
+                if (e != null)
+                    LogUtils.LOGD("vic", "erroe" + e.getMessage());
+            }
+        });
+
     }
 
 }
