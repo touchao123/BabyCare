@@ -34,7 +34,6 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.adapter.SittersParseQueryAdapter;
 import tw.tasker.babysitter.adapter.SittersParseQueryAdapter.SitterListClickHandler;
 import tw.tasker.babysitter.model.Babysitter;
-import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
@@ -112,13 +111,13 @@ public class ParentHomeFragment extends Fragment implements
     @DebugLog
     public void onEvent(UserInfo parent) {
         ParseHelper.pinParent(parent);
-        ParseHelper.loadParentFavoriteData(parent);
+        ParseHelper.loadParentFavoriteFromLocal(parent);
     }
 
-    @DebugLog
-    public void onEvent(List<BabysitterFavorite> favorites) {
-        ParseHelper.pinFavorites(favorites);
-    }
+//    @DebugLog
+//    public void onEvent(List<BabysitterFavorite> favorites) {
+//        ParseHelper.pinFavorites(favorites);
+//    }
 
     @Override
     public void onStop() {
