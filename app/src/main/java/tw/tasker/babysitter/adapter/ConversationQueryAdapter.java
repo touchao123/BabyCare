@@ -156,7 +156,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
         viewHolder.title1.setText(mConfirm.getTitle1());
 
         //Grab the last message in the conversation and show it in the format "sender: last message content"
-        Message message = conversation.getLastMessage();
+        final Message message = conversation.getLastMessage();
         if (message != null) {
             viewHolder.lastMsgContent.setText(mConfirm.getTitle1() + ": " + LayerImpl.getMessageText(message));
         } else {
@@ -176,10 +176,8 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
                 Message msg = LayerImpl.getLayerClient().newMessage(part);
                 viewHolder.conversation.send(msg);
 
-
                 String conversationId = viewHolder.conversation.getId().toString();
-                mConfirm.updateConfirm(conversationId);
-
+                mConfirm.agree(conversationId);
 
                 viewHolder.onConfirmClick();
                 //viewHolder.isConfirm = true;
@@ -191,6 +189,9 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
 
             @Override
             public void onClick(View v) {
+                String conversationId = viewHolder.conversation.getId().toString();
+                mConfirm.cancel(conversationId);
+
                 viewHolder.conversation.delete(DeletionMode.ALL_PARTICIPANTS);
             }
         });
