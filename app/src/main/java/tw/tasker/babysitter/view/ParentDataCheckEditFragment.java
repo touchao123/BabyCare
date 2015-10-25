@@ -36,7 +36,7 @@ import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.PictureHelper;
 
-public class DataCheckParentEditFragment extends Fragment implements OnClickListener {
+public class ParentDataCheckEditFragment extends Fragment implements OnClickListener {
 
     private static SignUpListener mListener;
     private TextView mName;
@@ -56,12 +56,12 @@ public class DataCheckParentEditFragment extends Fragment implements OnClickList
     private TextView mNote;
     private View mRootView;
 
-    public DataCheckParentEditFragment() {
+    public ParentDataCheckEditFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance(SignUpListener listener) {
-        Fragment fragment = new DataCheckParentEditFragment();
+        Fragment fragment = new ParentDataCheckEditFragment();
         mListener = listener;
         return fragment;
     }

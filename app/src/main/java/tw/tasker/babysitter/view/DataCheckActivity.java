@@ -24,10 +24,10 @@ public class DataCheckActivity extends BaseActivity implements OnClickListener {
 
             UserType userType = AccountChecker.getUserType();
             if (userType == UserType.PARENT) {
-                fragment = DataCheckParentEditFragment.newInstance(null);
+                fragment = ParentDataCheckEditFragment.newInstance(null);
                 ;
             } else if (userType == UserType.SITTER) {
-                fragment = DataCheckSitterEditFragment.newInstance(null);
+                fragment = SitterDataCheckEditFragment.newInstance(null);
                 ;
             }
 

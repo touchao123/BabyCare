@@ -24,7 +24,7 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.PictureHelper;
 
-public class DataCheckSitterEditFragment extends Fragment implements OnClickListener {
+public class SitterDataCheckEditFragment extends Fragment implements OnClickListener {
 
     private TextView mNumber;
     private TextView mSitterName;
@@ -49,12 +49,12 @@ public class DataCheckSitterEditFragment extends Fragment implements OnClickList
     private ScrollView mAllScreen;
     private View mRootView;
 
-    public DataCheckSitterEditFragment() {
+    public SitterDataCheckEditFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance(SignUpListener listener) {
-        Fragment fragment = new DataCheckSitterEditFragment();
+        Fragment fragment = new SitterDataCheckEditFragment();
         return fragment;
     }
 
