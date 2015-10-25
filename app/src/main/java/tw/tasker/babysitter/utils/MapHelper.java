@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.model.GMapAddress;
@@ -43,7 +44,7 @@ public class MapHelper {
 		ParseGeoPoint parseGeoPoint = new ParseGeoPoint(0.0, 0.0);
 		try {
 			String googleMapServiceUrl = "http://maps.googleapis.com/maps/api/geocode/json?address="
-					+ address + "&sensor=false&language=zh-tw";
+					+ URLEncoder.encode(address, "UTF-8") + "&sensor=false&language=zh-tw";
 			URL url = new URL(googleMapServiceUrl);
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
