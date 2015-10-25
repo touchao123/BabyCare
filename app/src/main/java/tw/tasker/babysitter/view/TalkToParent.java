@@ -4,15 +4,9 @@ import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.SendCallback;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -23,8 +17,6 @@ import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
-import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class TalkToParent {
@@ -34,33 +26,9 @@ public class TalkToParent {
     private Conversation mConversation;
 
     public void send(UserInfo parent) {
-        pushTextToParent(parent);
-        newConversationWithParent(parent);
-
-    }
-
-    @DebugLog
-    private void pushTextToParent(UserInfo parent) {
-
-        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-        LogUtils.LOGD("vic", "push obj:" + parent.getUser().getObjectId());
-        //ParseObject obj = ParseObject.createWithoutData("user", "KMyQfnc5k3");
-        pushQuery.whereEqualTo("user", parent.getUser());
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
         String pushMessage = "保母[" + ParseUser.getCurrentUser().getUsername() + "]，想幫您帶小孩唷~";
-        JSONObject data = DisplayUtils.getJSONDataMessageForIntent(pushMessage);
-        push.setData(data);
-        push.sendInBackground(new SendCallback() {
-
-            @Override
-            public void done(ParseException e) {
-                if (e != null)
-                    LogUtils.LOGD("vic", "erroe" + e.getMessage());
-            }
-        });
+        ParseHelper.pushTextToParent(parent, pushMessage);
+        newConversationWithParent(parent);
 
     }
 

@@ -4,15 +4,9 @@ import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
 import com.parse.ParseObject;
-import com.parse.ParsePush;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-import com.parse.SendCallback;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -22,8 +16,6 @@ import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
-import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 class TalkToSitter {
@@ -37,34 +29,9 @@ class TalkToSitter {
     }
 
     public void send(Babysitter sitter) {
-        pushTextToSitter(sitter);
-        newConversationWithSitter(sitter);
-    }
-
-    private void pushTextToSitter(Babysitter sitterUser) {
-        ParseQuery<ParseInstallation> pushQuery = ParseInstallation.getQuery();
-        LogUtils.LOGD("vic", "push obj:" + sitterUser.getUser().getObjectId());
-        //ParseObject obj = ParseObject.createWithoutData("user", "KMyQfnc5k3");
-        pushQuery.whereEqualTo("user", sitterUser.getUser());
-
-        // Send push notification to query
-        ParsePush push = new ParsePush();
-        push.setQuery(pushQuery); // Set our Installation query
         String pushMessage = "家長[" + ParseUser.getCurrentUser().getUsername() + "]，想找你帶小孩唷~";
-        JSONObject data = DisplayUtils.getJSONDataMessageForIntent(pushMessage);
-        push.setData(data);
-        push.sendInBackground(new SendCallback() {
-
-            @Override
-            public void done(ParseException parseException) {
-                if (parseException == null) {
-                    //EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_PUSH));
-                } else {
-                    EventBus.getDefault().post(parseException);
-                }
-            }
-        });
-
+        ParseHelper.pushTextToSitter(sitter, pushMessage);
+        newConversationWithSitter(sitter);
     }
 
     protected void newConversationWithSitter(Babysitter sitter) {
