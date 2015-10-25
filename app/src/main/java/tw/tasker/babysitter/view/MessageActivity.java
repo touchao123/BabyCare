@@ -308,16 +308,11 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
     }
 
     private void setMessageTitle(List<String> participantIds) {
-        //TextView[] participantList = new TextView[participantIds.size()-1];
-        int idx = 0;
-        for (String id : participantIds) {
-            if (!id.equals(LayerImpl.getLayerClient().getAuthenticatedUserId())) {
 
-                //Create a new stylized text view
-                setTitle(ParseImpl.getUsername(id));
-
-                idx++;
-            }
+        if (AccountChecker.isSitter()) {
+            setTitle(ParseHelper.getParentFromCache().getName());
+        } else {
+            setTitle(ParseHelper.getSitterFromCache().getName());
         }
     }
 
