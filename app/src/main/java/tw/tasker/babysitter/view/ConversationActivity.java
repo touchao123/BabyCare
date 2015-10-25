@@ -162,7 +162,7 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
 
             String conversationId = conversation.getId().toString();
             if (AccountChecker.isSitter()) {
-                UserInfo parent = ParseHelper.getParentrWithConversationId(conversationId);
+                UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
                 ParseHelper.pinParentToCache(parent);
             } else {
                 Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
