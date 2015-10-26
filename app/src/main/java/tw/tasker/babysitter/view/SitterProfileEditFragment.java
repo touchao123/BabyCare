@@ -18,6 +18,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -27,7 +28,12 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.SaveCallback;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
@@ -38,6 +44,8 @@ import tw.tasker.babysitter.utils.PictureHelper;
 
 public class SitterProfileEditFragment extends Fragment implements OnClickListener {
 
+    private static final int REQUEST_IMAGE = 1;
+    private static final int RESULT_OK = -1;
     private static SignUpListener mListner;
     private TextView mNumber;
     private TextView mSitterName;
@@ -61,6 +69,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private PictureHelper mPictureHelper;
     private ScrollView mAllScreen;
     private View mRootView;
+    private LinearLayout mSitterHome;
 
     public SitterProfileEditFragment() {
         // TODO Auto-generated constructor stub
@@ -108,6 +117,8 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         mPartTime = (CheckBox) mRootView.findViewById(R.id.part_time);
         mInHouse = (CheckBox) mRootView.findViewById(R.id.in_house);
 
+        mSitterHome = (LinearLayout) mRootView.findViewById(R.id.sitter_home);
+
     }
 
     private void initListener() {
@@ -122,6 +133,8 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         mConfirm.setOnClickListener(this);
 
         mAvatar.setOnClickListener(this);
+
+        mSitterHome.setOnClickListener(this);
     }
 
     private void initData() {
@@ -219,6 +232,10 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
             case R.id.confirm:
                 saveSitterInfo(ParseHelper.getSitter());
+                break;
+
+            case R.id.sitter_home:
+                openGallery();
 
             default:
                 break;
@@ -238,9 +255,22 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     }
 
     private void openGallery() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, 1);
+        Intent intent = new Intent(getContext(), MultiImageSelectorActivity.class);
+
+        // whether show camera
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, false);
+
+        // max select image amount
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 10);
+
+        // select mode (MultiImageSelectorActivity.MODE_SINGLE OR MultiImageSelectorActivity.MODE_MULTI)
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+
+        startActivityForResult(intent, REQUEST_IMAGE);
+
+//        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+//        photoPickerIntent.setType("image/*");
+//        startActivityForResult(photoPickerIntent, 1);
     }
 
     @Override
@@ -258,8 +288,29 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 getFromCamera(data);
                 break;
 
-            case 1:
-                getFromGallery(data);
+            case REQUEST_IMAGE:
+                if(resultCode == RESULT_OK){
+                    // Get the result list of select image paths
+                    List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    // do your logic ....
+
+                    for(String path : paths) {
+                        LogUtils.LOGI("vic", "path: " + path);
+                        Uri uri = Uri.fromFile(new File(path));
+                        LogUtils.LOGI("vic", "uri: " + uri);
+//                        try {
+//                            Bitmap myBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+//                            mAvatar.setImageBitmap(myBitmap);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+
+                    }
+
+                }
+
+
+                //getFromGallery(data);
                 break;
             default:
                 break;
