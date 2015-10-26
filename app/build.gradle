@@ -34,6 +34,7 @@ dependencies {
     compile('com.afollestad.material-dialogs:core:0.8.3.0@aar') {
         transitive = true
     }
+    compile project(':multi-image-selector')
 
     // Android Support
     compile 'com.android.support:appcompat-v7:23.1.0'
