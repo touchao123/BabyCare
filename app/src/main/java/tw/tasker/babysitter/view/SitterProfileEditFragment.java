@@ -29,13 +29,13 @@ import com.parse.ParseException;
 import com.parse.SaveCallback;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.UploadService;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
@@ -291,21 +291,9 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
             case REQUEST_IMAGE:
                 if(resultCode == RESULT_OK){
                     // Get the result list of select image paths
-                    List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                    ArrayList<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     // do your logic ....
-
-                    for(String path : paths) {
-                        LogUtils.LOGI("vic", "path: " + path);
-                        Uri uri = Uri.fromFile(new File(path));
-                        LogUtils.LOGI("vic", "uri: " + uri);
-//                        try {
-//                            Bitmap myBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
-//                            mAvatar.setImageBitmap(myBitmap);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-
-                    }
+                    startUploadService(paths);
 
                 }
 
@@ -315,6 +303,13 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
             default:
                 break;
         }
+    }
+
+    private void startUploadService(ArrayList<String> paths) {
+        Intent intent = new Intent(getContext(), UploadService.class);
+        intent.putStringArrayListExtra(UploadService.PARAM_PATHS, paths);
+        intent.setAction(UploadService.getActionUpload());
+        getActivity().startService(intent);
     }
 
     private void getFromCamera(Intent data) {

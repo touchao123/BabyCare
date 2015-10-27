@@ -52,7 +52,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:largeHeap="true">
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCLzUxrhoPiXZVBxFiicvuUy9fbvzQ4h0c" />
@@ -125,8 +126,10 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:configChanges="orientation|screenSize"
-            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize" />
+
+        <service android:name=".UploadService" />
 
         <!-- Parse -->
         <service android:name="com.parse.PushService" />
