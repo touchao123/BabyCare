@@ -134,7 +134,7 @@ public class UploadService extends IntentService {
 
                 try {
                     parseFile.save();
-                    SAdd (uploadId, parseFile, count);
+                    saveToParse(uploadId, parseFile, count);
 
                 } catch (ParseException parseException) {
                     broadcastError(uploadId, parseException);
