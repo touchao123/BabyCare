@@ -80,9 +80,9 @@ public class ParentConfirm extends Confirm {
 
     @Override
     public void agree(String conversationId) {
-        UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
+        Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
         String pushMessage = "家長[" + ParseUser.getCurrentUser().getUsername() + "]，接受托育，開始聊天吧~";
-        ParseHelper.pushTextToParent(parent, pushMessage);
+        ParseHelper.pushTextToSitter(sitter, pushMessage);
 
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.whereEqualTo("conversationId", conversationId);
@@ -97,7 +97,6 @@ public class ParentConfirm extends Confirm {
                 }
             }
         });
-
     }
 
     @Override

@@ -91,9 +91,9 @@ public class SitterConfirm extends Confirm {
 
     @Override
     public void agree(String conversationId) {
-        Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
-        String pushMessage = "家長[" + ParseUser.getCurrentUser().getUsername() + "]，接受托育，開始聊天吧~";
-        ParseHelper.pushTextToSitter(sitter, pushMessage);
+        UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
+        String pushMessage = "保母[" + ParseUser.getCurrentUser().getUsername() + "]，接受托育，開始聊天吧~";
+        ParseHelper.pushTextToParent(parent, pushMessage);
 
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
         query.whereEqualTo("conversationId", conversationId);
