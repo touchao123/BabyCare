@@ -2,6 +2,8 @@ package tw.tasker.babysitter.utils;
 
 import android.content.Context;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import tw.tasker.babysitter.R;
@@ -64,6 +66,12 @@ public class AccountChecker {
         if (isLogin()) {
             ParseUser.logOut();
             LayerImpl.getLayerClient().deauthenticate();
+
+            try {
+                ParseObject.unpinAll();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
