@@ -247,11 +247,11 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
             e.printStackTrace();
         }
 
-        //if (favorite != null) {
-        //    return true;
-        //} else {
-        return false;
-        //}
+        if (favorite != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*
