@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.layer.sdk.messaging.Conversation;
@@ -149,16 +150,21 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         TextView education = (TextView) dialog.findViewById(R.id.education);
         TextView address = (TextView) dialog.findViewById(R.id.address);
         TextView babycareTime = (TextView) dialog.findViewById(R.id.babycare_time);
+        RatingBar babyCount = (RatingBar) dialog.findViewById(R.id.babycare_count);
 
         //Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
         Babysitter sitter = ParseHelper.getSitterFromCache();
         if (sitter != null) {
+            ParseHelper.pinSitter(sitter);
             DisplayUtils.loadAvatorWithUrl(avatar, sitter.getImageUrl());
             name.setText(sitter.getName());
             age.setText(sitter.getAge());
             education.setText(sitter.getEducation());
             address.setText(sitter.getAddress());
             babycareTime.setText(sitter.getBabycareTime());
+            int showBabyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
+            babyCount.setRating(showBabyCount);
+
         }
 
         //mSignupDialogLogin.setOnClickListener(this);
