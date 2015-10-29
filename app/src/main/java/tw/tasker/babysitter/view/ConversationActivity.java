@@ -161,13 +161,7 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
             intent.putExtra("conversation-id", conversation.getId());
 
             String conversationId = conversation.getId().toString();
-            if (AccountChecker.isSitter()) {
-                UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
-                ParseHelper.pinParentToCache(parent);
-            } else {
-                Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
-                ParseHelper.pinSitterToCache(sitter);
-            }
+            pinParentOrSitterToCache(conversationId);
 
             startActivity(intent);
         } else {
@@ -210,7 +204,21 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
         if (conversation != null && conversation.getId() != null && !conversation.isDeleted()) {
             Intent intent = new Intent(ConversationActivity.this, MessageActivity.class);
             intent.putExtra("conversation-id", conversation.getId());
+
+            String conversationId = conversation.getId().toString();
+            pinParentOrSitterToCache(conversationId);
+
             startActivity(intent);
+        }
+    }
+
+    private void pinParentOrSitterToCache(String conversationId) {
+        if (AccountChecker.isSitter()) {
+            UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
+            ParseHelper.pinParentToCache(parent);
+        } else {
+            Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
+            ParseHelper.pinSitterToCache(sitter);
         }
     }
 
