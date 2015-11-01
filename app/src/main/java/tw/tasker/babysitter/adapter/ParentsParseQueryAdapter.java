@@ -6,11 +6,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -25,20 +23,15 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 
 public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     public ParentListClickHandler mParentListClickHandler;
-    private RatingBar mBabyCount;
-    private CircleImageView mAvatar;
-    private ImageLoader imageLoader = ImageLoader.getInstance();
-    private TextView mDistance;
-    private TextView mName;
-    private TextView mAddress;
-    private TextView mBabyGender;
-    private TextView mBabysitterNumber;
-    private TextView mBabyAge;
-    private TextView mCommunityName;
-    private TextView mKm;
-    private ImageView mKmLine;
+    private CircleImageView mParentAvatar;
+    private TextView mParentName;
+    private TextView mParentAddress;
+    private TextView mParentBabyGender;
+    private TextView mParentBabyAge;
     private Button mContact;
-    private TextView mDetail;
+    private TextView mParentBabycarePlan;
+    private TextView mParentBabycareTime;
+    private RatingBar mParentBabycareCount;
 
     public ParentsParseQueryAdapter(Context context, ParentListClickHandler parentListClickHandler) {
         super(context, getQueryFactory(context));
@@ -175,42 +168,15 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     }
 
     private void initView(View rootView) {
-        mAvatar = (CircleImageView) rootView.findViewById(R.id.parent_avatar);
-        mName = (TextView) rootView.findViewById(R.id.parent_name);
-        mAddress = (TextView) rootView.findViewById(R.id.parent_address);
-        mBabyAge = (TextView) rootView.findViewById(R.id.parent_baby_age);
-        mBabyGender = (TextView) rootView.findViewById(R.id.parent_baby_gender);
+        mParentAvatar = (CircleImageView) rootView.findViewById(R.id.parent_avatar);
+        mParentName = (TextView) rootView.findViewById(R.id.parent_name);
+        mParentAddress = (TextView) rootView.findViewById(R.id.parent_address);
+        mParentBabycarePlan = (TextView) rootView.findViewById(R.id.parent_babycare_plan);
+        mParentBabycareTime = (TextView) rootView.findViewById(R.id.parent_babycare_time);
+        mParentBabycareCount = (RatingBar) rootView.findViewById(R.id.parent_babycare_count);
+        mParentBabyAge = (TextView) rootView.findViewById(R.id.parent_baby_age);
+        mParentBabyGender = (TextView) rootView.findViewById(R.id.parent_baby_gender);
         mContact = (Button) rootView.findViewById(R.id.contact);
-    }
-
-    private void initData(UserInfo parent) {
-        String url = "";
-        if (parent.getAvatorFile() != null) {
-            url = parent.getAvatorFile().getUrl();
-        }
-        DisplayUtils.loadAvatorWithUrl(mAvatar, url);
-
-        mName.setText(parent.getName());
-
-        float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
-        mAddress.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
-
-        mBabyAge.setText(parent.getKidsAge());
-        mBabyGender.setText(parent.getKidsGender());
-
-        initContactStatus(parent);
-    }
-
-
-    private void initContactStatus(UserInfo parent) {
-        if (isTalkToSitter(parent)) {
-            mContact.setEnabled(false);
-            mContact.setText(R.string.contact_sent);
-        } else {
-            mContact.setEnabled(true);
-            mContact.setText(R.string.parent_contact);
-        }
-
     }
 
     private void initListener(final UserInfo parent) {
@@ -231,6 +197,39 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 //                Config.userInfo = userInfo;
 //            }
 //        });
+
+    }
+
+    private void initData(UserInfo parent) {
+        String url = "";
+        if (parent.getAvatorFile() != null) {
+            url = parent.getAvatorFile().getUrl();
+        }
+        DisplayUtils.loadAvatorWithUrl(mParentAvatar, url);
+
+        mParentName.setText(parent.getName());
+
+        float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+        mParentAddress.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
+
+        String parentBabyAgeTitle = getContext().getString(R.string.parent_baby_age_ttile);
+        mParentBabyAge.setText(parentBabyAgeTitle + parent.getKidsAge());
+
+        String parentBabyGender = getContext().getString(R.string.parent_baby_gender_ttile);
+        mParentBabyGender.setText(parentBabyGender + parent.getKidsGender());
+
+        initContactStatus(parent);
+    }
+
+
+    private void initContactStatus(UserInfo parent) {
+        if (isTalkToSitter(parent)) {
+            mContact.setEnabled(false);
+            mContact.setText(R.string.contact_sent);
+        } else {
+            mContact.setEnabled(true);
+            mContact.setText(R.string.parent_contact);
+        }
 
     }
 

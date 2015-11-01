@@ -115,12 +115,12 @@
                     android:textSize="16sp" />
 
                 <RatingBar
-                    android:id="@+id/babycare_count"
+                    android:id="@+id/parent_babycare_count"
                     style="@style/BabyRatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:isIndicator="true"
-                    android:numStars="2"
+                    android:numStars="4"
                     android:rating="0" />
             </LinearLayout>
 
