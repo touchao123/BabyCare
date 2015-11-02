@@ -300,4 +300,48 @@ public class DisplayUtils {
         }
     }
 
+    public static String showBabyAgeByBirthday(String birthday) {
+        Date startDate = getDateByTWDate(birthday);
+        Date endDate = new Date();
+
+        String age = getAge(startDate, endDate);
+        return age;
+    }
+
+
+    private static Date getDateByTWDate(String twDate) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat formatDate = new SimpleDateFormat("yyyMMdd");
+            Date date = formatDate.parse(twDate + calendar.get(Calendar.DAY_OF_MONTH));
+            calendar.setTime(date);
+            calendar.roll(Calendar.YEAR, +1911);
+            return calendar.getTime();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+            return new Date();
+        }
+    }
+
+    public static String getAge(Date startDate, Date endDate) {
+        Calendar srcCalendar = Calendar.getInstance();
+        srcCalendar.setTime(startDate);
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endDate);
+
+        int year = endCalendar.get(Calendar.YEAR) - srcCalendar.get(Calendar.YEAR);
+        int month = endCalendar.get(Calendar.MONTH) - srcCalendar.get(Calendar.MONTH);
+        int day = endCalendar.get(Calendar.DAY_OF_MONTH) - srcCalendar.get(Calendar.DAY_OF_MONTH);
+
+        year = year - ((month > 0) ? 0 : ((month < 0) ? 1 : ((day >= 0 ? 0 : 1))));
+        month = (month < 0) ? (day > 0 ? 12 + month : 12 + month - 1) : (day >= 0 ? month : month - 1);
+        endCalendar.add(Calendar.MONTH, -1);
+        //day = (day < 0) ? (perMonthDays(endCalendar)) + day : day;
+
+        // String ages = year + "歲" + month + "月" + day + "天";
+        String ages = year + "歲" + month + "個月";
+        return ages;
+    }
+
 }

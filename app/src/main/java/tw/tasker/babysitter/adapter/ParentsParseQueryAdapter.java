@@ -213,7 +213,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         mParentAddress.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
 
         String parentBabyAgeTitle = getContext().getString(R.string.parent_baby_age_ttile);
-        mParentBabyAge.setText(parentBabyAgeTitle + parent.getKidsAge());
+        mParentBabyAge.setText(parentBabyAgeTitle + DisplayUtils.showBabyAgeByBirthday(parent.getKidsAge()));
 
         String parentBabyGender = getContext().getString(R.string.parent_baby_gender_ttile);
         mParentBabyGender.setText(parentBabyGender + parent.getKidsGender());
