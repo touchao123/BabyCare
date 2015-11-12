@@ -51,6 +51,21 @@ public class DisplayUtils {
         return now;
     }
 
+    public static String showCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+        String now = formatter.format(calendar.getTime());
+        return now;
+    }
+
+    public static String showCurrentTime() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm");
+        String now = formatter.format(calendar.getTime());
+        return now;
+    }
+
+
     public static float getRatingValue(float totalRating, int totalComment) {
         float avgRating = 0.0f;
 
@@ -342,6 +357,28 @@ public class DisplayUtils {
         // String ages = year + "歲" + month + "月" + day + "天";
         String ages = year + "歲" + month + "個月";
         return ages;
+    }
+
+    public static Date getDateFromString(String dateString) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        Date date = new Date();
+        try {
+            date = format.parse(dateString);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    public static Date getTimeFromString(String timeString) {
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+        Date date = new Date();
+        try {
+            date = format.parse(timeString);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 
 }
