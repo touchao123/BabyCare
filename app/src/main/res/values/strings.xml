@@ -7,10 +7,18 @@
     <!-- Strings related to login -->
     <string name="sign_up">建立帳號</string>
     <string name="log_in">登入</string>
-    <string name="prompt_username">英文字母或數字</string>
-    <string name="prompt_password">六位數以上數字或英文字母</string>
-    <string name="prompt_password_again">請再輸入一次您的密碼</string>
     <string name="action_sign_in_short">登入</string>
+
+    <!-- Parent sign up -->
+    <string name="hint_account">英文字母或數字</string>
+    <string name="hint_password">英文字母或數字</string>
+    <string name="hint_password_again">請再輸入一次您的密碼</string>
+    <string name="hint_email">忘記密碼以E-Mail通知</string>
+    <string name="hint_parent_name">方便聯絡用</string>
+    <string name="hint_parent_address">只顯示部份住址</string>
+    <string name="hint_parent_phone">您同意後才顯示</string>
+    <string name="hint_parent_babycare_count">希望保母最多照顧幾個寶寶</string>
+    <string name="hint_parent_note">其它補充資訊</string>
 
     <!-- Sitter list  -->
     <string name="contact">媒合保母</string>
@@ -72,5 +80,6 @@
     <string name="uploading">上傳中</string>
     <string name="upload_success">上傳完成</string>
     <string name="upload_error">上傳錯誤</string>
+    <string name="parent_babycare_time_title">偏好時段：</string>
 
 </resources>

@@ -13,14 +13,38 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <include layout="@layout/merge_signup" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="註冊資訊"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
             android:src="@drawable/gray_line" />
+
+        <include layout="@layout/merge_signup" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="聯絡資訊"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/gray_line" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +55,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="　　姓名："
+                android:text=" 家長名稱："
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -39,11 +63,13 @@
                 android:id="@+id/parents_name"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginRight="45dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:hint="@string/hint_parent_name"
+                android:textColorHint="@color/hint"/>
         </LinearLayout>
 
         <LinearLayout
@@ -55,7 +81,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="住家地址："
+                android:text=" 住家地址："
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -63,12 +89,14 @@
                 android:id="@+id/parents_address"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginRight="45dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
                 android:ems="10"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:hint="@string/hint_parent_address"
+                android:textColorHint="@color/hint"/>
         </LinearLayout>
 
         <LinearLayout
@@ -80,7 +108,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="聯絡電話："
+                android:text=" 聯絡電話："
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -88,19 +116,29 @@
                 android:id="@+id/parents_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginRight="45dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
                 android:inputType="phone"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:hint="@string/hint_parent_phone"
+                android:textColorHint="@color/hint"/>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="寶寶資訊"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
             android:src="@drawable/gray_line" />
 
         <LinearLayout
@@ -112,7 +150,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="小孩生日：民國"
+                android:text="生日/預產："
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+            <TextView
+                android:id="@+id/baby_age"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/full_edittext_selector"
+                android:gravity="center_vertical"
+                android:text="2015/01/01"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/baby_age_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(1歲1個月1天)"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -128,16 +184,16 @@
                 android:maxLength="4" />
             -->
 
-            <Spinner
-                android:id="@+id/kids_age_year"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp" />
+            <!--<Spinner-->
+                <!--android:id="@+id/kids_age_year"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="40dp" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="年"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="年"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
 
             <!--
                  <EditText
@@ -152,16 +208,16 @@
                 android:singleLine="true" />
             -->
 
-            <Spinner
-                android:id="@+id/kids_age_month"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp" />
+            <!--<Spinner-->
+                <!--android:id="@+id/kids_age_month"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="40dp" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="月"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="月"-->
+                <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -173,7 +229,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="小孩姓別："
+                android:text=" 寶寶性別："
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -182,7 +238,7 @@
                 style="@style/FullCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="男" />
+                android:text="男寶" />
 
             <CheckBox
                 android:id="@+id/kids_gender_girl"
@@ -190,13 +246,237 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:text="女" />
+                android:text="女寶" />
+
+            <CheckBox
+                android:id="@+id/kids_gender_unknow"
+                style="@style/FullCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="未知" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="托育資訊"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/gray_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            week<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 收托人數："
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/normal_text" />
+
+            <TextView
+                android:id="@+id/parent_babycare_count"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/full_edittext_selector"
+                android:gravity="center_vertical"
+                android:text="@string/hint_parent_babycare_count"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 托育類別："
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+            <CheckBox
+                android:id="@+id/normal"
+                style="@style/FullCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="一般" />
+
+            <CheckBox
+                android:id="@+id/in_house"
+                style="@style/FullCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="到府" />
+
+            <CheckBox
+                android:id="@+id/part_time"
+                style="@style/FullCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="臨托" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 開始日期："
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+            <TextView
+                android:id="@+id/parent_babycare_plan"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/full_edittext_selector"
+                android:gravity="center_vertical"
+                android:text="2015/01/01"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(還有10天)"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            week<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="　　 每週："
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+            <TextView
+                android:id="@+id/parent_babycare_"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/full_edittext_selector"
+                android:gravity="center_vertical"
+                android:text="一，二，三，四，五"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="　　 每日："
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+            <TextView
+                android:id="@+id/parent_babycare_time_start"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/full_edittext_selector"
+                android:gravity="center_vertical"
+                android:text="08:00"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="~"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/normal_text" />
+
+            <TextView
+                android:id="@+id/parent_babycare_time_end"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/full_edittext_selector"
+                android:gravity="center_vertical"
+                android:text="18:00"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(日托，8小時)"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="需求說明："
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text"
+                android:layout_marginBottom="5dp"/>
+
+            <EditText
+                android:id="@+id/parents_note"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/full_edittext_selector"
+                android:textSize="16sp"
+                android:gravity="top"
+                android:hint="@string/hint_parent_note"
+                android:textColorHint="@color/hint"/>
         </LinearLayout>
 
         <Button
             android:id="@+id/action_button"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
+            android:layout_marginBottom="30dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/full_button_selector"
             android:paddingLeft="32dp"
