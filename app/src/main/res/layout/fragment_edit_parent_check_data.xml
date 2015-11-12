@@ -41,7 +41,7 @@
                 android:textColor="@color/normal_text" />
 
             <EditText
-                android:id="@+id/parents_name"
+                android:id="@+id/parent_name"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginRight="45dp"
@@ -65,7 +65,7 @@
                 android:textColor="@color/normal_text" />
 
             <EditText
-                android:id="@+id/parents_phone"
+                android:id="@+id/parent_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginRight="45dp"
@@ -90,7 +90,7 @@
                 android:textColor="@color/normal_text" />
 
             <EditText
-                android:id="@+id/parents_address"
+                android:id="@+id/parent_address"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginRight="45dp"
@@ -205,7 +205,7 @@
                 android:textColor="@color/normal_text" />
 
             <EditText
-                android:id="@+id/parents_note"
+                android:id="@+id/parent_note"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginRight="45dp"

@@ -101,15 +101,15 @@ public class ParentDataCheckEditFragment extends Fragment implements OnClickList
     private void initView() {
         mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
         mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
-        mName = (TextView) mRootView.findViewById(R.id.parents_name);
-        mPhone = (TextView) mRootView.findViewById(R.id.parents_phone);
-        mAddress = (TextView) mRootView.findViewById(R.id.parents_address);
+        mName = (TextView) mRootView.findViewById(R.id.parent_name);
+        mPhone = (TextView) mRootView.findViewById(R.id.parent_phone);
+        mAddress = (TextView) mRootView.findViewById(R.id.parent_address);
         mJob = (TextView) mRootView.findViewById(R.id.parents_job);
         mKidsAgeMonth = (Spinner) mRootView.findViewById(R.id.kids_age_month);
         //mKidsAge = (TextView) mRootView.findViewById(R.id.kids_age);
         mKidsAgeYear = (Spinner) mRootView.findViewById(R.id.kids_age_year);
         //mKidsGender = (TextView) mRootView.findViewById(R.id.kids_gender);
-        mNote = (TextView) mRootView.findViewById(R.id.parents_note);
+        mNote = (TextView) mRootView.findViewById(R.id.parent_note);
         mConfirm = (Button) mRootView.findViewById(R.id.confirm);
     }
 
