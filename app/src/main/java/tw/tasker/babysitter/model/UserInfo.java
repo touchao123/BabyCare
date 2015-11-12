@@ -77,4 +77,21 @@ public class UserInfo extends ParseObject {
         put("avator", file);
     }
 
+    public String getBabycareTime() {
+        String babycareTime = getString("babycareTime");
+        return babycareTime == null ? "" : babycareTime;
+    }
+
+    public void setBabycareTime(String vluae) {
+        put("babycareTime", vluae);
+    }
+
+    public String getBabycareCount() {
+        String babycareCount = getString("babycareCount");
+        return  babycareCount == null ? "0" : babycareCount;
+    }
+
+    public void setBabycareCount(String vluae) {
+        put("babycareCount", vluae);
+    }
 }
