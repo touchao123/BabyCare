@@ -35,6 +35,8 @@ dependencies {
         transitive = true
     }
     compile project(':multi-image-selector')
+    compile 'com.wdullaer:materialdatetimepicker:2.0.0'
+//    compile 'com.borax12.materialdaterangepicker:library:1.2'
 
     // Android Support
     compile 'com.android.support:appcompat-v7:23.1.0'
