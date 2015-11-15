@@ -3,6 +3,7 @@ package tw.tasker.babysitter.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -135,6 +136,7 @@ public class ParentSignUpFragment extends Fragment
         mParentBabycareTimeStart.setOnClickListener(this);
         mParentBabycareTimeEnd.setOnClickListener(this);
         mParentBabycareWeek.setOnClickListener(this);
+        mParentBabycareCount.setOnClickListener(this);
     }
 
     private void initData() {
@@ -206,9 +208,34 @@ public class ParentSignUpFragment extends Fragment
                 showWeekDialog();
                 break;
 
+            case R.id.parent_babycare_count:
+                showBabycareCountDialog();
+                break;
             default:
                 break;
         }
+    }
+
+    private void showBabycareCountDialog() {
+
+        int count = Integer.parseInt(mParentBabycareCount.getText().toString()) - 1;
+
+        new MaterialDialog.Builder(getContext())
+                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
+                .title("希望保母最多照顧幾個寶寶？")
+                .items(R.array.babies)
+                .itemsCallbackSingleChoice(count, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        String babycareCount = text.toString();
+                        babycareCount = babycareCount.replace("人", "");
+                        mParentBabycareCount.setText(babycareCount);
+                        return true;
+                    }
+                })
+                .positiveText(R.string.dialog_agree)
+                .negativeText(R.string.dialog_cancel)
+                .show();
     }
 
     private void showWeekDialog() {

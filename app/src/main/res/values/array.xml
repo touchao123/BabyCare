@@ -34,4 +34,11 @@
         <item>星期日</item>
     </string-array>
 
+    <string-array name="babies">
+        <item>1人</item>
+        <item>2人</item>
+        <item>3人</item>
+        <item>4人</item>
+    </string-array>
+
 </resources>
