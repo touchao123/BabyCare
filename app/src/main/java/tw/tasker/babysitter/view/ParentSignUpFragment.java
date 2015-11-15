@@ -239,49 +239,50 @@ public class ParentSignUpFragment extends Fragment
     }
 
     private void showWeekDialog() {
-        ArrayList<Integer> selectWeek = new ArrayList<>();
+        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
 
         String parentBabycareWeek = mParentBabycareWeek.getText().toString();
 
         if (parentBabycareWeek.contains("一")) {
-            selectWeek.add(0);
+            dayOfWeeks.add(0);
         }
         if (parentBabycareWeek.contains("二")) {
-            selectWeek.add(1);
+            dayOfWeeks.add(1);
         }
         if (parentBabycareWeek.contains("三")) {
-            selectWeek.add(2);
+            dayOfWeeks.add(2);
         }
         if (parentBabycareWeek.contains("四")) {
-            selectWeek.add(3);
+            dayOfWeeks.add(3);
         }
         if (parentBabycareWeek.contains("五")) {
-            selectWeek.add(4);
+            dayOfWeeks.add(4);
         }
         if (parentBabycareWeek.contains("六")) {
-            selectWeek.add(5);
+            dayOfWeeks.add(5);
         }
         if (parentBabycareWeek.contains("日")) {
-            selectWeek.add(6);
+            dayOfWeeks.add(6);
         }
 
-        Integer[] selectItems = new Integer[selectWeek.size()];
-        selectItems = selectWeek.toArray(selectItems);
+        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
+        selectedItems = dayOfWeeks.toArray(selectedItems);
 
         new MaterialDialog.Builder(getContext())
+                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
                 .title("請選擇每星期幾托育？")
                 .items(R.array.week)
-                .itemsCallbackMultiChoice(selectItems, new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
 
-                        String week = "";
+                        String dayOfWeek = "";
                         for (CharSequence item : items) {
-                            week = week + item + "，";
+                            dayOfWeek = dayOfWeek + item + "，";
                         }
-                        week = week.substring(0, week.length()-1);
-                        week = week.replace("星期", "");
-                        mParentBabycareWeek.setText(week);
+                        dayOfWeek = dayOfWeek.substring(0, dayOfWeek.length()-1);
+                        dayOfWeek = dayOfWeek.replace("星期", "");
+                        mParentBabycareWeek.setText(dayOfWeek);
 
                         return true;
                     }
