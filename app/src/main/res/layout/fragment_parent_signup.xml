@@ -464,7 +464,7 @@
                 android:id="@+id/parent_babycare_time_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(日托，8小時)"
+                android:text="日間，\n10小時0分鐘"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
