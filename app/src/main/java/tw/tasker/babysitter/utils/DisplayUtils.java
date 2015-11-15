@@ -40,6 +40,11 @@ import tw.tasker.babysitter.view.ListDialogFragment;
 public class DisplayUtils {
 
 
+    public static final int BIRTHDAY_BEFORE_CURREENTDAY = 1;
+    public static final int BIRTHDAY_AFTER_CURRENTDAY = 2;
+    public static final int STARTDAY_BEFORE_CURREENTDAY = 3;
+    public static final int STARTDAY_AFTER_CURRENTDAY = 4;
+
     public static void makeToast(Context context, String message) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
@@ -257,7 +262,7 @@ public class DisplayUtils {
                 break;
 
             default:
-                errorMessage =  parseException.getMessage() + "(" +parseException.getCode() + ")";
+                errorMessage = parseException.getMessage() + "(" + parseException.getCode() + ")";
                 break;
         }
 
@@ -315,14 +320,34 @@ public class DisplayUtils {
         }
     }
 
-    public static String showBabyAgeByBirthday(String birthday) {
-        Date startDate = getDateByTWDate(birthday);
-        Date endDate = new Date();
+    public static String showBabyAgeWithDayByBirthday(String birthday) {
+        Calendar startDate = getCalendarFromString(birthday);
+        Calendar endDate = Calendar.getInstance();
 
-        String age = getAge(startDate, endDate);
-        return age;
+        String age = "";
+        if (startDate.before(endDate)) {
+            age = getAge(startDate, endDate, BIRTHDAY_BEFORE_CURREENTDAY);
+        } else {
+            age = getAge(endDate, startDate, BIRTHDAY_AFTER_CURRENTDAY);
+        }
+
+
+        return age ;
     }
 
+
+    public static Calendar getCalendarFromString(String twDate) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat formatDate = new SimpleDateFormat("yyyy/MM/dd");
+            Date date = formatDate.parse(twDate);
+            calendar.setTime(date);
+            return calendar;
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+            return Calendar.getInstance();
+        }
+    }
 
     private static Date getDateByTWDate(String twDate) {
         try {
@@ -336,27 +361,6 @@ public class DisplayUtils {
             e.printStackTrace();
             return new Date();
         }
-    }
-
-    public static String getAge(Date startDate, Date endDate) {
-        Calendar srcCalendar = Calendar.getInstance();
-        srcCalendar.setTime(startDate);
-
-        Calendar endCalendar = Calendar.getInstance();
-        endCalendar.setTime(endDate);
-
-        int year = endCalendar.get(Calendar.YEAR) - srcCalendar.get(Calendar.YEAR);
-        int month = endCalendar.get(Calendar.MONTH) - srcCalendar.get(Calendar.MONTH);
-        int day = endCalendar.get(Calendar.DAY_OF_MONTH) - srcCalendar.get(Calendar.DAY_OF_MONTH);
-
-        year = year - ((month > 0) ? 0 : ((month < 0) ? 1 : ((day >= 0 ? 0 : 1))));
-        month = (month < 0) ? (day > 0 ? 12 + month : 12 + month - 1) : (day >= 0 ? month : month - 1);
-        endCalendar.add(Calendar.MONTH, -1);
-        //day = (day < 0) ? (perMonthDays(endCalendar)) + day : day;
-
-        // String ages = year + "歲" + month + "月" + day + "天";
-        String ages = year + "歲" + month + "個月";
-        return ages;
     }
 
     public static Date getDateFromString(String dateString) {
@@ -381,4 +385,83 @@ public class DisplayUtils {
         return date;
     }
 
+    public static String getAge(Calendar birthDay, Calendar currentDay, int type) {
+        int years = 0;
+        int months = 0;
+        int days = 0;
+
+        //Get difference between years
+        years = currentDay.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR);
+        int currMonth = currentDay.get(Calendar.MONTH)+1;
+        int birthMonth = birthDay.get(Calendar.MONTH)+1;
+        //Get difference between months
+        months = currMonth - birthMonth;
+        //if month difference is in negative then reduce years by one and calculate the number of months.
+        if(months < 0)
+        {
+            years--;
+            months = 12 - birthMonth + currMonth;
+
+            if(currentDay.get(Calendar.DATE) < birthDay.get(Calendar.DATE))
+                months--;
+
+        } else if(months == 0 && currentDay.get(Calendar.DATE) < birthDay.get(Calendar.DATE)){
+            years--;
+            months = 11;
+        } else if (currentDay.get(Calendar.DATE) < birthDay.get(Calendar.DATE)) {
+            months--;
+        }
+
+        //Calculate the days
+        if(currentDay.get(Calendar.DATE) > birthDay.get(Calendar.DATE))
+            days = currentDay.get(Calendar.DATE) - birthDay.get(Calendar.DATE);
+        else if(currentDay.get(Calendar.DATE)<birthDay.get(Calendar.DATE)){
+            int today = currentDay.get(Calendar.DAY_OF_MONTH);
+            currentDay.add(Calendar.MONTH, -1);
+            days = currentDay.getActualMaximum(Calendar.DAY_OF_MONTH)-birthDay.get(Calendar.DAY_OF_MONTH)+today;
+        }else{
+            days=0;
+
+            if(months == 12){
+                years++;
+                months = 0;
+            }
+        }
+
+        System.out.println("The age is : "+years+" years, "+months+" months and "+days+" days" );
+
+        String age = "";
+        switch (type) {
+            case BIRTHDAY_BEFORE_CURREENTDAY:
+                age = years + "歲" + months + "個月" + days + "天";
+                break;
+            case BIRTHDAY_AFTER_CURRENTDAY:
+                age = years + "年" + months + "個月" + days + "天出生";
+                break;
+            case STARTDAY_BEFORE_CURREENTDAY:
+                age = "已過" + years + "年" + months + "個月" + days + "天";
+                break;
+            case STARTDAY_AFTER_CURRENTDAY:
+                age = "還有" + years + "年" + months + "個月" + days + "天";
+                break;
+        }
+
+        return age;
+    }
+
+    public int daysOfTwo(String date1, String date2) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar befor = Calendar.getInstance();
+        Calendar after = Calendar.getInstance();
+
+
+
+        long m = after.getTimeInMillis() - befor.getTimeInMillis();
+        m=m/(24*60*60*1000);
+        //判斷是不是同一天
+        if(m==0 && after.get(Calendar.DAY_OF_YEAR)!=befor.get(Calendar.DAY_OF_YEAR)){
+            m+=1;
+        }
+        return (int)m;
+    }
 }

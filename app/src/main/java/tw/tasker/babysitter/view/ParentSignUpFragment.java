@@ -9,10 +9,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -35,29 +34,34 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentSignUpFragment extends Fragment
-        implements OnClickListener,
-        DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener {
+        implements OnClickListener {
 
     private EditText mAccount;
     private EditText mPassword;
     private EditText mPasswordAgain;
-    private Button mSignUp;
-    private EditText mParentsName;
-    private EditText mParentsAddress;
-    private EditText mParents_phone;
-    //private EditText mKidsGender;
-    private Spinner mKidsAgeYear;
-    private Spinner mKidsAgeMonth;
-    private CheckBox mKidsGenderBoy;
-    private CheckBox mKidsGenderGirl;
-    private ScrollView mAllScreen;
-    private View mRootView;
-    private MaterialDialog mMaterialDialog;
+    private EditText mEMail;
+
+    private EditText mParentName;
+    private EditText mParentAddress;
+    private EditText mParentPhone;
+
+    private TextView mParentKidsAge;
+    private TextView mParentKidsAgeMessage;
+    private RadioGroup mParentKidsGender;
+
+    private TextView mParentBabycareCount;
+    private RadioGroup mParentBabycareType;
     private TextView mParentBabycarePlan;
+    private TextView mParentBabycarePlanMessage;
+    private TextView mParentBabycareWeek;
     private TextView mParentBabycareTimeStart;
     private TextView mParentBabycareTimeEnd;
-    private int mWhichTimeView;
+    private TextView mParentBabycareTimeMessage;
+
+    private View mRootView;
+    private ScrollView mAllScreen;
+    private Button mSignUp;
+    private MaterialDialog mMaterialDialog;
 
     public static Fragment newInstance() {
         ParentSignUpFragment fragment = new ParentSignUpFragment();
@@ -85,29 +89,33 @@ public class ParentSignUpFragment extends Fragment
     private void initView() {
         mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
 
-        // Set up the signup form.
+        // Parent account info
         mAccount = (EditText) mRootView.findViewById(R.id.account);
         mPassword = (EditText) mRootView.findViewById(R.id.password);
         mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
-        // Parent info
-        mParentsName = (EditText) mRootView.findViewById(R.id.parent_name);
-        mParentsAddress = (EditText) mRootView.findViewById(R.id.parent_address);
-        mParents_phone = (EditText) mRootView.findViewById(R.id.parent_phone);
-        mKidsAgeYear = (Spinner) mRootView.findViewById(R.id.kids_age_year);
-        mKidsAgeMonth = (Spinner) mRootView.findViewById(R.id.kids_age_month);
-        //mKidsGender = (EditText) mRootView.findViewById(R.id.kids_gender);
-        mKidsGenderBoy = (CheckBox) mRootView.findViewById(R.id.kids_gender_boy);
-        mKidsGenderGirl = (CheckBox) mRootView.findViewById(R.id.kids_gender_girl);
+        mEMail = (EditText) mRootView.findViewById(R.id.email);
+        // Parent contact info
+        mParentName = (EditText) mRootView.findViewById(R.id.parent_name);
+        mParentAddress = (EditText) mRootView.findViewById(R.id.parent_address);
+        mParentPhone = (EditText) mRootView.findViewById(R.id.parent_phone);
 
+        // Baby info
+        mParentKidsAge = (TextView) mRootView.findViewById(R.id.parent_kids_age);
+        mParentKidsAgeMessage = (TextView) mRootView.findViewById(R.id.parent_kids_age_message);
+        mParentKidsGender = (RadioGroup) mRootView.findViewById(R.id.kids_gender);
+
+        // Baby care info
+        mParentBabycareCount = (TextView) mRootView.findViewById(R.id.parent_babycare_count);
+        mParentBabycareType = (RadioGroup) mRootView.findViewById(R.id.parent_babycare_type);
         mParentBabycarePlan = (TextView) mRootView.findViewById(R.id.parent_babycare_plan);
+        mParentBabycarePlanMessage = (TextView) mRootView.findViewById(R.id.parent_babycare_plan_message);
+        mParentBabycareWeek = (TextView) mRootView.findViewById(R.id.parent_babycare_week);
         mParentBabycareTimeStart = (TextView) mRootView.findViewById(R.id.parent_babycare_time_start);
         mParentBabycareTimeEnd = (TextView) mRootView.findViewById(R.id.parent_babycare_time_end);
-
+        mParentBabycareTimeMessage = (TextView) mRootView.findViewById(R.id.parent_babycare_time_message);
 
         mSignUp = (Button) mRootView.findViewById(R.id.action_button);
-
         mMaterialDialog = DisplayUtils.getMaterialProgressDialog(getActivity(), R.string.dialog_signup_please_wait);
-
     }
 
     private void initListener() {
@@ -120,9 +128,8 @@ public class ParentSignUpFragment extends Fragment
             }
         });
         mSignUp.setOnClickListener(this);
-        mKidsGenderBoy.setOnClickListener(this);
-        mKidsGenderGirl.setOnClickListener(this);
         mParentBabycarePlan.setOnClickListener(this);
+        mParentKidsAge.setOnClickListener(this);
         mParentBabycareTimeStart.setOnClickListener(this);
         mParentBabycareTimeEnd.setOnClickListener(this);
     }
@@ -141,6 +148,8 @@ public class ParentSignUpFragment extends Fragment
 //        mKidsAgeMonth.setSelection(DisplayUtils.getPositionFromNowMonth(getActivity()));
 
         mParentBabycarePlan.setText(DisplayUtils.showCurrentDate());
+        mParentKidsAge.setText(DisplayUtils.showCurrentDate());
+
 
 //        if (BuildConfig.DEBUG)
 //            loadTestData();
@@ -152,14 +161,9 @@ public class ParentSignUpFragment extends Fragment
         mPassword.setText("vic2");
         mPasswordAgain.setText("vic2");
 
-        mParentsName.setText("張小誠");
-        mParentsAddress.setText("高雄市鳳山區建國路一段31巷37號");
-        mParents_phone.setText("0915552673");
-
-        //mKidsAgeYear.setText("2015");
-        //mKidsAgeMonth.setText("03");
-        //mKidsGender.setText("男");
-
+        mParentName.setText("張小誠");
+        mParentAddress.setText("高雄市鳳山區建國路一段31巷37號");
+        mParentPhone.setText("0915552673");
     }
 
     @Override
@@ -179,28 +183,20 @@ public class ParentSignUpFragment extends Fragment
 
                 break;
 
-            case R.id.kids_gender_boy:
-                mKidsGenderGirl.setChecked(false);
-                mKidsGenderBoy.setChecked(true);
-                break;
-
-            case R.id.kids_gender_girl:
-                mKidsGenderBoy.setChecked(false);
-                mKidsGenderGirl.setChecked(true);
-                break;
-
             case R.id.parent_babycare_plan:
-                showDateDailog();
+                showDateDailog(id);
+                break;
+
+            case R.id.parent_kids_age:
+                showDateDailog(id);
                 break;
 
             case R.id.parent_babycare_time_start:
-                mWhichTimeView = R.id.parent_babycare_time_start;
-                showTimeDailog();
+                showTimeDailog(id);
                 break;
 
             case R.id.parent_babycare_time_end:
-                mWhichTimeView = R.id.parent_babycare_time_end;
-                showTimeDailog();
+                showTimeDailog(id);
                 break;
 
             default:
@@ -208,14 +204,28 @@ public class ParentSignUpFragment extends Fragment
         }
     }
 
-    private void showDateDailog() {
+    private void showDateDailog(final int id) {
         Calendar now = Calendar.getInstance();
 
-        String selectDate = mParentBabycarePlan.getText().toString();
+        String selectDate = DisplayUtils.showCurrentDate();
+        switch (id) {
+            case R.id.parent_babycare_plan:
+                selectDate = mParentBabycarePlan.getText().toString();
+                break;
+            case R.id.parent_kids_age:
+                selectDate = mParentKidsAge.getText().toString();
+                break;
+        }
+
         now.setTime(DisplayUtils.getDateFromString(selectDate));
 
         DatePickerDialog dpd = DatePickerDialog.newInstance(
-                this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                        showPickerDate(id, year, monthOfYear, dayOfMonth);
+                    }
+                },
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH)
@@ -224,18 +234,50 @@ public class ParentSignUpFragment extends Fragment
         dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
     }
 
-    @DebugLog
-    @Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+    private void showPickerDate(int id, int year, int monthOfYear, int dayOfMonth) {
         String date = year + "/" + (++monthOfYear) + "/" + dayOfMonth;
-        mParentBabycarePlan.setText(date);
+
+        switch (id) {
+            case R.id.parent_babycare_plan: {
+                mParentBabycarePlan.setText(date);
+
+                Calendar startDate = DisplayUtils.getCalendarFromString(date);
+                Calendar endDate = Calendar.getInstance();
+
+                String age = "";
+                if (startDate.before(endDate)) {
+                    age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.STARTDAY_BEFORE_CURREENTDAY);
+                } else {
+                    age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.STARTDAY_AFTER_CURRENTDAY);
+                }
+                mParentBabycarePlanMessage.setText(age);
+                break;
+            }
+            case R.id.parent_kids_age: {
+                mParentKidsAge.setText(date);
+
+                Calendar startDate = DisplayUtils.getCalendarFromString(date);
+                Calendar endDate = Calendar.getInstance();
+
+                String age = "";
+                if (startDate.before(endDate)) {
+                    age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
+                } else {
+                    age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+                }
+
+                mParentKidsAgeMessage.setText(age);
+                break;
+            }
+        }
+
     }
 
-    private void showTimeDailog() {
+    private void showTimeDailog(final int id) {
         Calendar now = Calendar.getInstance();
 
         String selectTime = "08:00";
-        switch (mWhichTimeView) {
+        switch (id) {
             case R.id.parent_babycare_time_start:
                 selectTime = mParentBabycareTimeStart.getText().toString();
                 break;
@@ -246,7 +288,12 @@ public class ParentSignUpFragment extends Fragment
         now.setTime(DisplayUtils.getTimeFromString(selectTime));
 
         TimePickerDialog tpd = TimePickerDialog.newInstance(
-                this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                        showPickerTime(id, hourOfDay, minute, second);
+                    }
+                },
                 now.get(Calendar.HOUR_OF_DAY),
                 now.get(Calendar.MINUTE),
                 false
@@ -255,13 +302,11 @@ public class ParentSignUpFragment extends Fragment
         tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
     }
 
-    @DebugLog
-    @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+    private void showPickerTime(int id, int hourOfDay, int minute, int second) {
         String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
         String minuteString = minute < 10 ? "0"+minute : ""+minute;
 
-        switch (mWhichTimeView) {
+        switch (id) {
             case R.id.parent_babycare_time_start:
                 mParentBabycareTimeStart.setText(hourString + ":" + minuteString);
                 break;
@@ -272,7 +317,6 @@ public class ParentSignUpFragment extends Fragment
         }
 
     }
-
 
     @Override
     public void onStart() {
@@ -300,19 +344,27 @@ public class ParentSignUpFragment extends Fragment
         UserInfo userInfo = new UserInfo();
         //userInfo.setLocation(Config.MY_LOCATION);
         userInfo.setUser(ParseUser.getCurrentUser());
-        userInfo.setName(mParentsName.getText().toString());
-        userInfo.setAddress(mParentsAddress.getText().toString());
-        userInfo.setPhone(mParents_phone.getText().toString());
-        String kidsAge = mKidsAgeYear.getSelectedItem().toString() + mKidsAgeMonth.getSelectedItem().toString();
-        userInfo.setKidsAge(kidsAge);
+        userInfo.setName(mParentName.getText().toString());
+        userInfo.setAddress(mParentAddress.getText().toString());
+        userInfo.setPhone(mParentPhone.getText().toString());
+        userInfo.setKidsAge(mParentKidsAge.getText().toString());
+
+        int kidsGenderItemId = mParentKidsGender.getCheckedRadioButtonId();
 
         String kidsGender;
-        if (mKidsGenderBoy.isChecked()) {
-            kidsGender = "男";
-        } else if (mKidsGenderGirl.isChecked()) {
-            kidsGender = "女";
-        } else {
-            kidsGender = "";
+        switch (kidsGenderItemId) {
+            case R.id.kids_gender_boy:
+                kidsGender = "男寶";
+                break;
+            case R.id.kids_gender_girl:
+                kidsGender = "女寶";
+                break;
+            case R.id.kids_gender_unknow:
+                kidsGender = "未知";
+                break;
+            default:
+                kidsGender = "";
+                break;
         }
 
         userInfo.setKidsGender(kidsGender);
