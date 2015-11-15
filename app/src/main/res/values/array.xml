@@ -8,6 +8,7 @@
         <item>104</item>
         <item>105</item>
     </string-array>
+
     <string-array name="kids_age_month">
         <item>01</item>
         <item>02</item>
@@ -21,6 +22,16 @@
         <item>10</item>
         <item>11</item>
         <item>12</item>
+    </string-array>
+
+    <string-array name="week">
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+        <item>星期日</item>
     </string-array>
 
 </resources>
