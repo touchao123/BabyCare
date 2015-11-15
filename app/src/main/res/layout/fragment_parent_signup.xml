@@ -240,10 +240,19 @@
                 android:orientation="horizontal">
 
                 <RadioButton
+                    android:id="@+id/kids_gender_unknow"
+                    style="@style/FullCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="未知" />
+
+                <RadioButton
                     android:id="@+id/kids_gender_boy"
                     style="@style/FullCheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:text="男寶" />
 
                 <RadioButton
@@ -254,13 +263,6 @@
                     android:layout_marginLeft="20dp"
                     android:text="女寶" />
 
-                <RadioButton
-                    android:id="@+id/kids_gender_unknow"
-                    style="@style/FullCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="未知" />
             </RadioGroup>
 
         </LinearLayout>
@@ -338,6 +340,7 @@
                     style="@style/FullCheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="一般" />
 
                 <RadioButton
