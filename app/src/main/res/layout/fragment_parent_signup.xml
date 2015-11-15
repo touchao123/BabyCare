@@ -65,11 +65,11 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
+                android:hint="@string/hint_parent_name"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="16sp"
-                android:hint="@string/hint_parent_name"
-                android:textColorHint="@color/hint"/>
+                android:textColorHint="@color/hint"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -92,11 +92,11 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
                 android:ems="10"
+                android:hint="@string/hint_parent_address"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="16sp"
-                android:hint="@string/hint_parent_address"
-                android:textColorHint="@color/hint"/>
+                android:textColorHint="@color/hint"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -118,12 +118,12 @@
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
+                android:hint="@string/hint_parent_phone"
                 android:inputType="phone"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textSize="16sp"
-                android:hint="@string/hint_parent_phone"
-                android:textColorHint="@color/hint"/>
+                android:textColorHint="@color/hint"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <TextView
@@ -155,7 +155,7 @@
                 android:textColor="@color/normal_text" />
 
             <TextView
-                android:id="@+id/baby_age"
+                android:id="@+id/parent_kids_age"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
@@ -165,10 +165,10 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/baby_age_message"
+                android:id="@+id/parent_kids_age_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(1歲1個月1天)"
+                android:text="0歲0個月0天"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -185,15 +185,15 @@
             -->
 
             <!--<Spinner-->
-                <!--android:id="@+id/kids_age_year"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="40dp" />-->
+            <!--android:id="@+id/kids_age_year"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="40dp" />-->
 
             <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="年"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="年"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
 
             <!--
                  <EditText
@@ -209,15 +209,15 @@
             -->
 
             <!--<Spinner-->
-                <!--android:id="@+id/kids_age_month"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="40dp" />-->
+            <!--android:id="@+id/kids_age_month"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="40dp" />-->
 
             <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="月"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="月"-->
+            <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
         </LinearLayout>
 
         <LinearLayout
@@ -233,28 +233,35 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
-            <CheckBox
-                android:id="@+id/kids_gender_boy"
-                style="@style/FullCheckbox"
+            <RadioGroup
+                android:id="@+id/kids_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="男寶" />
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/kids_gender_girl"
-                style="@style/FullCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="女寶" />
+                <RadioButton
+                    android:id="@+id/kids_gender_boy"
+                    style="@style/FullCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="男寶" />
 
-            <CheckBox
-                android:id="@+id/kids_gender_unknow"
-                style="@style/FullCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="未知" />
+                <RadioButton
+                    android:id="@+id/kids_gender_girl"
+                    style="@style/FullCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="女寶" />
+
+                <RadioButton
+                    android:id="@+id/kids_gender_unknow"
+                    style="@style/FullCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="未知" />
+            </RadioGroup>
 
         </LinearLayout>
 
@@ -280,22 +287,31 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            week<TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" 收托人數："
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/normal_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  保母1對："
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
 
             <TextView
                 android:id="@+id/parent_babycare_count"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
                 android:gravity="center_vertical"
-                android:text="@string/hint_parent_babycare_count"
+                android:text="1"
                 android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_parent_babycare_count"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -311,29 +327,35 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
-            <CheckBox
-                android:id="@+id/normal"
-                style="@style/FullCheckbox"
+            <RadioGroup
+                android:id="@+id/parent_babycare_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="一般" />
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/in_house"
-                style="@style/FullCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="到府" />
+                <RadioButton
+                    android:id="@+id/normal"
+                    style="@style/FullCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="一般" />
 
-            <CheckBox
-                android:id="@+id/part_time"
-                style="@style/FullCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="臨托" />
+                <RadioButton
+                    android:id="@+id/in_house"
+                    style="@style/FullCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="到府" />
 
+                <RadioButton
+                    android:id="@+id/part_time"
+                    style="@style/FullCheckbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="臨托" />
+            </RadioGroup>
         </LinearLayout>
 
         <LinearLayout
@@ -361,9 +383,10 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/parent_babycare_plan_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="(還有10天)"
+                android:text="已過0年0個月0天"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -376,7 +399,9 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            week<TextView
+            week
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="　　 每週："
@@ -384,7 +409,7 @@
                 android:textColor="@color/normal_text" />
 
             <TextView
-                android:id="@+id/parent_babycare_"
+                android:id="@+id/parent_babycare_week"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
@@ -436,6 +461,7 @@
                 android:textSize="16sp" />
 
             <TextView
+                android:id="@+id/parent_babycare_time_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="(日托，8小時)"
@@ -455,10 +481,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="需求說明："
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/normal_text"
-                android:layout_marginBottom="5dp"/>
+                android:textColor="@color/normal_text" />
 
             <EditText
                 android:id="@+id/parent_note"
@@ -466,10 +492,10 @@
                 android:layout_height="80dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/full_edittext_selector"
-                android:textSize="16sp"
                 android:gravity="top"
                 android:hint="@string/hint_parent_note"
-                android:textColorHint="@color/hint"/>
+                android:textColorHint="@color/hint"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <Button
