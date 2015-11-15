@@ -76,7 +76,7 @@ public class ParentProfileFragment extends Fragment implements OnClickListener {
         mPhone = (TextView) mRootView.findViewById(R.id.phone);
         mAddress = (TextView) mRootView.findViewById(R.id.address);
 
-        mKidsAge = (TextView) mRootView.findViewById(R.id.kids_age);
+        mKidsAge = (TextView) mRootView.findViewById(R.id.parent_kids_age);
         mKidsGender = (TextView) mRootView.findViewById(R.id.kids_gender);
     }
 
