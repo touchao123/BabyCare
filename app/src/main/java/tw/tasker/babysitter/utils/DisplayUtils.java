@@ -464,4 +464,45 @@ public class DisplayUtils {
         }
         return (int)m;
     }
+
+    public static String getTimeSection(String timeStart, String timeEnd) {
+        int startTimeHour = Integer.valueOf(timeStart.split(":")[0]);
+        int startTimeMinute = Integer.valueOf(timeStart.split(":")[1]);
+
+        int endTimeHour = Integer.valueOf(timeEnd.split(":")[0]);
+        int endTimeMinute = Integer.valueOf(timeEnd.split(":")[1]);
+
+        int timeHour = endTimeHour - startTimeHour;
+        if (timeHour < 0) {
+            timeHour = timeHour + 24;
+        }
+
+        int timeMinute = endTimeMinute - startTimeMinute;
+        if (timeMinute < 0) {
+            timeHour--;
+            timeMinute = timeMinute + 60;
+        }
+
+        String timeSection = "";
+        int totalMinute = (timeHour * 60) + timeMinute;
+
+        if (totalMinute == 0) {
+            timeSection = "全日";
+            timeHour = 24;
+        } else if (totalMinute > (16 * 60)) {
+            timeSection = "全日";
+        } else {
+            if (startTimeHour >= 8 && startTimeHour < 20) {
+                timeSection = "日間";
+            } else {
+                timeSection = "夜間";
+            }
+
+            if (totalMinute > 0 &&totalMinute <= (6 * 60)) {
+                timeSection = timeSection + "半日";
+            }
+        }
+
+        return timeSection + "，\n" +timeHour + "小時" + timeMinute + "分鐘";
+    }
 }

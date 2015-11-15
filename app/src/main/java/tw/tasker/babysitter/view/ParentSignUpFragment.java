@@ -1,5 +1,6 @@
 package tw.tasker.babysitter.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -296,15 +297,15 @@ public class ParentSignUpFragment extends Fragment
                 },
                 now.get(Calendar.HOUR_OF_DAY),
                 now.get(Calendar.MINUTE),
-                false
+                true
         );
         tpd.dismissOnPause(true);
         tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
     }
 
     private void showPickerTime(int id, int hourOfDay, int minute, int second) {
-        String hourString = hourOfDay < 10 ? "0"+hourOfDay : ""+hourOfDay;
-        String minuteString = minute < 10 ? "0"+minute : ""+minute;
+        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+        String minuteString = minute < 10 ? "0" + minute : "" + minute;
 
         switch (id) {
             case R.id.parent_babycare_time_start:
@@ -316,6 +317,11 @@ public class ParentSignUpFragment extends Fragment
                 break;
         }
 
+        String startTime = mParentBabycareTimeStart.getText().toString();
+        String endTime = mParentBabycareTimeEnd.getText().toString();
+        String timeSection = DisplayUtils.getTimeSection(startTime, endTime);
+
+        mParentBabycareTimeMessage.setText(timeSection);
     }
 
     @Override
