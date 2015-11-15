@@ -1,6 +1,5 @@
 package tw.tasker.babysitter.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -209,14 +208,14 @@ public class ParentSignUpFragment extends Fragment
                 break;
 
             case R.id.parent_babycare_count:
-                showBabycareCountDialog();
+                showMaxBabiesDialog();
                 break;
             default:
                 break;
         }
     }
 
-    private void showBabycareCountDialog() {
+    private void showMaxBabiesDialog() {
 
         int count = Integer.parseInt(mParentBabycareCount.getText().toString()) - 1;
 
@@ -227,9 +226,9 @@ public class ParentSignUpFragment extends Fragment
                 .itemsCallbackSingleChoice(count, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        String babycareCount = text.toString();
-                        babycareCount = babycareCount.replace("人", "");
-                        mParentBabycareCount.setText(babycareCount);
+                        String maxBabies = text.toString();
+                        maxBabies = maxBabies.replace("人", "");
+                        mParentBabycareCount.setText(maxBabies);
                         return true;
                     }
                 })
