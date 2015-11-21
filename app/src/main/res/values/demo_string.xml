@@ -17,12 +17,11 @@
 
     <!-- Parent info  -->
     <string name="demo_parent_name">陳先生</string>
-    <string name="demo_parent_babycare_plan">預計托育時間：現在</string>
-    <string name="demo_parent_introduction">註記：乳糖不適症</string>
-    <string name="demo_parent_baby_gender">小孩姓別：女</string>
-    <string name="demo_parent_babycare_count">希望保母照顧人數：</string>
-    <string name="demo_parent_baby_age">小孩步數：1歲3月</string>
     <string name="demo_parent_address">高雄市鳳山區光復路</string>
     <string name="demo_parent_distance">(2km)</string>
+    <string name="demo_parent_babycare_count"> 保母1對：1</string>
+    <string name="demo_parent_babycare_type">托育類別：一般</string>
+    <string name="demo_parent_babycare_plan">開始日期：2015/11/16 還有1年1個月1天</string>
+    <string name="demo_parent_note">需求說明：尋找有緣保母，我們家大寶比較皮一點，連我們也會受不了，希望可以找到有耐心、愛心的保母，價錢及托育時間都可以談，歡迎跟我聯絡唷。</string>
 
 </resources>
