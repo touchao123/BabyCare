@@ -77,13 +77,22 @@ public class UserInfo extends ParseObject {
         put("avator", file);
     }
 
-    public String getBabycareTime() {
-        String babycareTime = getString("babycareTime");
+    public String getBabycareTimeStart() {
+        String babycareTime = getString("babycareTimeStart");
         return babycareTime == null ? "" : babycareTime;
     }
 
-    public void setBabycareTime(String vluae) {
-        put("babycareTime", vluae);
+    public void setBabycareTimeStart(String vluae) {
+        put("babycareTimeStart", vluae);
+    }
+
+    public String getBabycareTimeEnd() {
+        String babycareTime = getString("babycareTimeEnd");
+        return babycareTime == null ? "" : babycareTime;
+    }
+
+    public void setBabycareTimeEnd(String vluae) {
+        put("babycareTimeEnd", vluae);
     }
 
     public String getBabycareCount() {
@@ -93,5 +102,41 @@ public class UserInfo extends ParseObject {
 
     public void setBabycareCount(String vluae) {
         put("babycareCount", vluae);
+    }
+
+    public String getBabycareType() {
+        String babycareCount = getString("babycareType");
+        return  babycareCount == null ? "0" : babycareCount;
+    }
+
+    public void setBabycareType(String value) {
+        put("babycareType", value);
+    }
+
+    public String getBabycarePlan() {
+        String babycareCount = getString("babycarePlan");
+        return  babycareCount == null ? "0" : babycareCount;
+    }
+
+    public void setBabycarePlan(String value) {
+        put("babycarePlan", value);
+    }
+
+    public String getBabycareWeek() {
+        String babycareCount = getString("babycareWeek");
+        return  babycareCount == null ? "0" : babycareCount;
+    }
+
+    public void setBabycareWeek(String value) {
+        put("babycareWeek", value);
+    }
+
+    public String getParentNote() {
+        String babycareCount = getString("parentNote");
+        return  babycareCount == null ? "0" : babycareCount;
+    }
+
+    public void setParentNote(String value) {
+        put("parentNote", value);
     }
 }
