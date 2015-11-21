@@ -168,7 +168,7 @@
                 android:id="@+id/parent_kids_age_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0歲0個月0天"
+                android:text="今天"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -389,7 +389,7 @@
                 android:id="@+id/parent_babycare_plan_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="已過0年0個月0天"
+                android:text="今天"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 
@@ -401,8 +401,6 @@
             android:layout_margin="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
-            week
 
             <TextView
                 android:layout_width="wrap_content"
