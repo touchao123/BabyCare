@@ -59,6 +59,7 @@ public class ParentSignUpFragment extends Fragment
     private TextView mParentBabycareTimeStart;
     private TextView mParentBabycareTimeEnd;
     private TextView mParentBabycareTimeMessage;
+    private TextView mParentNote;
 
     private View mRootView;
     private ScrollView mAllScreen;
@@ -115,6 +116,7 @@ public class ParentSignUpFragment extends Fragment
         mParentBabycareTimeStart = (TextView) mRootView.findViewById(R.id.parent_babycare_time_start);
         mParentBabycareTimeEnd = (TextView) mRootView.findViewById(R.id.parent_babycare_time_end);
         mParentBabycareTimeMessage = (TextView) mRootView.findViewById(R.id.parent_babycare_time_message);
+        mParentNote = (TextView) mRootView.findViewById(R.id.parent_note);
 
         mSignUp = (Button) mRootView.findViewById(R.id.action_button);
         mMaterialDialog = DisplayUtils.getMaterialProgressDialog(getActivity(), R.string.dialog_signup_please_wait);
@@ -436,13 +438,16 @@ public class ParentSignUpFragment extends Fragment
         UserInfo userInfo = new UserInfo();
         //userInfo.setLocation(Config.MY_LOCATION);
         userInfo.setUser(ParseUser.getCurrentUser());
+
+        // parent info
         userInfo.setName(mParentName.getText().toString());
         userInfo.setAddress(mParentAddress.getText().toString());
         userInfo.setPhone(mParentPhone.getText().toString());
+
+        // baby info
         userInfo.setKidsAge(mParentKidsAge.getText().toString());
 
         int kidsGenderItemId = mParentKidsGender.getCheckedRadioButtonId();
-
         String kidsGender;
         switch (kidsGenderItemId) {
             case R.id.kids_gender_boy:
@@ -458,8 +463,34 @@ public class ParentSignUpFragment extends Fragment
                 kidsGender = "";
                 break;
         }
-
         userInfo.setKidsGender(kidsGender);
+
+        // baby care info
+        userInfo.setBabycareCount(mParentBabycareCount.getText().toString());
+
+        int parentBabycareTypeItemId = mParentBabycareType.getCheckedRadioButtonId();
+        String parentBabycareType;
+        switch (parentBabycareTypeItemId) {
+            case R.id.normal:
+                parentBabycareType = "一般";
+                break;
+            case R.id.in_house:
+                parentBabycareType = "到府";
+                break;
+            case R.id.part_time:
+                parentBabycareType = "臨托";
+                break;
+            default:
+                parentBabycareType = "";
+                break;
+        }
+        userInfo.setBabycareType(parentBabycareType);
+
+        userInfo.setBabycarePlan(mParentBabycarePlan.getText().toString());
+        userInfo.setBabycareWeek(mParentBabycareWeek.getText().toString());
+        userInfo.setBabycareTimeStart(mParentBabycareTimeStart.getText().toString());
+        userInfo.setBabycareTimeEnd(mParentBabycareTimeEnd.getText().toString());
+        userInfo.setParentNote(mParentNote.getText().toString());
 
         ParseHelper.addUserInfo(userInfo);
     }
