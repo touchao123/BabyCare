@@ -68,18 +68,17 @@
     <string name="sitter_register_number_ttile">登記證號：</string>
 
     <!-- Parent info title -->
-    <string name="parent_name_ttile">陳先生</string>
-    <string name="parent_address_ttile">地址：</string>
-    <string name="parent_babycare_plan_ttile">預計托育時間：</string>
-    <string name="parent_babycare_count_ttile">希望保母照顧人數：</string>
-    <string name="parent_baby_age_ttile">小孩歲數：</string>
-    <string name="parent_baby_gender_ttile">小孩姓別：</string>
-    <string name="parent_introduction_ttile">註記：</string>
+    <string name="parent_babycare_plan_ttile">開始日期：</string>
+    <string name="parent_babycare_count_ttile">  保母1對：</string>
+    <string name="parent_babycare_type_title">托育類別：</string>
+    <string name="parent_babycare_week_title">　　每週：</string>
+    <string name="parent_babycare_time_title">　　每日：</string>
+    <string name="parent_babycare_time_message_title">　　　　</string>
+    <string name="parent_note_ttile">需求說明：</string>
 
     <!-- Sitter home image upload -->
     <string name="uploading">上傳中</string>
     <string name="upload_success">上傳完成</string>
     <string name="upload_error">上傳錯誤</string>
-    <string name="parent_babycare_time_title">偏好時段：</string>
 
 </resources>
