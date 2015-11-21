@@ -433,16 +433,34 @@ public class DisplayUtils {
         String age = "";
         switch (type) {
             case BIRTHDAY_BEFORE_CURREENTDAY:
-                age = years + "歲" + months + "個月" + days + "天";
+                if (years == 0 && months == 0 && days == 0) {
+                    age = "今天";
+                } else {
+                    if (years > 0) age = age + years + "歲";
+                    if (months > 0) age = age + months + "個月";
+                    if (days > 0) age = age + days + "天";
+                }
                 break;
             case BIRTHDAY_AFTER_CURRENTDAY:
-                age = years + "年" + months + "個月" + days + "天出生";
+                if (years > 0) age = age + years + "歲";
+                if (months > 0) age = age + months + "個月";
+                age = age + days + "天出生";
                 break;
             case STARTDAY_BEFORE_CURREENTDAY:
-                age = "已過" + years + "年" + months + "個月" + days + "天";
+                if (years == 0 && months == 0 && days == 0) {
+                    age = "今天";
+                } else {
+                    age = "已過";
+                    if (years > 0) age = age + years + "年";
+                    if (months > 0) age = age + months + "個月";
+                    if (days > 0) age = age + days+ "天";
+                }
                 break;
             case STARTDAY_AFTER_CURRENTDAY:
-                age = "還有" + years + "年" + months + "個月" + days + "天";
+                age = "還有";
+                if (years > 0) age = age + years + "年";
+                if (months > 0) age = age + months + "個月";
+                age = age + days+ "天";
                 break;
         }
 
