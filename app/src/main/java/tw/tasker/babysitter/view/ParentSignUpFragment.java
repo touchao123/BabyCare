@@ -181,10 +181,11 @@ public class ParentSignUpFragment extends Fragment
                 String account = mAccount.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String passwordAgain = mPasswordAgain.getText().toString().trim();
+                String email = mEMail.getText().toString().trim();
 
                 if (AccountChecker.isAccountOK(getActivity(), account, password, passwordAgain)) {
                     mMaterialDialog.show();
-                    ParseHelper.doParentSignUp(account, password);
+                    ParseHelper.doParentSignUp(account, password, email);
                 }
 
                 break;

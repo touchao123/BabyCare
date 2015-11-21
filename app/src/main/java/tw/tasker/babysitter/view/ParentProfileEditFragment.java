@@ -262,8 +262,8 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
                 break;
 
             case R.id.confirm:
-                //saveUserAccount();
                 //mMaterialDialog.show();
+                saveUserAccount();
                 saveUserInfo(ParseHelper.getParent());
                 break;
 
