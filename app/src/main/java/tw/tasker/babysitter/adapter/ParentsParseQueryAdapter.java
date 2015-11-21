@@ -13,6 +13,8 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
+import java.util.Calendar;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
@@ -26,12 +28,16 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     private CircleImageView mParentAvatar;
     private TextView mParentName;
     private TextView mParentAddress;
-    private TextView mParentBabyGender;
-    private TextView mParentBabyAge;
-    private Button mContact;
+    private TextView mParentBabyInfo;
+
+    private TextView mParentBabycareCount;
+    private TextView mParentBabycareType;
     private TextView mParentBabycarePlan;
+    private TextView mParentBabycareWeek;
     private TextView mParentBabycareTime;
-    private RatingBar mParentBabycareCount;
+    private TextView mParentBabycareTimeMessage;
+    private TextView mParentNote;
+    private Button mContact;
 
     public ParentsParseQueryAdapter(Context context, ParentListClickHandler parentListClickHandler) {
         super(context, getQueryFactory(context));
@@ -171,11 +177,16 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         mParentAvatar = (CircleImageView) rootView.findViewById(R.id.parent_avatar);
         mParentName = (TextView) rootView.findViewById(R.id.parent_name);
         mParentAddress = (TextView) rootView.findViewById(R.id.parent_address);
+        mParentBabyInfo = (TextView) rootView.findViewById(R.id.parent_baby_info);
+
+        mParentBabycareCount = (TextView) rootView.findViewById(R.id.parent_babycare_count);
+        mParentBabycareType = (TextView) rootView.findViewById(R.id.parent_babycare_type);
         mParentBabycarePlan = (TextView) rootView.findViewById(R.id.parent_babycare_plan);
+        mParentBabycareWeek = (TextView) rootView.findViewById(R.id.parent_babycare_week);
         mParentBabycareTime = (TextView) rootView.findViewById(R.id.parent_babycare_time);
-        mParentBabycareCount = (RatingBar) rootView.findViewById(R.id.parent_babycare_count);
-        mParentBabyAge = (TextView) rootView.findViewById(R.id.parent_baby_age);
-        mParentBabyGender = (TextView) rootView.findViewById(R.id.parent_baby_gender);
+        mParentBabycareTimeMessage = (TextView) rootView.findViewById(R.id.parent_babycare_time_message);
+        mParentNote = (TextView) rootView.findViewById(R.id.parent_note);
+
         mContact = (Button) rootView.findViewById(R.id.contact);
     }
 
@@ -201,6 +212,14 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     }
 
     private void initData(UserInfo parent) {
+        String parentBabycareCountTitile = getContext().getString(R.string.parent_babycare_count_ttile);
+        String parentBabycareTypeTitle = getContext().getString(R.string.parent_babycare_type_title);
+        String parentBabycarePlanTitile = getContext().getString(R.string.parent_babycare_plan_ttile);;
+        String parentBabycareWeekTitle = getContext().getString(R.string.parent_babycare_week_title);
+        String parentBabycareTimeTitle = getContext().getString(R.string.parent_babycare_time_title);
+        String parentBabycareTimeMessageTitle = getContext().getString(R.string.parent_babycare_time_message_title);
+        String parentNoteTtile = getContext().getString(R.string.parent_note_ttile);
+
         String url = "";
         if (parent.getAvatorFile() != null) {
             url = parent.getAvatorFile().getUrl();
@@ -208,15 +227,41 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         DisplayUtils.loadAvatorWithUrl(mParentAvatar, url);
 
         mParentName.setText(parent.getName());
-
         float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
         mParentAddress.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
 
-        String parentBabyAgeTitle = getContext().getString(R.string.parent_baby_age_ttile);
-        mParentBabyAge.setText(parentBabyAgeTitle + DisplayUtils.showBabyAgeByBirthday(parent.getKidsAge()));
+        Calendar startDate = DisplayUtils.getCalendarFromString(parent.getKidsAge());
+        Calendar endDate = Calendar.getInstance();
 
-        String parentBabyGender = getContext().getString(R.string.parent_baby_gender_ttile);
-        mParentBabyGender.setText(parentBabyGender + parent.getKidsGender());
+        String age = "";
+        if (startDate.before(endDate)) {
+            age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
+        } else {
+            age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+        }
+
+        mParentBabyInfo.setText("(" + parent.getKidsGender() + "，" + age + ")");
+
+        mParentBabycareCount.setText(parentBabycareCountTitile + parent.getBabycareCount());
+        mParentBabycareType.setText(parentBabycareTypeTitle + parent.getBabycareType());
+
+
+        startDate = DisplayUtils.getCalendarFromString(parent.getBabycarePlan());
+        String plan = "";
+        if (startDate.before(endDate)) {
+            plan = DisplayUtils.getAge(startDate, endDate, DisplayUtils.STARTDAY_BEFORE_CURREENTDAY);
+        } else {
+            plan = DisplayUtils.getAge(endDate, startDate, DisplayUtils.STARTDAY_AFTER_CURRENTDAY);
+        }
+        mParentBabycarePlan.setText(parentBabycarePlanTitile + parent.getBabycarePlan() + "，" + plan);
+        mParentBabycareWeek.setText(parentBabycareWeekTitle + parent.getBabycareWeek());
+
+        String startTime = parent.getBabycareTimeStart();
+        String endTime = parent.getBabycareTimeEnd();
+        mParentBabycareTime.setText(parentBabycareTimeTitle + startTime + "~" + endTime);
+        String timeSection = DisplayUtils.getTimeSection(startTime, endTime).replace("\n", "");
+        mParentBabycareTimeMessage.setText(parentBabycareTimeMessageTitle + "(" + timeSection + ")");
+        mParentNote.setText(parentNoteTtile + parent.getParentNote());
 
         initContactStatus(parent);
     }
