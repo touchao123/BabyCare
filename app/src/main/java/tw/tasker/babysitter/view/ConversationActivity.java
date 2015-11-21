@@ -1,12 +1,19 @@
 package tw.tasker.babysitter.view;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.layer.sdk.exceptions.LayerException;
@@ -14,7 +21,10 @@ import com.layer.sdk.messaging.Conversation;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
 import tw.tasker.babysitter.adapter.QueryAdapter;
 import tw.tasker.babysitter.layer.LayerCallbacks;
@@ -25,6 +35,7 @@ import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
@@ -36,6 +47,7 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
     private ListView mListView;
     //The Query Adapter that grabs all Conversations and displays them based on the last lastMsgContent
     private ConversationQueryAdapter mConversationsAdapter;
+    private Dialog mInfoDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,11 +176,140 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
             pinParentOrSitterToCache(conversationId);
 
             startActivity(intent);
-        } else {
-            DisplayUtils.makeToast(this, "確認「媒合」後，才可以進行對話。");
+        } else if (conversation != null) {
+            String conversationId = conversation.getId().toString();
+
+            UserType userType = AccountChecker.getUserType();
+            if (userType == UserType.PARENT) { // 爸媽，抓保母資料
+                mInfoDialog = getSitterDailog(conversationId);
+            } else {
+                mInfoDialog = getParentDailog(conversationId);
+            }
+
+            mInfoDialog.show();
+
+            //DisplayUtils.makeToast(this, "確認「媒合」後，才可以進行對話。");
         }
 
     }
+
+    private Dialog getSitterDailog(String conversationId) {
+
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_message_sitter);
+
+        Button ok = (Button) dialog.findViewById(R.id.ok);
+        TextView detail = (TextView) dialog.findViewById(R.id.detail);
+
+        // adjust dialog width
+        Point size = new Point();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        int width = size.x;
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        //lp.width = (int) (width - (width * 0.07) );
+        lp.width = width;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(IntentUtil.startSitterDetailActivity());
+            }
+        });
+
+        CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.avatar);
+        TextView name = (TextView) dialog.findViewById(R.id.name);
+        TextView age = (TextView) dialog.findViewById(R.id.age);
+        TextView education = (TextView) dialog.findViewById(R.id.education);
+        TextView address = (TextView) dialog.findViewById(R.id.address);
+        TextView babycareTime = (TextView) dialog.findViewById(R.id.babycare_time);
+        RatingBar babyCount = (RatingBar) dialog.findViewById(R.id.babycare_count);
+
+        //Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
+        Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
+        if (sitter != null) {
+            ParseHelper.pinSitter(sitter);
+            DisplayUtils.loadAvatorWithUrl(avatar, sitter.getImageUrl());
+            name.setText(sitter.getName());
+            age.setText(sitter.getAge());
+            education.setText(sitter.getEducation());
+            address.setText(sitter.getAddress());
+            babycareTime.setText(sitter.getBabycareTime());
+            int showBabyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
+            babyCount.setRating(showBabyCount);
+
+        }
+
+        //mSignupDialogLogin.setOnClickListener(this);
+
+        return dialog;
+    }
+
+    private Dialog getParentDailog(String conversationId) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_message_parent);
+
+        Button ok = (Button) dialog.findViewById(R.id.ok);
+
+        // adjust dialog width
+        Point size = new Point();
+        Display display = getWindowManager().getDefaultDisplay();
+        display.getSize(size);
+        int width = size.x;
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        //lp.width = (int) (width - (width * 0.07) );
+        lp.width = width;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        dialog.getWindow().setAttributes(lp);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.parent_avatar);
+        TextView name = (TextView) dialog.findViewById(R.id.parent_name);
+        TextView address = (TextView) dialog.findViewById(R.id.parent_address);
+        TextView babyAge = (TextView) dialog.findViewById(R.id.parent_baby_age);
+        TextView babyGender = (TextView) dialog.findViewById(R.id.parent_baby_gender);
+
+        UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
+        if (parent != null) {
+            String url = "";
+            if (parent.getAvatorFile() != null) {
+                url = parent.getAvatorFile().getUrl();
+            }
+            DisplayUtils.loadAvatorWithUrl(avatar, url);
+
+            name.setText(parent.getName());
+
+            float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+            address.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
+
+            babyAge.setText(parent.getKidsAge());
+            babyGender.setText(parent.getKidsGender());
+        }
+
+        //mSignupDialogLogin.setOnClickListener(this);
+
+        return dialog;
+    }
+
 
     private boolean isConfirmBothParentAndSitter(String conversationId) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
