@@ -1,61 +1,88 @@
 package tw.tasker.babysitter.view;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
-import tw.tasker.babysitter.Config;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
-import tw.tasker.babysitter.utils.PictureHelper;
 
 public class ParentProfileEditFragment extends Fragment implements OnClickListener {
 
     private static SignUpListener mListener;
-    private TextView mName;
+
+    private CircleImageView mParentAvatar;
     private TextView mAccount;
-    private TextView mPassword;
-    private TextView mPhone;
-    private TextView mAddress;
-    private TextView mKidsAge;
-    private TextView mKidsGender;
+    private EditText mPassword;
+    private EditText mPasswordAgain;
+    private EditText mEMail;
+
+    private EditText mParentName;
+    private EditText mParentAddress;
+    private EditText mParentPhone;
+
+    private TextView mParentKidsAge;
+    private TextView mParentKidsAgeMessage;
+    private RadioGroup mParentKidsGender;
+    private RadioButton mParentKidsGenderUnknow;
+    private RadioButton mParentKidsGenderBoy;
+    private RadioButton mParentKidsGenderGirl;
+
+    private TextView mParentBabycareCount;
+    private RadioGroup mParentBabycareType;
+    private RadioButton mParentBabycareTypeNormal;
+    private RadioButton mParentBabycareTypeInHouse;
+    private RadioButton mParentBabycareTypePartTime;
+    private TextView mParentBabycarePlan;
+    private TextView mParentBabycarePlanMessage;
+    private TextView mParentBabycareWeek;
+    private TextView mParentBabycareTimeStart;
+    private TextView mParentBabycareTimeEnd;
+    private TextView mParentBabycareTimeMessage;
+    private TextView mParentNote;
     private Button mConfirm;
-    private CircleImageView mAvatar;
-    private PictureHelper mPictureHelper;
-    private ProgressDialog mRingProgressDialog;
-    private ImageLoader imageLoader = ImageLoader.getInstance();
-    private Spinner mKidsAgeYear;
-    private Spinner mKidsAgeMonth;
-    private ScrollView mAllScreen;
+
     private View mRootView;
+    private ScrollView mAllScreen;
+    //private MaterialDialog mMaterialDialog;
+    private ImageLoader imageLoader = ImageLoader.getInstance();
 
     public ParentProfileEditFragment() {
         // Required empty public constructor
@@ -86,20 +113,46 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
     private void initView() {
         mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
-        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
-        mName = (TextView) mRootView.findViewById(R.id.name);
 
+        mParentAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+
+        // Parent account info
         mAccount = (TextView) mRootView.findViewById(R.id.account);
-        mPassword = (TextView) mRootView.findViewById(R.id.password);
-        mPhone = (TextView) mRootView.findViewById(R.id.phone);
-        mAddress = (TextView) mRootView.findViewById(R.id.address);
+        mPassword = (EditText) mRootView.findViewById(R.id.password);
+        mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
+        mEMail = (EditText) mRootView.findViewById(R.id.email);
+        // Parent contact info
+        mParentName = (EditText) mRootView.findViewById(R.id.parent_name);
+        mParentAddress = (EditText) mRootView.findViewById(R.id.parent_address);
+        mParentPhone = (EditText) mRootView.findViewById(R.id.parent_phone);
 
-        //mKidsAge = (TextView) mRootView.findViewById(R.id.kids_age);
-        mKidsAgeYear = (Spinner) mRootView.findViewById(R.id.kids_age_year);
-        mKidsAgeMonth = (Spinner) mRootView.findViewById(R.id.kids_age_month);
-        mKidsGender = (TextView) mRootView.findViewById(R.id.kids_gender);
+        // Baby info
+        mParentKidsAge = (TextView) mRootView.findViewById(R.id.parent_kids_age);
+        mParentKidsAgeMessage = (TextView) mRootView.findViewById(R.id.parent_kids_age_message);
+
+        mParentKidsGender = (RadioGroup) mRootView.findViewById(R.id.kids_gender);
+        mParentKidsGenderUnknow = (RadioButton) mRootView.findViewById(R.id.kids_gender_unknow);
+        mParentKidsGenderBoy = (RadioButton) mRootView.findViewById(R.id.kids_gender_boy);
+        mParentKidsGenderGirl = (RadioButton) mRootView.findViewById(R.id.kids_gender_girl);
+
+        // Baby care info
+        mParentBabycareCount = (TextView) mRootView.findViewById(R.id.parent_babycare_count);
+
+        mParentBabycareType = (RadioGroup) mRootView.findViewById(R.id.parent_babycare_type);
+        mParentBabycareTypeNormal = (RadioButton) mRootView.findViewById(R.id.normal);
+        mParentBabycareTypeInHouse = (RadioButton) mRootView.findViewById(R.id.in_house);
+        mParentBabycareTypePartTime = (RadioButton) mRootView.findViewById(R.id.part_time);
+
+        mParentBabycarePlan = (TextView) mRootView.findViewById(R.id.parent_babycare_plan);
+        mParentBabycarePlanMessage = (TextView) mRootView.findViewById(R.id.parent_babycare_plan_message);
+        mParentBabycareWeek = (TextView) mRootView.findViewById(R.id.parent_babycare_week);
+        mParentBabycareTimeStart = (TextView) mRootView.findViewById(R.id.parent_babycare_time_start);
+        mParentBabycareTimeEnd = (TextView) mRootView.findViewById(R.id.parent_babycare_time_end);
+        mParentBabycareTimeMessage = (TextView) mRootView.findViewById(R.id.parent_babycare_time_message);
+        mParentNote = (TextView) mRootView.findViewById(R.id.parent_note);
 
         mConfirm = (Button) mRootView.findViewById(R.id.confirm);
+        //mMaterialDialog = DisplayUtils.getMaterialProgressDialog(getActivity(), R.string.dialog_signup_please_wait);
     }
 
     private void initListener() {
@@ -111,23 +164,19 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
                 return false;
             }
         });
+        mParentAvatar.setOnClickListener(this);
 
-        mAvatar.setOnClickListener(this);
+        mParentBabycarePlan.setOnClickListener(this);
+        mParentKidsAge.setOnClickListener(this);
+        mParentBabycareTimeStart.setOnClickListener(this);
+        mParentBabycareTimeEnd.setOnClickListener(this);
+        mParentBabycareWeek.setOnClickListener(this);
+        mParentBabycareCount.setOnClickListener(this);
+
         mConfirm.setOnClickListener(this);
     }
 
     protected void initData() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.kids_age_year, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mKidsAgeYear.setAdapter(adapter);
-        mKidsAgeYear.setSelection(DisplayUtils.getPositionFromYear(getActivity()));
-
-        adapter = ArrayAdapter.createFromResource(getActivity(),
-                R.array.kids_age_month, R.layout.spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mKidsAgeMonth.setAdapter(adapter);
-        mKidsAgeMonth.setSelection(DisplayUtils.getPositionFromMonth(getActivity()));
     }
 
 
@@ -137,27 +186,69 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
         fillDataToUI(ParseHelper.getParent());
     }
 
-    protected void fillDataToUI(UserInfo userInfo) {
-        mName.setText(userInfo.getName());
-        mAccount.setText("帳號：" + ParseUser.getCurrentUser().getUsername());
-        mPassword.setText("密碼：*******");
+    protected void fillDataToUI(UserInfo parent) {
+        String url = "";
+        if (parent.getAvatorFile() != null) {
+            url = parent.getAvatorFile().getUrl();
+        }
+        DisplayUtils.loadAvatorWithUrl(mParentAvatar, url);
 
-        mPhone.setText(userInfo.getPhone());
-        mAddress.setText(userInfo.getAddress());
+        mAccount.setText(parent.getUser().getUsername());
+        mEMail.setText(parent.getUser().getEmail());
 
-        // mKidsAge.setText("小孩生日： 民國 " + year + " 年 " + month + " 月");
+        mParentName.setText(parent.getName());
+        mParentAddress.setText(parent.getAddress());
+        mParentPhone.setText(parent.getPhone());
 
-        mKidsGender.setText("小孩姓別：" + userInfo.getKidsGender());
+        mParentKidsAge.setText(parent.getKidsAge());
 
-        if (userInfo.getAvatorFile() != null) {
-            String url = userInfo.getAvatorFile().getUrl();
-            LogUtils.LOGD("vic", "url=" + url);
-
-            imageLoader.displayImage(url, mAvatar, Config.OPTIONS, null);
+        Calendar startDate = DisplayUtils.getCalendarFromString(parent.getKidsAge());
+        Calendar endDate = Calendar.getInstance();
+        String age = "";
+        if (startDate.before(endDate)) {
+            age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
         } else {
-            mAvatar.setImageResource(R.drawable.photo_icon);
+            age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+        }
+        mParentKidsAgeMessage.setText(age);
+
+        if (parent.getKidsGender().equals("男寶")) {
+            mParentKidsGenderBoy.setChecked(true);
+        } else if (parent.getKidsGender().equals("女寶")) {
+            mParentKidsGenderGirl.setChecked(true);
+        } else {
+            mParentKidsGenderUnknow.setChecked(true);
         }
 
+        mParentBabycareCount.setText(parent.getBabycareCount());
+
+        if (parent.getBabycareType().equals("到府")) {
+            mParentBabycareTypeInHouse.setChecked(true);
+        } else if (parent.getBabycareType().equals("臨托")) {
+            mParentBabycareTypePartTime.setChecked(true);
+        } else {
+            mParentBabycareTypeNormal.setChecked(true);
+        }
+
+        mParentBabycarePlan.setText(parent.getBabycarePlan());
+
+        startDate = DisplayUtils.getCalendarFromString(parent.getBabycarePlan());
+        String plan = "";
+        if (startDate.before(endDate)) {
+            plan = DisplayUtils.getAge(startDate, endDate, DisplayUtils.STARTDAY_BEFORE_CURREENTDAY);
+        } else {
+            plan = DisplayUtils.getAge(endDate, startDate, DisplayUtils.STARTDAY_AFTER_CURRENTDAY);
+        }
+        mParentBabycarePlanMessage.setText(plan);
+
+        mParentBabycareWeek.setText(parent.getBabycareWeek());
+        String startTime = parent.getBabycareTimeStart();
+        String endTime = parent.getBabycareTimeEnd();
+        mParentBabycareTimeStart.setText(startTime);
+        mParentBabycareTimeEnd.setText(endTime);
+        String timeSection = DisplayUtils.getTimeSection(startTime, endTime);
+        mParentBabycareTimeMessage.setText(timeSection);
+        mParentNote.setText(parent.getParentNote());
     }
 
     @Override
@@ -167,11 +258,38 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
         switch (id) {
             case R.id.avatar:
-                saveAvatar();
+                //saveAvatar();
                 break;
 
             case R.id.confirm:
+                //saveUserAccount();
+                //mMaterialDialog.show();
                 saveUserInfo(ParseHelper.getParent());
+                break;
+
+            case R.id.parent_babycare_plan:
+                showDateDailog(id);
+                break;
+
+            case R.id.parent_kids_age:
+                showDateDailog(id);
+                break;
+
+            case R.id.parent_babycare_time_start:
+                showTimeDailog(id);
+                break;
+
+            case R.id.parent_babycare_time_end:
+                showTimeDailog(id);
+                break;
+
+            case R.id.parent_babycare_week:
+                showWeekDialog();
+                break;
+
+            case R.id.parent_babycare_count:
+                showMaxBabiesDialog();
+                break;
 
             default:
                 break;
@@ -179,8 +297,207 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
     }
 
+    private void showDateDailog(final int id) {
+        Calendar now = Calendar.getInstance();
+
+        String selectDate = DisplayUtils.showCurrentDate();
+        switch (id) {
+            case R.id.parent_babycare_plan:
+                selectDate = mParentBabycarePlan.getText().toString();
+                break;
+            case R.id.parent_kids_age:
+                selectDate = mParentKidsAge.getText().toString();
+                break;
+        }
+
+        now.setTime(DisplayUtils.getDateFromString(selectDate));
+
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                        showPickerDate(id, year, monthOfYear, dayOfMonth);
+                    }
+                },
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.dismissOnPause(true);
+        dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+    }
+
+    private void showPickerDate(int id, int year, int monthOfYear, int dayOfMonth) {
+        String date = year + "/" + (++monthOfYear) + "/" + dayOfMonth;
+
+        switch (id) {
+            case R.id.parent_babycare_plan: {
+                mParentBabycarePlan.setText(date);
+
+                Calendar startDate = DisplayUtils.getCalendarFromString(date);
+                Calendar endDate = Calendar.getInstance();
+
+                String age = "";
+                if (startDate.before(endDate)) {
+                    age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.STARTDAY_BEFORE_CURREENTDAY);
+                } else {
+                    age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.STARTDAY_AFTER_CURRENTDAY);
+                }
+                mParentBabycarePlanMessage.setText(age);
+                break;
+            }
+            case R.id.parent_kids_age: {
+                mParentKidsAge.setText(date);
+
+                Calendar startDate = DisplayUtils.getCalendarFromString(date);
+                Calendar endDate = Calendar.getInstance();
+
+                String age = "";
+                if (startDate.before(endDate)) {
+                    age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
+                } else {
+                    age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+                }
+
+                mParentKidsAgeMessage.setText(age);
+                break;
+            }
+        }
+
+    }
+
+    private void showTimeDailog(final int id) {
+        Calendar now = Calendar.getInstance();
+
+        String selectTime = "08:00";
+        switch (id) {
+            case R.id.parent_babycare_time_start:
+                selectTime = mParentBabycareTimeStart.getText().toString();
+                break;
+            case R.id.parent_babycare_time_end:
+                selectTime = mParentBabycareTimeEnd.getText().toString();
+                break;
+        }
+        now.setTime(DisplayUtils.getTimeFromString(selectTime));
+
+        TimePickerDialog tpd = TimePickerDialog.newInstance(
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+                        showPickerTime(id, hourOfDay, minute, second);
+                    }
+                },
+                now.get(Calendar.HOUR_OF_DAY),
+                now.get(Calendar.MINUTE),
+                true
+        );
+        tpd.dismissOnPause(true);
+        tpd.show(getActivity().getFragmentManager(), "Timepickerdialog");
+    }
+
+    private void showPickerTime(int id, int hourOfDay, int minute, int second) {
+        String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
+        String minuteString = minute < 10 ? "0" + minute : "" + minute;
+
+        switch (id) {
+            case R.id.parent_babycare_time_start:
+                mParentBabycareTimeStart.setText(hourString + ":" + minuteString);
+                break;
+
+            case R.id.parent_babycare_time_end:
+                mParentBabycareTimeEnd.setText(hourString + ":" + minuteString);
+                break;
+        }
+
+        String startTime = mParentBabycareTimeStart.getText().toString();
+        String endTime = mParentBabycareTimeEnd.getText().toString();
+        String timeSection = DisplayUtils.getTimeSection(startTime, endTime);
+
+        mParentBabycareTimeMessage.setText(timeSection);
+    }
+
+    private void showMaxBabiesDialog() {
+
+        int count = Integer.parseInt(mParentBabycareCount.getText().toString()) - 1;
+
+        new MaterialDialog.Builder(getContext())
+                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
+                .title("希望保母最多照顧幾個寶寶？")
+                .items(R.array.babies)
+                .itemsCallbackSingleChoice(count, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        String maxBabies = text.toString();
+                        maxBabies = maxBabies.replace("人", "");
+                        mParentBabycareCount.setText(maxBabies);
+                        return true;
+                    }
+                })
+                .positiveText(R.string.dialog_agree)
+                .negativeText(R.string.dialog_cancel)
+                .show();
+    }
+
+    private void showWeekDialog() {
+        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
+
+        String parentBabycareWeek = mParentBabycareWeek.getText().toString();
+
+        if (parentBabycareWeek.contains("一")) {
+            dayOfWeeks.add(0);
+        }
+        if (parentBabycareWeek.contains("二")) {
+            dayOfWeeks.add(1);
+        }
+        if (parentBabycareWeek.contains("三")) {
+            dayOfWeeks.add(2);
+        }
+        if (parentBabycareWeek.contains("四")) {
+            dayOfWeeks.add(3);
+        }
+        if (parentBabycareWeek.contains("五")) {
+            dayOfWeeks.add(4);
+        }
+        if (parentBabycareWeek.contains("六")) {
+            dayOfWeeks.add(5);
+        }
+        if (parentBabycareWeek.contains("日")) {
+            dayOfWeeks.add(6);
+        }
+
+        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
+        selectedItems = dayOfWeeks.toArray(selectedItems);
+
+        new MaterialDialog.Builder(getContext())
+                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
+                .title("請選擇每星期幾托育？")
+                .items(R.array.week)
+                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
+
+                        String dayOfWeek = "";
+                        for (CharSequence item : items) {
+                            dayOfWeek = dayOfWeek + item + "，";
+                        }
+                        dayOfWeek = dayOfWeek.substring(0, dayOfWeek.length()-1);
+                        dayOfWeek = dayOfWeek.replace("星期", "");
+                        mParentBabycareWeek.setText(dayOfWeek);
+
+                        return true;
+                    }
+                })
+                .positiveText(R.string.dialog_agree)
+                .negativeText(R.string.dialog_cancel)
+                .show();
+    }
+
+    private void saveUserAccount() {
+        ParseUser.getCurrentUser().setEmail(mEMail.getText().toString());
+    }
+
     private void saveAvatar() {
-        mPictureHelper = new PictureHelper();
+        //mPictureHelper = new PictureHelper();
         openCamera();
     }
 
@@ -220,34 +537,34 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
     }
 
     private void getFromCamera(Intent data) {
-        mRingProgressDialog = ProgressDialog.show(getActivity(),
-                "請稍等 ...", "資料儲存中...", true);
-
-        // 取出拍照後回傳資料
-        Bundle extras = data.getExtras();
-        // 將資料轉換為圖像格式
-        Bitmap bmp = (Bitmap) extras.get("data");
-        mAvatar.setImageBitmap(bmp);
-
-        mPictureHelper.setBitmap(bmp);
-        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
-        mPictureHelper.savePicture();
+//        mRingProgressDialog = ProgressDialog.show(getActivity(),
+//                "請稍等 ...", "資料儲存中...", true);
+//
+//        // 取出拍照後回傳資料
+//        Bundle extras = data.getExtras();
+//        // 將資料轉換為圖像格式
+//        Bitmap bmp = (Bitmap) extras.get("data");
+//        mParentAvatar.setImageBitmap(bmp);
+//
+//        mPictureHelper.setBitmap(bmp);
+//        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
+//        mPictureHelper.savePicture();
     }
 
     private void getFromGallery(Intent data) {
-        mRingProgressDialog = ProgressDialog.show(getActivity(),
-                "請稍等 ...", "資料儲存中...", true);
-
-        Uri selectedImage = data.getData();
-
-        String filePath = getFilePath(selectedImage);
-
-        Bitmap bmp = BitmapFactory.decodeFile(filePath);
-        mAvatar.setImageBitmap(bmp);
-
-        mPictureHelper.setBitmap(bmp);
-        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
-        mPictureHelper.savePicture();
+//        mRingProgressDialog = ProgressDialog.show(getActivity(),
+//                "請稍等 ...", "資料儲存中...", true);
+//
+//        Uri selectedImage = data.getData();
+//
+//        String filePath = getFilePath(selectedImage);
+//
+//        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+//        mParentAvatar.setImageBitmap(bmp);
+//
+//        mPictureHelper.setBitmap(bmp);
+//        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
+//        mPictureHelper.savePicture();
     }
 
     private String getFilePath(Uri selectedImage) {
@@ -270,36 +587,89 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
         //@Override
         //public void done(UserInfo userInfo, ParseException e) {
-        userInfo.setAvatorFile(mPictureHelper.getFile());
-        userInfo.saveInBackground();
+//        userInfo.setAvatorFile(mPictureHelper.getFile());
+//        userInfo.saveInBackground();
         //}
         //});
-        mRingProgressDialog.dismiss();
+//        mRingProgressDialog.dismiss();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @DebugLog
+    public void onEvent(HomeEvent homeEvent) {
+
+        switch (homeEvent.getAction()) {
+            case HomeEvent.ACTION_ADD_PARENT_INFO_DOEN:
+                //mMaterialDialog.dismiss();
+                DisplayUtils.makeToast(getContext(), "資料儲存成功!");
+                break;
+        }
     }
 
     private void saveUserInfo(UserInfo userInfo) {
-        String phone = mPhone.getText().toString();
-        String address = mAddress.getText().toString();
+        //userInfo.setLocation(Config.MY_LOCATION);
 
-        userInfo.setPhone(phone);
-        userInfo.setAddress(address);
-        userInfo.setKidsAge(mKidsAgeYear.getSelectedItem().toString() + mKidsAgeMonth.getSelectedItem().toString());
-        userInfo.saveInBackground(new SaveCallback() {
+        // parent info
+        userInfo.setName(mParentName.getText().toString());
+        userInfo.setAddress(mParentAddress.getText().toString());
+        userInfo.setPhone(mParentPhone.getText().toString());
 
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Toast.makeText(getActivity(),
-                            "我的資料更新成功!" /* e.getMessage() */, Toast.LENGTH_LONG)
-                            .show();
-                    //getActivity().finish();
-                    mListener.onSwitchToNextFragment(Config.PARENT_READ_PAGE);
-                } else {
+        // baby info
+        userInfo.setKidsAge(mParentKidsAge.getText().toString());
 
-                }
-            }
-        });
+        int kidsGenderItemId = mParentKidsGender.getCheckedRadioButtonId();
+        String kidsGender;
+        switch (kidsGenderItemId) {
+            case R.id.kids_gender_boy:
+                kidsGender = "男寶";
+                break;
+            case R.id.kids_gender_girl:
+                kidsGender = "女寶";
+                break;
+            case R.id.kids_gender_unknow:
+                kidsGender = "未知";
+                break;
+            default:
+                kidsGender = "";
+                break;
+        }
+        userInfo.setKidsGender(kidsGender);
 
+        // baby care info
+        userInfo.setBabycareCount(mParentBabycareCount.getText().toString());
+
+        int parentBabycareTypeItemId = mParentBabycareType.getCheckedRadioButtonId();
+        String parentBabycareType;
+        switch (parentBabycareTypeItemId) {
+            case R.id.normal:
+                parentBabycareType = "一般";
+                break;
+            case R.id.in_house:
+                parentBabycareType = "到府";
+                break;
+            case R.id.part_time:
+                parentBabycareType = "臨托";
+                break;
+            default:
+                parentBabycareType = "";
+                break;
+        }
+        userInfo.setBabycareType(parentBabycareType);
+
+        userInfo.setBabycarePlan(mParentBabycarePlan.getText().toString());
+        userInfo.setBabycareWeek(mParentBabycareWeek.getText().toString());
+        userInfo.setBabycareTimeStart(mParentBabycareTimeStart.getText().toString());
+        userInfo.setBabycareTimeEnd(mParentBabycareTimeEnd.getText().toString());
+        userInfo.setParentNote(mParentNote.getText().toString());
+
+        //ParseHelper.addUserInfo(userInfo);
+
+        ParseHelper.pinDataLocal(userInfo);
     }
 
     public class BabyRecordSaveCallback extends SaveCallback {
@@ -318,4 +688,18 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
         }
     }
+
+    @DebugLog
+    public void onEvent(ParseException parseException) {
+        //mMaterialDialog.dismiss();
+        String errorMessage = DisplayUtils.getErrorMessage(getActivity(), parseException);
+        DisplayUtils.makeToast(getActivity(), errorMessage);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
 }

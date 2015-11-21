@@ -37,7 +37,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
             if (AccountChecker.isSitter()) {
                 fragment = mProfileSitterFragment;
             } else {
-                fragment = mProfileParentFragment;
+                fragment = mProfileParentEditFragment;
             }
 
             mFragmentTransaction.add(R.id.container, fragment).commit();

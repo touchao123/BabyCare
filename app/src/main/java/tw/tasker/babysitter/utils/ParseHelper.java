@@ -464,5 +464,22 @@ public class ParseHelper {
 
     }
 
+    public static void pinDataLocal(final UserInfo userInfo) {
+        userInfo.pinInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    saveDataServer(userInfo);
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_ADD_PARENT_INFO_DOEN));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
+
+    private static void saveDataServer(UserInfo userInfo) {
+        userInfo.saveEventually();
+    }
 }
 
