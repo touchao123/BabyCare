@@ -41,4 +41,17 @@
         <item>4人</item>
     </string-array>
 
+    <string-array name="babycare_type">
+        <item>一般</item>
+        <item>到府</item>
+        <item>臨托</item>
+    </string-array>
+
+    <string-array name="babycare_time">
+        <item>日間</item>
+        <item>夜間</item>
+        <item>半日</item>
+        <item>全日</item>
+    </string-array>
+
 </resources>

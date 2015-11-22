@@ -331,10 +331,11 @@ public class ParseHelper {
         });
     }
 
-    public static void doSitterSignUp(String account, String password) {
+    public static void doSitterSignUp(String account, String password, String email) {
         ParseUser user = new ParseUser();
         user.setUsername(account);
         user.setPassword(account);
+        user.setEmail(email);
         user.put("userType", "sitter");
 
         user.signUpInBackground(new SignUpCallback() {

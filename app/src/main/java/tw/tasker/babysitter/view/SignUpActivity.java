@@ -20,6 +20,7 @@ import tw.tasker.babysitter.utils.IntentUtil;
 public class SignUpActivity extends BaseActivity {
     public static final int STEP_CREATE_ACCOUNT = 0;
     public static final int STEP_CHANGE_PHONE = 1;
+    public static final int STEP_SYNC_DATA = 2;
     public static final int STEP_VERIFY_CODE = -1;
 
     private PagerSlidingTabStrip tabs;
@@ -148,9 +149,9 @@ public class SignUpActivity extends BaseActivity {
 
                 case 1:
                     if (mFragmentAtPos1 == null) {
-                        mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener);
+                        // mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener);
                         // mFragmentAtPos1 = VerifyCodeFragment.newInstance(mListener);
-                        // mFragmentAtPos1 = CreateAccountFragment.newInstance();
+                        mFragmentAtPos1 = SitterSignUpFragment.newInstance(mListener);
 
                     }
                     return mFragmentAtPos1;
@@ -171,10 +172,16 @@ public class SignUpActivity extends BaseActivity {
 //                return POSITION_NONE;
 //            }
 
-            if (object instanceof SitterSyncDataFragment
-                    && mFragmentAtPos1 instanceof SitterSignUpFragment) {
+//            if (object instanceof SitterSyncDataFragment
+//                    && mFragmentAtPos1 instanceof SitterSignUpFragment) {
+//                return POSITION_NONE;
+//            }
+
+            if (object instanceof SitterSignUpFragment
+                    && mFragmentAtPos1 instanceof SitterSyncDataFragment) {
                 return POSITION_NONE;
             }
+
 
 //            if (object instanceof VerifyCodeFragment
 //                    && mFragmentAtPos1 instanceof CreateAccountFragment) {
@@ -194,25 +201,25 @@ public class SignUpActivity extends BaseActivity {
                 mFragmentManager.beginTransaction().remove(mFragmentAtPos1)
                         .commit();
 
-                if (mFragmentAtPos1 instanceof SitterSyncDataFragment) { // Page2
+                if (mFragmentAtPos1 instanceof SitterSignUpFragment) { // Page2
 //                    if (type == STEP_VERIFY_CODE)
 //                        mFragmentAtPos1 = VerifyCodeFragment.newInstance(mListener);
 //                    else if (type == STEP_CHANGE_PHONE) {
 //                        mFragmentAtPos1 = ChangePhoneFragment.newInstance();
 //                    }
-                    mFragmentAtPos1 = SitterSignUpFragment.newInstance();
+                    mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener);
 
 
                 } else if (mFragmentAtPos1 instanceof VerifyCodeFragment) { // Page3
                     if (type == STEP_CREATE_ACCOUNT) // confirm
                     {
-                        mFragmentAtPos1 = SitterSignUpFragment.newInstance();
+                        mFragmentAtPos1 = SitterSignUpFragment.newInstance(mListener);
                     } else if (type == STEP_CHANGE_PHONE) { // change_phone
                         mFragmentAtPos1 = ChangePhoneFragment.newInstance();
                     }
 
                 } else {
-                    mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener); // Page1
+                    mFragmentAtPos1 = SitterSignUpFragment.newInstance(mListener); // Page1
                 }
 
                 notifyDataSetChanged();

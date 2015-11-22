@@ -199,6 +199,24 @@ public class Babysitter extends ParseObject {
         put("avatar", file);
     }
 
+    public String getBabycareType() {
+        String babycareCount = getString("babycareType");
+        return  babycareCount == null ? "0" : babycareCount;
+    }
+
+    public void setBabycareType(String value) {
+        put("babycareType", value);
+    }
+
+    public String getSitterNote() {
+        String babycareCount = getString("sitterNote");
+        return  babycareCount == null ? "0" : babycareCount;
+    }
+
+    public void setSitterNote(String value) {
+        put("sitterNote", value);
+    }
+
     @Override
     public String toString() {
 
