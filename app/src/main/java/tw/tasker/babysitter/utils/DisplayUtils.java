@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -548,4 +549,47 @@ public class DisplayUtils {
                 .show();
     }
 
+    public static void showBabycareTypeDialog(Context context, final TextView sitterBabycareType) {
+        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
+
+        String parentBabycareWeek = sitterBabycareType.getText().toString();
+
+        if (parentBabycareWeek.contains("一般")) {
+            dayOfWeeks.add(0);
+        }
+        if (parentBabycareWeek.contains("到府")) {
+            dayOfWeeks.add(1);
+        }
+        if (parentBabycareWeek.contains("臨托")) {
+            dayOfWeeks.add(2);
+        }
+
+        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
+        selectedItems = dayOfWeeks.toArray(selectedItems);
+
+        new MaterialDialog.Builder(context)
+                .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
+                .title("請選擇托育類別？")
+                .items(R.array.babycare_type)
+                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
+
+                        String babycareType = "";
+                        for (CharSequence item : items) {
+                            babycareType = babycareType + item + "，";
+                        }
+                        babycareType = babycareType.substring(0, babycareType.length() - 1);
+                        sitterBabycareType.setText(babycareType);
+
+                        return true;
+                    }
+                })
+                .positiveText(R.string.dialog_agree)
+                .negativeText(R.string.dialog_cancel)
+                .show();
+    }
+
 }
+
+

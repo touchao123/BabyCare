@@ -147,7 +147,7 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
                 DisplayUtils.showMaxBabiesDialog(getContext(), mSitterBabycareCount);
                 break;
             case R.id.sitter_babycare_type:
-                showBabycareTypeDialog();
+                DisplayUtils.showBabycareTypeDialog(getContext(), mSitterBabycareType);
                 break;
             case R.id.sitter_babycare_time:
                 showBabycareTimeDialog();
@@ -157,46 +157,6 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
     }
 
 
-    private void showBabycareTypeDialog() {
-        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
-
-        String parentBabycareWeek = mSitterBabycareType.getText().toString();
-
-        if (parentBabycareWeek.contains("一般")) {
-            dayOfWeeks.add(0);
-        }
-        if (parentBabycareWeek.contains("到府")) {
-            dayOfWeeks.add(1);
-        }
-        if (parentBabycareWeek.contains("臨托")) {
-            dayOfWeeks.add(2);
-        }
-
-        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
-        selectedItems = dayOfWeeks.toArray(selectedItems);
-
-        new MaterialDialog.Builder(getContext())
-                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
-                .title("請選擇托育類別？")
-                .items(R.array.babycare_type)
-                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
-
-                        String babycareType = "";
-                        for (CharSequence item : items) {
-                            babycareType = babycareType + item + "，";
-                        }
-                        babycareType = babycareType.substring(0, babycareType.length()-1);
-                        mSitterBabycareType.setText(babycareType);
-
-                        return true;
-                    }
-                })
-                .positiveText(R.string.dialog_agree)
-                .negativeText(R.string.dialog_cancel)
-                .show();
-    }
 
     private void showBabycareTimeDialog() {
         ArrayList<Integer> dayOfWeeks = new ArrayList<>();

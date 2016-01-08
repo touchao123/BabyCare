@@ -18,14 +18,17 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
@@ -46,30 +49,34 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     private static final int REQUEST_IMAGE = 1;
     private static final int RESULT_OK = -1;
-    private static SignUpListener mListner;
-    private TextView mNumber;
-    private TextView mSitterName;
-    private TextView mEducation;
-    private TextView mTel;
-    private TextView mAddress;
-    private RatingBar mBabycareCount;
-    private TextView mBabycareTime;
-    private TextView mSkillNumber;
-    private TextView mCommunityName;
+
+    private static SignUpListener mListener;
+
     private CircleImageView mAvatar;
-    private ImageLoader imageLoader = ImageLoader.getInstance();
-    private Button mConfirm;
-    private CheckBox mDayTime;
-    private CheckBox mNightTime;
-    private CheckBox mHalfDay;
-    private CheckBox mFullDay;
-    private CheckBox mPartTime;
-    private CheckBox mInHouse;
-    private ProgressDialog mRingProgressDialog;
-    private PictureHelper mPictureHelper;
+
+    private EditText mAccount;
+    private EditText mPassword;
+    private EditText mPasswordAgain;
+    private EditText mEMail;
+
+    private EditText mSitterName;
+    private EditText mSitterAddress;
+    private EditText mSitterPhone;
+
+    private TextView mSitterBabycareCount;
+    private TextView mSitterBabycareType;
+    private TextView mSitterBabycareTime;
+    private EditText mSitterNote;
+
+    private Button mCreate;
     private ScrollView mAllScreen;
     private View mRootView;
-    private LinearLayout mSitterHome;
+    private MaterialDialog mMaterialDialog;
+
+
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private ProgressDialog mRingProgressDialog;
+    private PictureHelper mPictureHelper;
 
     public SitterProfileEditFragment() {
         // TODO Auto-generated constructor stub
@@ -77,7 +84,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     public static Fragment newInstance(SignUpListener listener) {
         Fragment fragment = new SitterProfileEditFragment();
-        mListner = listener;
+        mListener = listener;
         return fragment;
     }
 
@@ -95,29 +102,44 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     private void initView() {
         mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
-        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
+
         mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
-        mNumber = (TextView) mRootView.findViewById(R.id.number);
-        mSitterName = (TextView) mRootView.findViewById(R.id.name);
+        // Set up the signup form.
+        mAccount = (EditText) mRootView.findViewById(R.id.account);
+        mPassword = (EditText) mRootView.findViewById(R.id.password);
+        mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
+        mEMail = (EditText) mRootView.findViewById(R.id.email);
+
+        mSitterName = (EditText) mRootView.findViewById(R.id.sitter_name);
+        mSitterAddress = (EditText) mRootView.findViewById(R.id.sitter_address);
+        mSitterPhone = (EditText) mRootView.findViewById(R.id.sitter_phone);
+
+        mSitterBabycareCount = (TextView) mRootView.findViewById(R.id.sitter_babycare_count);
+        mSitterBabycareType = (TextView) mRootView.findViewById(R.id.sitter_babycare_type);
+        mSitterBabycareTime = (TextView) mRootView.findViewById(R.id.sitter_babycare_time);
+
+        mSitterNote = (EditText) mRootView.findViewById(R.id.sitter_note);
+
+        mCreate = (Button) mRootView.findViewById(R.id.create);
+        mMaterialDialog = DisplayUtils.getMaterialProgressDialog(getActivity(), R.string.dialog_signup_please_wait);
+
+
+//        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
+//        mNumber = (TextView) mRootView.findViewById(R.id.number);
+//        mSitterName = (TextView) mRootView.findViewById(R.id.name);
         //mSex = (TextView) mRootView.findViewById(R.id.sex);
         //mAge = (TextView) mRootView.findViewById(R.id.age);
-        mEducation = (TextView) mRootView.findViewById(R.id.education);
-        mTel = (TextView) mRootView.findViewById(R.id.tel);
-        mAddress = (TextView) mRootView.findViewById(R.id.address);
-        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
-        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
+//        mEducation = (TextView) mRootView.findViewById(R.id.education);
+//        mTel = (TextView) mRootView.findViewById(R.id.tel);
+//        mAddress = (TextView) mRootView.findViewById(R.id.address);
+//        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
+//        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
 
-        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
-        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
+//        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
+//        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
 
-        mDayTime = (CheckBox) mRootView.findViewById(R.id.day_time);
-        mNightTime = (CheckBox) mRootView.findViewById(R.id.night_time);
-        mHalfDay = (CheckBox) mRootView.findViewById(R.id.half_day);
-        mFullDay = (CheckBox) mRootView.findViewById(R.id.full_day);
-        mPartTime = (CheckBox) mRootView.findViewById(R.id.part_time);
-        mInHouse = (CheckBox) mRootView.findViewById(R.id.in_house);
 
-        mSitterHome = (LinearLayout) mRootView.findViewById(R.id.sitter_home);
+//        mSitterHome = (LinearLayout) mRootView.findViewById(R.id.sitter_home);
 
     }
 
@@ -130,11 +152,15 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 return false;
             }
         });
-        mConfirm.setOnClickListener(this);
-
         mAvatar.setOnClickListener(this);
 
-        mSitterHome.setOnClickListener(this);
+        mCreate.setOnClickListener(this);
+        mSitterBabycareCount.setOnClickListener(this);
+        mSitterBabycareType.setOnClickListener(this);
+        mSitterBabycareTime.setOnClickListener(this);
+
+//        mConfirm.setOnClickListener(this);
+//        mSitterHome.setOnClickListener(this);
     }
 
     private void initData() {
@@ -150,28 +176,44 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     }
 
     protected void fillDataToUI(Babysitter sitter) {
+
+        mAccount.setText(ParseUser.getCurrentUser().getUsername());
+        //mPassword;
+        //mPasswordAgain;
+        mEMail.setText(ParseUser.getCurrentUser().getEmail());
+
         mSitterName.setText(sitter.getName());
+        mSitterAddress.setText(sitter.getAddress());
+        mSitterPhone.setText(sitter.getTel());
+
+        mSitterBabycareCount.setText(sitter.getBabycareCount());
+        mSitterBabycareType.setText(sitter.getBabycareType());
+        mSitterBabycareTime.setText(sitter.getBabycareTime());
+        mSitterNote.setText(sitter.getSitterNote());
+
+
+        //mSitterName.setText(sitter.getName());
         //mSex.setText(babysitter.getSex());
         //mAge.setText(babysitter.getAge());
-        mTel.setText(sitter.getTel());
-        mAddress.setText(sitter.getAddress());
+        //mTel.setText(sitter.getTel());
+        //mAddress.setText(sitter.getAddress());
 
-        int babyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
-        mBabycareCount.setRating(babyCount);
+        //int babyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
+        //mBabycareCount.setRating(babyCount);
 
         //mSkillNumber.setText("保母證號：" + sitter.getSkillNumber());
-        mEducation.setText(sitter.getEducation());
-        mCommunityName.setText(sitter.getCommunityName());
+        //mEducation.setText(sitter.getEducation());
+        //mCommunityName.setText(sitter.getCommunityName());
 
         //mBabycareTime.setText(babysitter.getBabycareTime());
 
-        setBabyCareTime(sitter.getBabycareTime());
+        //setBabyCareTime(sitter.getBabycareTime());
 
-        if (sitter.getAvatarFile() == null) {
-            getOldAvatar(sitter);
-        } else {
-            getNewAvatar(sitter);
-        }
+        //if (sitter.getAvatarFile() == null) {
+        //    getOldAvatar(sitter);
+        //} else {
+        //    getNewAvatar(sitter);
+        //}
     }
 
     private void getOldAvatar(Babysitter sitter) {
@@ -194,32 +236,32 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     }
 
-    private void setBabyCareTime(String babycareTime) {
-        if (babycareTime.indexOf("白天") > -1) {
-            mDayTime.setChecked(true);
-        }
-
-        if (babycareTime.indexOf("夜間") > -1) {
-            mNightTime.setChecked(true);
-        }
-
-        if (babycareTime.indexOf("全天") > -1) {
-            mFullDay.setChecked(true);
-        }
-
-        if (babycareTime.indexOf("半天") > -1) {
-            mHalfDay.setChecked(true);
-        }
-
-        if (babycareTime.indexOf("臨時托育(平日)") > -1 || babycareTime.indexOf("臨時托育(假日)") > -1) {
-            mPartTime.setChecked(true);
-        }
-
-        if (babycareTime.indexOf("到宅服務") > -1) {
-            mInHouse.setChecked(true);
-        }
-
-    }
+//    private void setBabyCareTime(String babycareTime) {
+//        if (babycareTime.indexOf("白天") > -1) {
+//            mDayTime.setChecked(true);
+//        }
+//
+//        if (babycareTime.indexOf("夜間") > -1) {
+//            mNightTime.setChecked(true);
+//        }
+//
+//        if (babycareTime.indexOf("全天") > -1) {
+//            mFullDay.setChecked(true);
+//        }
+//
+//        if (babycareTime.indexOf("半天") > -1) {
+//            mHalfDay.setChecked(true);
+//        }
+//
+//        if (babycareTime.indexOf("臨時托育(平日)") > -1 || babycareTime.indexOf("臨時托育(假日)") > -1) {
+//            mPartTime.setChecked(true);
+//        }
+//
+//        if (babycareTime.indexOf("到宅服務") > -1) {
+//            mInHouse.setChecked(true);
+//        }
+//
+//    }
 
     @Override
     public void onClick(View v) {
@@ -236,6 +278,15 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
             case R.id.sitter_home:
                 openGallery();
+                break;
+
+            case R.id.sitter_babycare_count:
+                DisplayUtils.showMaxBabiesDialog(getContext(), mSitterBabycareCount);
+                break;
+
+            case R.id.sitter_babycare_type:
+                DisplayUtils.showBabycareTypeDialog(getContext(), mSitterBabycareType);
+                break;
 
             default:
                 break;
@@ -371,62 +422,62 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     }
 
     private void saveSitterInfo(Babysitter tmpSiterInfo) {
-        String phone = mTel.getText().toString();
-        String address = mAddress.getText().toString();
-
-        String education = mEducation.getText().toString();
-        String communityName = mCommunityName.getText().toString();
-
-        String babycareTime = getBabycareTimeInfo();
-
-        tmpSiterInfo.setTel(phone);
-        tmpSiterInfo.setAddress(address);
-        tmpSiterInfo.setEducation(education);
-        tmpSiterInfo.setCommunityName(communityName);
-        tmpSiterInfo.setBabycareTime(babycareTime);
-
-        tmpSiterInfo.saveInBackground(new SaveCallback() {
-
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Toast.makeText(getActivity(),
-                            "我的資料更新成功!" /* e.getMessage() */, Toast.LENGTH_LONG)
-                            .show();
-                    mListner.onSwitchToNextFragment(Config.SITTER_READ_PAGE);
-                }
-            }
-        });
+//        String phone = mTel.getText().toString();
+//        String address = mAddress.getText().toString();
+//
+//        String education = mEducation.getText().toString();
+//        String communityName = mCommunityName.getText().toString();
+//
+//        String babycareTime = getBabycareTimeInfo();
+//
+//        tmpSiterInfo.setTel(phone);
+//        tmpSiterInfo.setAddress(address);
+//        tmpSiterInfo.setEducation(education);
+//        tmpSiterInfo.setCommunityName(communityName);
+//        tmpSiterInfo.setBabycareTime(babycareTime);
+//
+//        tmpSiterInfo.saveInBackground(new SaveCallback() {
+//
+//            @Override
+//            public void done(ParseException e) {
+//                if (e == null) {
+//                    Toast.makeText(getActivity(),
+//                            "我的資料更新成功!" /* e.getMessage() */, Toast.LENGTH_LONG)
+//                            .show();
+//                    mListner.onSwitchToNextFragment(Config.SITTER_READ_PAGE);
+//                }
+//            }
+//        });
 
     }
 
-    private String getBabycareTimeInfo() {
-        String babycareTimeInfo = "";
-        if (mDayTime.isChecked()) {
-            babycareTimeInfo = babycareTimeInfo + "白天, ";
-        }
-
-        if (mNightTime.isChecked()) {
-            babycareTimeInfo = babycareTimeInfo + "夜間, ";
-        }
-
-        if (mFullDay.isChecked()) {
-            babycareTimeInfo = babycareTimeInfo + "全天, ";
-        }
-
-        if (mHalfDay.isChecked()) {
-            babycareTimeInfo = babycareTimeInfo + "半天, ";
-        }
-
-        if (mPartTime.isChecked()) {
-            babycareTimeInfo = babycareTimeInfo + "臨時托育(平日), 臨時托育(假日), ";
-        }
-
-        if (mInHouse.isChecked()) {
-            babycareTimeInfo = babycareTimeInfo + "到宅服務, ";
-        }
-        return babycareTimeInfo;
-    }
+//    private String getBabycareTimeInfo() {
+//        String babycareTimeInfo = "";
+//        if (mDayTime.isChecked()) {
+//            babycareTimeInfo = babycareTimeInfo + "白天, ";
+//        }
+//
+//        if (mNightTime.isChecked()) {
+//            babycareTimeInfo = babycareTimeInfo + "夜間, ";
+//        }
+//
+//        if (mFullDay.isChecked()) {
+//            babycareTimeInfo = babycareTimeInfo + "全天, ";
+//        }
+//
+//        if (mHalfDay.isChecked()) {
+//            babycareTimeInfo = babycareTimeInfo + "半天, ";
+//        }
+//
+//        if (mPartTime.isChecked()) {
+//            babycareTimeInfo = babycareTimeInfo + "臨時托育(平日), 臨時托育(假日), ";
+//        }
+//
+//        if (mInHouse.isChecked()) {
+//            babycareTimeInfo = babycareTimeInfo + "到宅服務, ";
+//        }
+//        return babycareTimeInfo;
+//    }
 
     public class BabyRecordSaveCallback extends SaveCallback {
 
