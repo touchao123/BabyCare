@@ -17,10 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,15 +28,17 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.File;
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
+import hugo.weaving.DebugLog;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UploadService;
 import tw.tasker.babysitter.model.Babysitter;
+import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
@@ -68,7 +67,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private TextView mSitterBabycareTime;
     private EditText mSitterNote;
 
-    private Button mCreate;
+    private Button mConfirm;
     private ScrollView mAllScreen;
     private View mRootView;
     private MaterialDialog mMaterialDialog;
@@ -120,7 +119,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
         mSitterNote = (EditText) mRootView.findViewById(R.id.sitter_note);
 
-        mCreate = (Button) mRootView.findViewById(R.id.create);
+        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
         mMaterialDialog = DisplayUtils.getMaterialProgressDialog(getActivity(), R.string.dialog_signup_please_wait);
 
 
@@ -154,7 +153,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         });
         mAvatar.setOnClickListener(this);
 
-        mCreate.setOnClickListener(this);
+        mConfirm.setOnClickListener(this);
         mSitterBabycareCount.setOnClickListener(this);
         mSitterBabycareType.setOnClickListener(this);
         mSitterBabycareTime.setOnClickListener(this);
@@ -268,16 +267,16 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         int id = v.getId();
 
         switch (id) {
+            case R.id.sitter_home:
+                openGallery();
+                break;
+
             case R.id.avatar:
                 saveAvatar();
                 break;
 
             case R.id.confirm:
                 saveSitterInfo(ParseHelper.getSitter());
-                break;
-
-            case R.id.sitter_home:
-                openGallery();
                 break;
 
             case R.id.sitter_babycare_count:
@@ -351,8 +350,6 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                     startUploadService(paths);
 
                 }
-
-
                 //getFromGallery(data);
                 break;
             default:
@@ -425,7 +422,28 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         mRingProgressDialog.dismiss();
     }
 
-    private void saveSitterInfo(Babysitter tmpSiterInfo) {
+    private void saveSitterInfo(Babysitter sitterInfo) {
+
+        // sitter info
+        sitterInfo.setName(mSitterName.getText().toString());
+        sitterInfo.setAddress(mSitterAddress.getText().toString());
+        sitterInfo.setTel(mSitterPhone.getText().toString());
+
+        // babycare info
+//        String baby = "";
+//        int count = Integer.valueOf(mSitterBabycareCount.getText().toString());
+//        for (int i = 0; i <= count; i++ ) {
+//            baby = baby + i + " ";
+//        }
+//        baby = baby.substring(0, baby.length()-1);
+        sitterInfo.setBabycareCount(mSitterBabycareCount.getText().toString());
+        sitterInfo.setBabycareTime(mSitterBabycareTime.getText().toString());
+        sitterInfo.setBabycareType(mSitterBabycareType.getText().toString());
+        sitterInfo.setSitterNote(mSitterNote.getText().toString());
+
+        ParseHelper.pinDataLocal(sitterInfo);
+
+
 //        String phone = mTel.getText().toString();
 //        String address = mAddress.getText().toString();
 //
@@ -455,34 +473,6 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     }
 
-//    private String getBabycareTimeInfo() {
-//        String babycareTimeInfo = "";
-//        if (mDayTime.isChecked()) {
-//            babycareTimeInfo = babycareTimeInfo + "白天, ";
-//        }
-//
-//        if (mNightTime.isChecked()) {
-//            babycareTimeInfo = babycareTimeInfo + "夜間, ";
-//        }
-//
-//        if (mFullDay.isChecked()) {
-//            babycareTimeInfo = babycareTimeInfo + "全天, ";
-//        }
-//
-//        if (mHalfDay.isChecked()) {
-//            babycareTimeInfo = babycareTimeInfo + "半天, ";
-//        }
-//
-//        if (mPartTime.isChecked()) {
-//            babycareTimeInfo = babycareTimeInfo + "臨時托育(平日), 臨時托育(假日), ";
-//        }
-//
-//        if (mInHouse.isChecked()) {
-//            babycareTimeInfo = babycareTimeInfo + "到宅服務, ";
-//        }
-//        return babycareTimeInfo;
-//    }
-
     public class BabyRecordSaveCallback extends SaveCallback {
 
         @Override
@@ -499,6 +489,37 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
         }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @DebugLog
+    public void onEvent(HomeEvent homeEvent) {
+
+        switch (homeEvent.getAction()) {
+            case HomeEvent.ACTION_ADD_SITTER_INFO_DOEN:
+                //mMaterialDialog.dismiss();
+                DisplayUtils.makeToast(getContext(), "資料儲存成功!");
+                break;
+        }
+    }
+
+    @DebugLog
+    public void onEvent(ParseException parseException) {
+        //mMaterialDialog.dismiss();
+        String errorMessage = DisplayUtils.getErrorMessage(getActivity(), parseException);
+        DisplayUtils.makeToast(getActivity(), errorMessage);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
 
 
 }

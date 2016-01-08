@@ -467,6 +467,7 @@ public class ParseHelper {
 
     }
 
+    // parent
     public static void pinDataLocal(final UserInfo userInfo) {
         userInfo.pinInBackground(new SaveCallback() {
             @Override
@@ -483,6 +484,26 @@ public class ParseHelper {
 
     private static void saveDataServer(UserInfo userInfo) {
         userInfo.saveEventually();
+    }
+
+    // sitter
+    public static void pinDataLocal(final Babysitter sitterInfo) {
+        sitterInfo.pinInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    saveDataServer(sitterInfo);
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_ADD_SITTER_INFO_DOEN));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+
+    }
+
+    private static void saveDataServer(Babysitter sitterInfo) {
+        sitterInfo.saveEventually();
     }
 }
 

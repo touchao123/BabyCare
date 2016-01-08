@@ -190,13 +190,13 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
         sitterInfo.setTel(mSitterPhone.getText().toString());
 
         // babycare info
-        String baby = "";
-        int count = Integer.valueOf(mSitterBabycareCount.getText().toString());
-        for (int i = 0; i <= count; i++ ) {
-            baby = baby + i + " ";
-        }
-        baby = baby.substring(0, baby.length()-1);
-        sitterInfo.setBabycareCount(baby);
+//        String baby = "";
+//        int count = Integer.valueOf(mSitterBabycareCount.getText().toString());
+//        for (int i = 0; i <= count; i++ ) {
+//            baby = baby + i + " ";
+//        }
+//        baby = baby.substring(0, baby.length()-1);
+        sitterInfo.setBabycareCount(mSitterBabycareCount.getText().toString());
         sitterInfo.setBabycareTime(mSitterBabycareTime.getText().toString());
         sitterInfo.setBabycareType(mSitterBabycareType.getText().toString());
         sitterInfo.setSitterNote(mSitterNote.getText().toString());
