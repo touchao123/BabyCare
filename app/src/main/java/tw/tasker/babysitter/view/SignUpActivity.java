@@ -172,15 +172,15 @@ public class SignUpActivity extends BaseActivity {
 //                return POSITION_NONE;
 //            }
 
-//            if (object instanceof SitterSyncDataFragment
-//                    && mFragmentAtPos1 instanceof SitterSignUpFragment) {
-//                return POSITION_NONE;
-//            }
-
-            if (object instanceof SitterSignUpFragment
-                    && mFragmentAtPos1 instanceof SitterSyncDataFragment) {
+            if (object instanceof SitterSyncDataFragment
+                    && mFragmentAtPos1 instanceof SitterSignUpFragment) {
                 return POSITION_NONE;
             }
+
+//            if (object instanceof SitterSignUpFragment
+//                    && mFragmentAtPos1 instanceof SitterSyncDataFragment) {
+//                return POSITION_NONE;
+//            }
 
 
 //            if (object instanceof VerifyCodeFragment
@@ -201,13 +201,13 @@ public class SignUpActivity extends BaseActivity {
                 mFragmentManager.beginTransaction().remove(mFragmentAtPos1)
                         .commit();
 
-                if (mFragmentAtPos1 instanceof SitterSignUpFragment) { // Page2
+                if (mFragmentAtPos1 instanceof SitterSyncDataFragment) { // Page2
 //                    if (type == STEP_VERIFY_CODE)
 //                        mFragmentAtPos1 = VerifyCodeFragment.newInstance(mListener);
 //                    else if (type == STEP_CHANGE_PHONE) {
 //                        mFragmentAtPos1 = ChangePhoneFragment.newInstance();
 //                    }
-                    mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener);
+                    mFragmentAtPos1 = SitterSignUpFragment.newInstance(mListener);
 
 
                 } else if (mFragmentAtPos1 instanceof VerifyCodeFragment) { // Page3
@@ -219,7 +219,7 @@ public class SignUpActivity extends BaseActivity {
                     }
 
                 } else {
-                    mFragmentAtPos1 = SitterSignUpFragment.newInstance(mListener); // Page1
+                    mFragmentAtPos1 = SitterSyncDataFragment.newInstance(mListener); // Page1
                 }
 
                 notifyDataSetChanged();

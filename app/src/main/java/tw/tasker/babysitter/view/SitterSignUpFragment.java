@@ -132,6 +132,8 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
 
         switch (v.getId()) {
             case R.id.create:
+//                mListener.onSwitchToNextFragment(SignUpActivity.STEP_SYNC_DATA);
+
                 String account = mAccount.getText().toString();
                 String password = mPassword.getText().toString();
                 String passwordAgain = mPasswordAgain.getText().toString();
@@ -279,9 +281,9 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
 
             case HomeEvent.ACTION_ADD_SITTER_INFO_DOEN:
                 mMaterialDialog.dismiss();
-                mListener.onSwitchToNextFragment(SignUpActivity.STEP_SYNC_DATA);
+                //mListener.onSwitchToNextFragment(SignUpActivity.STEP_SYNC_DATA);
 
-                //startActivity(IntentUtil.startDispatchActivity());
+                startActivity(IntentUtil.startDispatchActivity());
                 break;
         }
 
