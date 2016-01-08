@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -523,4 +525,27 @@ public class DisplayUtils {
 
         return timeSection + "，\n" +timeHour + "小時" + timeMinute + "分鐘";
     }
+
+    public static void showMaxBabiesDialog(Context context, final TextView sitterBabycareCount) {
+
+        int count = Integer.parseInt(sitterBabycareCount.getText().toString()) - 1;
+
+        new MaterialDialog.Builder(context)
+                .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
+                .title("目前照顧幾個寶寶？")
+                .items(R.array.babies)
+                .itemsCallbackSingleChoice(count, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        String maxBabies = text.toString();
+                        maxBabies = maxBabies.replace("人", "");
+                        sitterBabycareCount.setText(maxBabies);
+                        return true;
+                    }
+                })
+                .positiveText(R.string.dialog_agree)
+                .negativeText(R.string.dialog_cancel)
+                .show();
+    }
+
 }

@@ -144,7 +144,7 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
                 }
                 break;
             case R.id.sitter_babycare_count:
-                showMaxBabiesDialog();
+                DisplayUtils.showMaxBabiesDialog(getContext(), mSitterBabycareCount);
                 break;
             case R.id.sitter_babycare_type:
                 showBabycareTypeDialog();
@@ -156,27 +156,6 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
 
     }
 
-    private void showMaxBabiesDialog() {
-
-        int count = Integer.parseInt(mSitterBabycareCount.getText().toString()) - 1;
-
-        new MaterialDialog.Builder(getContext())
-                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
-                .title("希望保母最多照顧幾個寶寶？")
-                .items(R.array.babies)
-                .itemsCallbackSingleChoice(count, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        String maxBabies = text.toString();
-                        maxBabies = maxBabies.replace("人", "");
-                        mSitterBabycareCount.setText(maxBabies);
-                        return true;
-                    }
-                })
-                .positiveText(R.string.dialog_agree)
-                .negativeText(R.string.dialog_cancel)
-                .show();
-    }
 
     private void showBabycareTypeDialog() {
         ArrayList<Integer> dayOfWeeks = new ArrayList<>();
