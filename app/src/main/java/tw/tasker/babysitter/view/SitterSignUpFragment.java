@@ -19,8 +19,10 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
@@ -55,6 +57,8 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
     private ScrollView mAllScreen;
     private View mRootView;
     private MaterialDialog mMaterialDialog;
+    private TextView mSitterAge;
+    private TextView mSitterAgeMessage;
 
     public SitterSignUpFragment() {
     }
@@ -90,6 +94,8 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
         mSitterAddress = (EditText) mRootView.findViewById(R.id.sitter_address);
         mSitterPhone = (EditText) mRootView.findViewById(R.id.sitter_phone);
 
+        mSitterAge = (TextView) mRootView.findViewById(R.id.sitter_age);
+        mSitterAgeMessage = (TextView) mRootView.findViewById(R.id.sitter_age_message);
         mSitterBabycareCount = (TextView) mRootView.findViewById(R.id.sitter_babycare_count);
         mSitterBabycareType = (TextView) mRootView.findViewById(R.id.sitter_babycare_type);
         mSitterBabycareTime = (TextView) mRootView.findViewById(R.id.sitter_babycare_time);
@@ -111,12 +117,14 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
         });
 
         mCreate.setOnClickListener(this);
+        mSitterAge.setOnClickListener(this);
         mSitterBabycareCount.setOnClickListener(this);
         mSitterBabycareType.setOnClickListener(this);
         mSitterBabycareTime.setOnClickListener(this);
     }
 
     private void loadData() {
+        mSitterAge.setText(DisplayUtils.showCurrentDate());
 
 //        if (BuildConfig.DEBUG)
 //            loadTestData();
@@ -131,7 +139,8 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()) {
+        int id = v.getId();
+        switch (id) {
             case R.id.create:
 //                mListener.onSwitchToNextFragment(SignUpActivity.STEP_SYNC_DATA);
 
@@ -153,9 +162,66 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
             case R.id.sitter_babycare_time:
                 DisplayUtils.showBabycareTimeDialog(getContext(), mSitterBabycareTime);
                 break;
+            case R.id.sitter_age:
+                showDateDailog(id);
+                break;
+
         }
 
     }
+
+    private void showDateDailog(final int id) {
+        Calendar now = Calendar.getInstance();
+
+        String selectDate = DisplayUtils.showCurrentDate();
+        switch (id) {
+            case R.id.sitter_age:
+                selectDate = mSitterAge.getText().toString();
+                break;
+        }
+
+        now.setTime(DisplayUtils.getDateFromString(selectDate));
+
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                        showPickerDate(id, year, monthOfYear, dayOfMonth);
+                    }
+                },
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.dismissOnPause(true);
+        dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+    }
+
+    private void showPickerDate(int id, int year, int monthOfYear, int dayOfMonth) {
+        String date = year + "/" + (++monthOfYear) + "/" + dayOfMonth;
+
+        switch (id) {
+            case R.id.sitter_age: {
+                mSitterAge.setText(date);
+
+                Calendar startDate = DisplayUtils.getCalendarFromString(date);
+                Calendar endDate = Calendar.getInstance();
+
+                String age = "";
+                if (startDate.before(endDate)) {
+                    age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
+                } else {
+                    age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+                }
+                mSitterAgeMessage.setText(age);
+                break;
+            }
+
+        }
+
+    }
+
+
 
     @Override
     public void onStart() {
@@ -196,6 +262,7 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
 //            baby = baby + i + " ";
 //        }
 //        baby = baby.substring(0, baby.length()-1);
+        sitterInfo.setAge(mSitterAge.getText().toString());
         sitterInfo.setBabycareCount(mSitterBabycareCount.getText().toString());
         sitterInfo.setBabycareTime(mSitterBabycareTime.getText().toString());
         sitterInfo.setBabycareType(mSitterBabycareType.getText().toString());
