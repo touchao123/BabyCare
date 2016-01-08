@@ -1,14 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/all_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="tw.tasker.babysitter.view.fragment.ProfileParentFragment">
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -37,227 +38,249 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/data_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="註冊資訊"
+                android:textColor="@color/primary"
+                android:textSize="16sp" />
+
+            <include layout="@layout/merge_signup" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="聯絡資訊"
+                android:textColor="@color/primary"
+                android:textSize="16sp" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
                 android:src="@drawable/gray_line" />
 
-            <!-- <include layout="@layout/merge_signup" /> -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 保母名稱："
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
+
+                <EditText
+                    android:id="@+id/sitter_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/full_edittext_selector"
+                    android:hint="方便家長聯絡用"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/hint"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_margin="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 托育地址："
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
+
+                <EditText
+                    android:id="@+id/sitter_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/full_edittext_selector"
+                    android:ems="10"
+                    android:hint="@string/hint_parent_address"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/hint"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 手機號碼："
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
+
+                <EditText
+                    android:id="@+id/sitter_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/full_edittext_selector"
+                    android:hint="@string/hint_parent_phone"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/hint"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="托育資訊"
+                android:textColor="@color/primary"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="聯絡電話："
+                    android:text="  托育人數："
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
+
+                <TextView
+                    android:id="@+id/sitter_babycare_count"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/full_edittext_selector"
+                    android:gravity="center_vertical"
+                    android:text="1"
                     android:textSize="16sp" />
 
-                <EditText
-                    android:id="@+id/tel"
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:singleLine="true" />
+                    android:layout_height="wrap_content"
+                    android:text="目前照顧幾個寶寶"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_margin="4dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="住家地址："
-                    android:textSize="16sp" />
-
-                <EditText
-                    android:id="@+id/address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:singleLine="true" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical">
+                    android:text="  托育類別："
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
 
                 <TextView
+                    android:id="@+id/sitter_babycare_type"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="目前托育人數："
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/full_edittext_selector"
+                    android:gravity="center_vertical"
+                    android:text="一般，到府，臨托"
                     android:textSize="16sp" />
-
-                <RatingBar
-                    android:id="@+id/babycare_count"
-                    style="@style/BabyRatingBarBig"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:isIndicator="true"
-                    android:numStars="4"
-                    android:rating="0"
-                    android:stepSize="1" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="托育時段："
+                    android:text="  托育時段："
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
+
+                <TextView
+                    android:id="@+id/sitter_babycare_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/full_edittext_selector"
+                    android:gravity="center_vertical"
+                    android:text="日間、夜間、半日、全日"
                     android:textSize="16sp" />
-
-                <CheckBox
-                    android:id="@+id/day_time"
-                    style="@style/FullCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="日托" />
-
-                <CheckBox
-                    android:id="@+id/night_time"
-                    style="@style/FullCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="52dp"
-                    android:text="夜托" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
-
-                <CheckBox
-                    android:id="@+id/half_day"
-                    style="@style/FullCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="115dp"
-                    android:text="半日" />
-
-                <CheckBox
-                    android:id="@+id/full_day"
-                    style="@style/FullCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="52dp"
-                    android:text="全日" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_margin="4dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="托育方式："
+                    android:layout_marginBottom="5dp"
+                    android:text="自我介紹："
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
+
+                <EditText
+                    android:id="@+id/sitter_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/full_edittext_selector"
+                    android:gravity="top"
+                    android:hint="簡單說明自己的特色，可以讓爸媽更了解您唷。"
+                    android:textColorHint="@color/hint"
                     android:textSize="16sp" />
-
-                <CheckBox
-                    android:id="@+id/part_time"
-                    style="@style/FullCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="臨時托育" />
-
-                <CheckBox
-                    android:id="@+id/in_house"
-                    style="@style/FullCheckbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="到府服務" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <Button
+                android:id="@+id/confirm"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginBottom="30dp"
                 android:layout_marginTop="16dp"
-                android:gravity="center_vertical">
+                android:background="@drawable/full_button_selector"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="修改個人資料"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="教育程度："
-                    android:textSize="16sp" />
-
-                <EditText
-                    android:id="@+id/education"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:singleLine="true" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="社區保母系統："
-                    android:textSize="16sp" />
-
-                <EditText
-                    android:id="@+id/community_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:singleLine="true" />
-            </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/confirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/full_button_selector"
-            android:text="確認修改"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
     </LinearLayout>
 
 </ScrollView>
