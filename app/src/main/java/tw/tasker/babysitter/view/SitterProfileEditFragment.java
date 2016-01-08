@@ -288,6 +288,10 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 DisplayUtils.showBabycareTypeDialog(getContext(), mSitterBabycareType);
                 break;
 
+            case R.id.sitter_babycare_time:
+                DisplayUtils.showBabycareTimeDialog(getContext(), mSitterBabycareTime);
+                break;
+
             default:
                 break;
         }

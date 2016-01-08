@@ -1,5 +1,6 @@
 package tw.tasker.babysitter.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -150,59 +151,11 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
                 DisplayUtils.showBabycareTypeDialog(getContext(), mSitterBabycareType);
                 break;
             case R.id.sitter_babycare_time:
-                showBabycareTimeDialog();
+                DisplayUtils.showBabycareTimeDialog(getContext(), mSitterBabycareTime);
                 break;
         }
 
     }
-
-
-
-    private void showBabycareTimeDialog() {
-        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
-
-        String parentBabycareWeek = mSitterBabycareTime.getText().toString();
-
-        if (parentBabycareWeek.contains("日間")) {
-            dayOfWeeks.add(0);
-        }
-        if (parentBabycareWeek.contains("夜間")) {
-            dayOfWeeks.add(1);
-        }
-        if (parentBabycareWeek.contains("半日")) {
-            dayOfWeeks.add(2);
-        }
-        if (parentBabycareWeek.contains("全日")) {
-            dayOfWeeks.add(3);
-        }
-
-        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
-        selectedItems = dayOfWeeks.toArray(selectedItems);
-
-        new MaterialDialog.Builder(getContext())
-                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
-                .title("請選擇托育時段？")
-                .items(R.array.babycare_time)
-                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
-
-                        String babycareTime = "";
-                        for (CharSequence item : items) {
-                            babycareTime = babycareTime + item + "，";
-                        }
-                        babycareTime = babycareTime.substring(0, babycareTime.length()-1);
-                        mSitterBabycareTime.setText(babycareTime);
-
-                        return true;
-                    }
-                })
-                .positiveText(R.string.dialog_agree)
-                .negativeText(R.string.dialog_cancel)
-                .show();
-    }
-
-
 
     @Override
     public void onStart() {
