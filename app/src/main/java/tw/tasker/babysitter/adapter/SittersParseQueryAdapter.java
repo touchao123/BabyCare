@@ -27,17 +27,18 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 
 public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
     public SitterListClickHandler mSitterListClickHandler;
-    private RatingBar mBabyCount;
+
     private CircleImageView mAvatar;
-    private TextView mAge;
-    private TextView mName;
-    private TextView mAddress;
-    private TextView mBabycareTime;
-    private TextView mBabysitterNumber;
-    private TextView mEducation;
-    private TextView mCommunityName;
-    private TextView mKm;
-    private ImageView mKmLine;
+
+    private TextView mSitterName;
+    private TextView mSitterAge;
+    private TextView mSitterAddress;
+
+    private TextView mSitterBabycareCount;
+    private TextView mSitterBabycareType;
+    private TextView mSitterBabycareTime;
+    private TextView mSitterNote;
+
     private Button mContact;
     private TextView mDetail;
 
@@ -56,7 +57,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
                         .getDefaultSharedPreferences(context);
 
                 ParseQuery<Babysitter> query = Babysitter.getQuery();
-                // query.whereExists("user");
+                query.whereExists("user");
 
                 boolean mDayTime = sharedPreferences.getBoolean("mDayTime", false);
                 if (mDayTime) {
@@ -174,47 +175,34 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
     private void initView(View rootView) {
         mAvatar = (CircleImageView) rootView.findViewById(R.id.avatar);
-        mName = (TextView) rootView.findViewById(R.id.name);
-//        mBabysitterNumber = (TextView) rootView.findViewById(R.id.babysitterNumber);
-        mAge = (TextView) rootView.findViewById(R.id.age);
-        mEducation = (TextView) rootView.findViewById(R.id.education);
-        mAddress = (TextView) rootView.findViewById(R.id.address);
-        mBabycareTime = (TextView) rootView.findViewById(R.id.babycare_time);
-        mBabyCount = (RatingBar) rootView.findViewById(R.id.babycare_count);
-        mCommunityName = (TextView) rootView.findViewById(R.id.community_name);
 
-//        mExpandable = (LinearLayout) rootView.findViewById(R.id.expandable);
-//        mExpandableToggle = (LinearLayout) rootView.findViewById(R.id.expandable_toggle_button);
-//        mArrow = (ImageView) rootView.findViewById(R.id.arrow);
+        mSitterName = (TextView) rootView.findViewById(R.id.sitter_name);
+        mSitterAge = (TextView) rootView.findViewById(R.id.sitter_age);
+        mSitterAddress = (TextView) rootView.findViewById(R.id.sitter_address);
 
-//        mKm = (TextView) rootView.findViewById(R.id.km);
-        mKmLine = (ImageView) rootView.findViewById(R.id.km_line);
+        mSitterBabycareCount = (TextView) rootView.findViewById(R.id.sitter_babycare_count);
+        mSitterBabycareType = (TextView) rootView.findViewById(R.id.sitter_babycare_type);
+        mSitterBabycareTime = (TextView) rootView.findViewById(R.id.sitter_babycare_time);
+        mSitterNote = (TextView) rootView.findViewById(R.id.sitter_note);
 
         mContact = (Button) rootView.findViewById(R.id.contact);
         mDetail = (TextView) rootView.findViewById(R.id.detail);
-
     }
 
     private void initData(Babysitter sitter) {
 
         DisplayUtils.loadAvatorWithUrl(mAvatar, sitter.getImageUrl());
-        mName.setText(sitter.getName());
-        //mBabysitterNumber.setText("保母證號：" + sitter.getSkillNumber());
-        mAge.setText("(" + sitter.getAge() + ")");
-        mEducation.setText("教育程度：" + sitter.getEducation());
+        mSitterName.setText(sitter.getName());
+        mSitterAge.setText("(" + sitter.getAge() + ")");
 
         float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
-        mAddress.setText(sitter.getAddress() + "(" + DisplayUtils.showDistance(distance) + ")");
+        mSitterAddress.setText(sitter.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
 
-        String changeText = DisplayUtils.getChangeText(sitter.getBabycareTime());
-        mBabycareTime.setText(changeText);
+        mSitterBabycareCount.setText("托育人數：" + sitter.getBabycareCount());
+        mSitterBabycareType.setText("托育類別：" + sitter.getBabycareType());
+        mSitterBabycareTime.setText("托育時段：" + sitter.getBabycareTime());
 
-        int babyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
-        mBabyCount.setRating(babyCount);
-
-        SpannableString content = new SpannableString(sitter.getCommunityName());
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        //mCommunityName.setText(content);
+        mSitterNote.setText(sitter.getSitterNote());
 
         initContactStatus(sitter);
     }
