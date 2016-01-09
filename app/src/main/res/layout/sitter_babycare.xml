@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:text="其它保母資訊"
+        android:text="托育資訊"
         android:textColor="@color/primary"
         android:textSize="16sp" />
 
@@ -20,17 +20,16 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_margin="5dp"
-        android:background="@color/gray_light"
-        />
+        android:background="@color/gray_light" />
 
     <TextView
-        android:id="@+id/sitter_register_number"
+        android:id="@+id/sitter_age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="5dp"
-        android:text="登記證號：北府社兒托10300591"
+        android:text="保母年齡：29歲"
         android:textSize="16sp" />
 
     <View
@@ -40,12 +39,12 @@
         android:background="@color/gray_light" />
 
     <TextView
-        android:id="@+id/sitter_skill_number"
+        android:id="@+id/sitter_babycare_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="30dp"
-        android:text="技術證號：154-052413"
+        android:text="托育人數：1 人"
         android:textSize="16sp" />
 
     <View
@@ -55,70 +54,27 @@
         android:background="@color/gray_light" />
 
     <TextView
-        android:id="@+id/sitter_education"
+        android:id="@+id/sitter_babycare_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="30dp"
-        android:text="@string/demo_education"
-        android:textSize="16sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:text="社區保母系統"
-        android:textColor="@color/primary"
-        android:textSize="16sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="5dp"
-        android:background="@color/gray_light"
-        />
-
-    <TextView
-        android:id="@+id/sitter_community_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="5dp"
-        android:text="名稱：板橋南區社區保母系統"
+        android:text="托育類別：一般、到府、臨托"
         android:textSize="16sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_margin="10dp"
-        android:background="@color/gray_light"
-        />
+        android:background="@color/gray_light" />
 
     <TextView
-        android:id="@+id/sitter_community_tel"
+        android:id="@+id/sitter_babycare_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:layout_marginLeft="30dp"
-        android:text="電話：02-89517830"
-        android:textSize="16sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_margin="10dp"
-        android:background="@color/gray_light"
-        />
-
-    <TextView
-        android:id="@+id/sitter_community_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:layout_marginLeft="30dp"
-        android:text="地址：220新北市板橋區四川路一段178號3樓"
+        android:text="托育時段：日間、夜間、半日、全日"
         android:textSize="16sp" />
 
 </LinearLayout>

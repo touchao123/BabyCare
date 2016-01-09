@@ -62,53 +62,18 @@
                     android:src="@drawable/profile" />
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/sitter_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="@string/demo_name"
                     android:textColor="@android:color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:layout_marginBottom="10dp"/>
 
-                <TextView
-                    android:id="@+id/babycare_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="(42歲) 日托, 全日托"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/demo_address"
-                    android:textSize="16sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="目前托育人數："
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp" />
-
-                    <RatingBar
-                        android:id="@+id/babycare_count"
-                        style="@style/BabyRatingBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:isIndicator="true"
-                        android:numStars="4"
-                        android:rating="0" />
-                </LinearLayout>
             </LinearLayout>
+
+            <include layout="@layout/sitter_babycare" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,10 +90,18 @@
                     android:textColor="@color/primary"
                     android:textSize="16sp" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="5dp"
+                    android:background="@color/gray_light"
+                    />
+
                 <TextView
-                    android:id="@+id/introduction"
+                    android:id="@+id/sitter_note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="30dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
@@ -141,6 +114,7 @@
 
             </LinearLayout>
 
+
             <include layout="@layout/sitter_info" />
 
         </LinearLayout>
@@ -148,7 +122,7 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/edit"
+        android:id="@+id/contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
