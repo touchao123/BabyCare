@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,23 +33,35 @@ import tw.tasker.babysitter.utils.ParseHelper;
 public class SitterDetailFragment extends Fragment implements OnClickListener {
 
     private static SignUpListener mListener;
-    private TextView mNumber;
-    private TextView mSitterName;
-    private TextView mEducation;
-    private TextView mTel;
-    private TextView mAddress;
-    private RatingBar mBabycareCount;
-    private TextView mBabycareTime;
-    private TextView mSkillNumber;
-    private TextView mCommunityName;
-    private CircleImageView mAvatar;
+
     private ImageLoader imageLoader = ImageLoader.getInstance();
-    private Button mEidt;
-    private ImageView mStaticMap;
+
     private ViewPager mPager;
-    private View mRootView;
+
+    private CircleImageView mAvatar;
+    private TextView mSitterName;
+
+    private TextView mSitterAge;
+    private TextView mSitterBabycareCount;
+    private TextView mSitterBabycareType;
+    private TextView mSitterBabycareTime;
+
+    private TextView mSitterNote;
+
+    private ImageView mStaticMap;
     private TextView mStaticMapAddr;
     private TextView mStaticMapDistance;
+
+    private TextView mSitterRegisterNumber;
+    private TextView mSitterSkillNumber;
+    private TextView mSitterEducation;
+
+    private TextView mSitterCommunityName;
+    private TextView mSitterCommunityTel;
+    private TextView mSitterCommunityAddress;
+
+    private Button mContact;
+    private View mRootView;
 
     public SitterDetailFragment() {
         // TODO Auto-generated constructor stub
@@ -75,26 +86,32 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     }
 
     private void initView() {
-        mEidt = (Button) mRootView.findViewById(R.id.edit);
-        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
-        mNumber = (TextView) mRootView.findViewById(R.id.number);
-        mSitterName = (TextView) mRootView.findViewById(R.id.name);
-        //mSex = (TextView) mRootView.findViewById(R.id.sex);
-        //mAge = (TextView) mRootView.findViewById(R.id.age);
-        mEducation = (TextView) mRootView.findViewById(R.id.education);
-        mTel = (TextView) mRootView.findViewById(R.id.tel);
-        mAddress = (TextView) mRootView.findViewById(R.id.address);
-        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
-        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
-
-        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
-        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
+        mContact = (Button) mRootView.findViewById(R.id.contact);
 
         mPager = (ViewPager) mRootView.findViewById(R.id.pager);
+
+        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mSitterName = (TextView) mRootView.findViewById(R.id.sitter_name);
+
+        // sitter babycare info
+        mSitterAge = (TextView) mRootView.findViewById(R.id.sitter_age);
+        mSitterBabycareCount = (TextView) mRootView.findViewById(R.id.sitter_babycare_count);
+        mSitterBabycareType = (TextView) mRootView.findViewById(R.id.sitter_babycare_type);
+        mSitterBabycareTime = (TextView) mRootView.findViewById(R.id.sitter_babycare_time);
+
+        mSitterNote = (TextView) mRootView.findViewById(R.id.sitter_note);
+
         mStaticMap = (ImageView) mRootView.findViewById(R.id.static_map);
         mStaticMapAddr = (TextView) mRootView.findViewById(R.id.static_map_addr);
         mStaticMapDistance = (TextView) mRootView.findViewById(R.id.static_map_distance);
 
+        mSitterRegisterNumber = (TextView) mRootView.findViewById(R.id.sitter_register_number);
+        mSitterSkillNumber = (TextView) mRootView.findViewById(R.id.sitter_skill_number);
+        mSitterEducation = (TextView) mRootView.findViewById(R.id.sitter_education);
+
+        mSitterCommunityName = (TextView) mRootView.findViewById(R.id.sitter_community_name);
+        mSitterCommunityTel = (TextView) mRootView.findViewById(R.id.sitter_community_tel);
+        mSitterCommunityAddress = (TextView) mRootView.findViewById(R.id.sitter_community_address);
     }
 
     private void initListener() {
@@ -102,19 +119,17 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         //mPager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
         mPager.setCurrentItem(0);
 
-        mEidt.setOnClickListener(this);
+        mContact.setOnClickListener(this);
     }
 
     private void initData() {
 //        mSitterName.setText("聯絡電話：");
 //        mAddress.setText("住家地址：");
-//        mBabycareTime.setText("托育時段：");
+//        mSitterBabycareTime.setText("托育時段：");
 
-//        mSkillNumber.setText("保母證號：");
-//        mEducation.setText("教育程度：");
-//        mCommunityName.setText("");
-
-
+//        mSitterSkillNumber.setText("保母證號：");
+//        mSitterEducation.setText("教育程度：");
+//        mSitterCommunityName.setText("");
     }
 
     @Override
@@ -124,7 +139,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         Babysitter sitter = ParseHelper.getSitter();
 
         if (sitter == null) {
-            loadProfileData();
+            //loadProfileData();
         } else {
             fillDataToUI(sitter);
         }
@@ -151,21 +166,6 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
     }
 
     protected void fillDataToUI(Babysitter sitter) {
-        mSitterName.setText(sitter.getName());
-        //mSex.setText(babysitter.getSex());
-        //mAge.setText(babysitter.getAge());
-        mTel.setText("聯絡電話：" + sitter.getTel());
-        mAddress.setText(sitter.getAddress());
-
-        int babyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
-        mBabycareCount.setRating(babyCount);
-
-        mSkillNumber.setText("保母證號：" + sitter.getSkillNumber());
-        mEducation.setText("教育程度：" + sitter.getEducation());
-        mCommunityName.setText(sitter.getCommunityName());
-
-        mBabycareTime.setText("托育時段：" + sitter.getBabycareTime());
-
 
         if (sitter.getAvatarFile() == null) {
             getOldAvatar(sitter);
@@ -173,14 +173,33 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
             getNewAvatar(sitter);
         }
 
+        mSitterName.setText(sitter.getName());
+
+        mSitterAge.setText("保母年齡：" + sitter.getAge());
+        mSitterBabycareCount.setText("托育人數：" + sitter.getBabycareCount());
+        mSitterBabycareType.setText("托育類別：" + sitter.getBabycareType());
+        mSitterBabycareTime.setText("托育時段：" + sitter.getBabycareTime());
+
+        mSitterNote.setText(sitter.getSitterNote());
+
+        // static map
         String staticMapUrl = MapHelper.getStaticMapUrl(sitter.getAddress());
         ImageLoader.getInstance().displayImage(staticMapUrl, mStaticMap, Config.OPTIONS);
-
         mStaticMapAddr.setText(sitter.getAddress());
 
         float distance = (float) sitter.getLocation()
                 .distanceInKilometersTo(Config.MY_LOCATION);
         mStaticMapDistance.setText("距離您的位置：" + DisplayUtils.showDistance(distance));
+
+        // sitter sync info
+        mSitterRegisterNumber.setText("登記證號：");
+        mSitterSkillNumber.setText("保母證號：" + sitter.getSkillNumber());
+        mSitterEducation.setText("教育程度：" + sitter.getEducation());
+
+        // sitter community
+        mSitterCommunityName.setText("名稱：" + sitter.getCommunityName());
+        mSitterCommunityTel.setText("電話：" + sitter.getCommunityTel());
+        mSitterCommunityAddress.setText("地址：" + sitter.getCommunityAddress());
     }
 
 
