@@ -36,13 +36,6 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.GovDataHelper;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-//import android.app.Fragment;
-
-/**
- * A simple {@link Fragment} subclass. Use the
- * {@link SitterSyncDataFragment#newInstance} factory method to create an
- * instance of this fragment.
- */
 public class SitterSyncDataFragment extends Fragment implements OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -55,13 +48,13 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
     private String mParam2;
     private Button mSync;
 
-    private TextView mNumber;
+    private TextView mSitterRegisterNumber;
     private TextView mSitterName;
     //private TextView mSex;
     private TextView mAge;
-    private TextView mEducation;
+    private TextView mSitterEducation;
     private TextView mTel;
-    private TextView mAddress;
+    private TextView mSitterAddress;
     private RatingBar mBabycareCount;
     private TextView mBabycareTime;
     private LinearLayout mSyncLayout;
@@ -69,7 +62,7 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
     private EditText mName;
     private EditText mPassword;
     private EditText mPasswordAgain;
-    private TextView mSkillNumber;
+    private TextView mSitterSkillNumber;
     private TextView mCommunityName;
     private ScrollView mAllScreen;
     private Button mConfirm;
@@ -77,6 +70,13 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private View mRootView;
+    private EditText mInputSitterRegisterNumber;
+    private TextView mSitterAge;
+    private TextView mSitterPhone;
+    private TextView mSitterCommunityName;
+    private TextView mSitterCommunityTel;
+    private TextView mSitterCommunityAddress;
+    private LinearLayout mRuleLayout;
     //private Babysitter mSitter;
 
     public SitterSyncDataFragment() {
@@ -113,30 +113,30 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
         // Touch
         mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
 
-        // Info
-        mAvator = (CircleImageView) mRootView.findViewById(R.id.avator);
         mSync = (Button) mRootView.findViewById(R.id.sync);
-        mNumber = (TextView) mRootView.findViewById(R.id.number);
-        mSitterName = (TextView) mRootView.findViewById(R.id.name);
-        //mSex = (TextView) rootView.findViewById(R.id.sex);
-        //mAge = (TextView) rootView.findViewById(R.id.age);
-        mEducation = (TextView) mRootView.findViewById(R.id.education);
-        mTel = (TextView) mRootView.findViewById(R.id.tel);
-        mAddress = (TextView) mRootView.findViewById(R.id.address);
-        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
-        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
-        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
-        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
+        mInputSitterRegisterNumber = (EditText) mRootView.findViewById(R.id.input_sitter_register_number);
+
+        // sitter info
+        mAvator = (CircleImageView) mRootView.findViewById(R.id.avator);
+
+        mSitterName = (TextView) mRootView.findViewById(R.id.sitter_name);
+        mSitterAge = (TextView) mRootView.findViewById(R.id.sitter_age);
+        mSitterPhone = (TextView) mRootView.findViewById(R.id.sitter_phone);
+        mSitterAddress = (TextView) mRootView.findViewById(R.id.sitter_address);
+        mSitterRegisterNumber = (TextView) mRootView.findViewById(R.id.sitter_register_number);
+        mSitterSkillNumber = (TextView) mRootView.findViewById(R.id.sitter_skill_number);
+        mSitterEducation = (TextView) mRootView.findViewById(R.id.sitter_education);
+
+        // sitter community
+        mSitterCommunityName = (TextView) mRootView.findViewById(R.id.sitter_community_name);
+        mSitterCommunityTel = (TextView) mRootView.findViewById(R.id.sitter_community_tel);
+        mSitterCommunityAddress = (TextView) mRootView.findViewById(R.id.sitter_community_address);
 
         // Layout
         mSyncLayout = (LinearLayout) mRootView.findViewById(R.id.sync_layout);
         mDataLayout = (LinearLayout) mRootView.findViewById(R.id.data_layout);
-        mDataLayout.setVisibility(View.GONE);
-
-        // Signup
-        mName = (EditText) mRootView.findViewById(R.id.account);
-        mPassword = (EditText) mRootView.findViewById(R.id.password);
-        mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
+        mRuleLayout = (LinearLayout) mRootView.findViewById(R.id.rule_layout);
+        //mDataLayout.setVisibility(View.GONE);
 
         mConfirm = (Button) mRootView.findViewById(R.id.confirm);
     }
@@ -166,8 +166,8 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
 
     private void loadData() {
         if (BuildConfig.DEBUG) {
-            // mNumber.setText("031080");
-            mNumber.setText("北府社兒托10300591");
+            // mSitterRegisterNumber.setText("031080");
+            mInputSitterRegisterNumber.setText("北府社兒托10300591");
         }
     }
 
@@ -184,7 +184,7 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
                 //    mListener.onSwitchToNextFragment(SignUpActivity.STEP_CHANGE_PHONE);
                 //}
 
-                mListener.onSwitchToNextFragment(SignUpActivity.STEP_CREATE_ACCOUNT);
+                // mListener.onSwitchToNextFragment(SignUpActivity.STEP_CREATE_ACCOUNT);
 
                 break;
 
@@ -194,52 +194,51 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
     }
 
     private void syncData() {
-        mDataLayout.setVisibility(View.INVISIBLE);
+        //mDataLayout.setVisibility(View.INVISIBLE);
 
-        String skillNumber = mNumber.getText().toString();
-        if (skillNumber.isEmpty()) {
-            Toast.makeText(getActivity(), "請輸入保母證號!", Toast.LENGTH_LONG).show();
+        String sitterReigsterNumber = mInputSitterRegisterNumber.getText().toString();
+        if (sitterReigsterNumber.isEmpty()) {
+            Toast.makeText(getActivity(), "請輸入保母「登記證號」!", Toast.LENGTH_LONG).show();
             return;
         } else {
             Toast.makeText(getActivity(), "資料同步...", Toast.LENGTH_LONG).show();
         }
 
-        //fillDataToUI(babysitter);
-        //Config.sitter = babysitter;
-        //mSyncLayout.setVisibility(View.GONE);
-        runGovData(skillNumber);
-
-
-        ParseQuery<Babysitter> query = Babysitter.getQuery();
-        query.whereEqualTo("skillNumber", skillNumber);
-//        query.getFirstInBackground(new GetCallback<Babysitter>() {
-//
-//            @Override
-//            public void done(Babysitter babysitter, ParseException e) {
-//                LogUtils.LOGD("vic", "syncData()" + babysitter);
-//
-//                if (babysitter == null) {
-//                    Toast.makeText(getActivity(), "查不到此證號!", Toast.LENGTH_LONG).show();
-//
-//                } else {
-//                    fillDataToUI(babysitter);
-//                    Config.sitter = babysitter;
-//                    //mSyncLayout.setVisibility(View.GONE);
-//                    runGovData(babysitter.getBabysitterNumber());
-//                }
-//
-//            }
-//
-//        });
+        runGovData(sitterReigsterNumber);
     }
 
-    protected void runGovData(String babysitterNumber) {
+    private void runGovData(String sitterReigsterNumber) {
         GovAsyncTask govAsyncTask = new GovAsyncTask();
-        govAsyncTask.execute(babysitterNumber);
+        govAsyncTask.execute(sitterReigsterNumber);
+    }
+
+    public class GovAsyncTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... babysitterNumber) {
+            return syncGovData(babysitterNumber[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result.isEmpty()) {
+                DisplayUtils.makeToast(getActivity(), "網站發生錯誤，請再試一次。");
+
+            } else {
+                fillDataToUI(ParseHelper.getSitterFromCache());
+
+                //mTel.setText("聯絡電話：" + result);
+                //Config.sitter.setTel(result);
+                mDataLayout.setVisibility(View.VISIBLE);
+                mRuleLayout.setVisibility(View.GONE);
+            }
+        }
     }
 
     @DebugLog
-    protected String syncGovData(String babysitterNumber) {
+    protected String syncGovData(String sitterReigsterNumber) {
         String cwregno = "北府社兒托";
         String cwregno2 = "10300591";
 
@@ -271,64 +270,28 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
             return "";
         }
 
-
     }
 
-    private void fillDataToUI(Babysitter babysitter) {
-        mSitterName.setText(babysitter.getName());
-        //mSex.setText(babysitter.getSex());
-        //mAge.setText(babysitter.getAge());
-        mTel.setText("聯絡電話：" + babysitter.getTel());
-        mAddress.setText("住家地址：" + babysitter.getAddress());
+    private void fillDataToUI(Babysitter sitter) {
 
-        int babyCount = DisplayUtils.getBabyCount(babysitter.getBabycareCount());
-        mBabycareCount.setRating(babyCount);
-
-        mSkillNumber.setText("保母證號：" + babysitter.getSkillNumber());
-        mEducation.setText("教育程度：" + babysitter.getEducation());
-        mCommunityName.setText(babysitter.getCommunityName());
-        mBabycareTime.setText("托育時段：" + babysitter.getBabycareTime());
-
-//        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
+        //        String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
 //        String parseUrl = babysitter.getImageUrl();
 //        if (parseUrl.equals("../img/photo_mother_no.jpg")) {
-            mAvator.setImageResource(R.drawable.profile);
+        mAvator.setImageResource(R.drawable.profile);
 //        } else {
 //            imageLoader.displayImage(websiteUrl + parseUrl, mAvator, Config.OPTIONS, null);
 //        }
 
-        //mBabycareTime.setText(babysitter.getBabycareTime());
+        mSitterName.setText("保母姓名：" + sitter.getName());
+        mSitterAge.setText("保母年齡：" + sitter.getAge());
+        mSitterPhone.setText("手機號碼：" + sitter.getTel());
+        mSitterAddress.setText("托育地址：" + sitter.getAddress());
+        mSitterRegisterNumber.setText("登記證號：" + sitter.getRegisterNumber());
+        mSitterSkillNumber.setText("技術證號：" + sitter.getSkillNumber());
+        mSitterEducation.setText("教育程度：" + sitter.getEducation());
+
+        mSitterCommunityName.setText("名稱：" + sitter.getCommunityName());
+        mSitterCommunityTel.setText("電話：" + sitter.getCommunityTel());
+        mSitterCommunityAddress.setText("地址：" + sitter.getCommunityAddress());
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //inflater.inflate(R.menu.add, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    public class GovAsyncTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... babysitterNumber) {
-            return syncGovData(babysitterNumber[0]);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            if (result.isEmpty()) {
-                DisplayUtils.makeToast(getActivity(), "網站發生錯誤，請再試一次。");
-
-            } else {
-                fillDataToUI(ParseHelper.getSitterFromCache());
-
-                //mTel.setText("聯絡電話：" + result);
-                //Config.sitter.setTel(result);
-                mDataLayout.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-
 }

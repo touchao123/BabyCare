@@ -1,5 +1,6 @@
 package tw.tasker.babysitter.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -24,6 +25,7 @@ import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.MapHelper;
 import tw.tasker.babysitter.utils.ParseHelper;
 
@@ -47,6 +49,8 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
     private ImageView mStaticMap;
     private TextView mStaticMapAddr;
     private TextView mStaticMapDistance;
+
+    private TextView mSync;
 
     private TextView mSitterRegisterNumber;
     private TextView mSitterSkillNumber;
@@ -99,6 +103,8 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
         mStaticMapAddr = (TextView) mRootView.findViewById(R.id.static_map_addr);
         mStaticMapDistance = (TextView) mRootView.findViewById(R.id.static_map_distance);
 
+        mSync = (TextView) mRootView.findViewById(R.id.sync);
+
         mSitterRegisterNumber = (TextView) mRootView.findViewById(R.id.sitter_register_number);
         mSitterSkillNumber = (TextView) mRootView.findViewById(R.id.sitter_skill_number);
         mSitterEducation = (TextView) mRootView.findViewById(R.id.sitter_education);
@@ -115,6 +121,7 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
         //mPager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
         mPager.setCurrentItem(0);
 
+        mSync.setOnClickListener(this);
         mEidt.setOnClickListener(this);
     }
 
@@ -208,7 +215,18 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        mListener.onSwitchToNextFragment(Config.SITTER_EDIT_PAGE);
+
+        int id = v.getId();
+        switch (id) {
+            case R.id.edit:
+                mListener.onSwitchToNextFragment(Config.SITTER_EDIT_PAGE);
+                break;
+
+            case R.id.sync:
+                startActivity(IntentUtil.startSitterSyncDataActivity());
+                break;
+        }
+
     }
 
 }

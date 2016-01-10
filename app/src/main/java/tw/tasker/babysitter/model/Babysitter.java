@@ -217,6 +217,15 @@ public class Babysitter extends ParseObject {
         put("sitterNote", value);
     }
 
+    public String getRegisterNumber() {
+        return getString("registerNumber");
+    }
+
+    public void setRegisterNumber(String value) {
+        put("registerNumber", value);
+    }
+
+
     @Override
     public String toString() {
 
@@ -240,4 +249,5 @@ public class Babysitter extends ParseObject {
 
         return s;
     }
+
 }

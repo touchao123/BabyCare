@@ -18,17 +18,17 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/number"
+                android:id="@+id/input_sitter_register_number"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="3"
                 android:background="@drawable/full_edittext_selector"
                 android:ems="10"
-                android:hint="請填入您的保母證號"
+                android:hint="請填入您的保母「登記證號」"
                 android:singleLine="true"
                 android:textColorHint="@color/hint"
                 android:textSize="16sp" />
@@ -53,11 +53,70 @@
             android:src="@drawable/gray_line" />
 
         <LinearLayout
+            android:id="@+id/rule_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="#55000000"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:text="透過BabyCare的自動驗證機制，您再也不用上傳任何個人相關證件了。"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:text="驗證流程："
+                android:textColor="@color/primary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="1. 輸入「證記登號」下載資料\n2. 確認為資料本人\n3. 接收及輸入「驗證碼」"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:text="確認事項："
+                android:textColor="@color/primary"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="1. 於托育人員(保母)資訊網可透過「登記證號」查詢到個人公開資料\n2. 在公開資料中聯絡電話有「手機號碼」並與目前使用的「手機號碼」相同"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/data_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/avator"
@@ -68,106 +127,119 @@
                 android:layout_marginTop="10dp"
                 android:src="@drawable/profile" />
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="5dp"
-                android:text="姓名"
-                android:textSize="20sp" />
-
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:src="@drawable/gray_line" />
 
-            <!-- <include layout="@layout/merge_signup" /> -->
-
             <TextView
-                android:id="@+id/tel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginLeft="45dp"
-                android:layout_marginTop="16dp"
-                android:text="聯絡電話："
+                android:layout_marginLeft="5dp"
+                android:text="保母資訊"
+                android:textColor="@color/primary"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/address"
+                android:id="@+id/sitter_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginLeft="45dp"
-                android:text="住家地址："
-                android:textSize="16sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="45dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="目前托育人數："
-                    android:textSize="16sp" />
-
-                <RatingBar
-                    android:id="@+id/babycare_count"
-                    style="@style/BabyRatingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="true"
-                    android:numStars="4"
-                    android:rating="0" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/babycare_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="45dp"
-                android:text="托育時段："
+                android:layout_marginLeft="10dp"
+                android:text="保母姓名：張女士"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/skill_number"
+                android:id="@+id/sitter_age"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginLeft="45dp"
-                android:text="保母證號："
+                android:layout_marginLeft="10dp"
+                android:text="保母年齡：43 歲"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/education"
+                android:id="@+id/sitter_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginLeft="45dp"
-                android:text="教育程度："
+                android:layout_marginLeft="10dp"
+                android:text="手機號碼：0910082082"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sitter_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="托育地址：(803)高雄市鹽埕區教仁里14鄰安石街***"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sitter_register_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="登記證號：北府社兒托10300591"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sitter_skill_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="技術證號：154-052413"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sitter_education"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="教育程度：高中/職"
                 android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginLeft="45dp"
-                android:text="社區保母系統："
+                android:layout_marginLeft="5dp"
+                android:text="社區保母系統"
+                android:textColor="@color/primary"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/community_name"
+                android:id="@+id/sitter_community_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginLeft="45dp"
-                android:text="高雄市第四區社區保母系統"
+                android:layout_marginLeft="10dp"
+                android:text="名稱：板橋南區社區保母系統"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sitter_community_tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="電話：02-89517830"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sitter_community_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="10dp"
+                android:text="地址：220新北市板橋區四川路一段178號3樓"
                 android:textSize="16sp" />
 
             <Button
@@ -175,7 +247,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginBottom="32dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/full_button_selector"
                 android:text="確認為資料本人"

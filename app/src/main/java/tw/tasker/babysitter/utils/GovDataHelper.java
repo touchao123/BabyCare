@@ -93,6 +93,8 @@ public class GovDataHelper {
 
             if (title.equals("保母姓名：")) {
                 sitter.setName(value);
+            } else if (title.equals("登記證編號：")) {
+                sitter.setRegisterNumber(value);
             } else if (title.equals("技術證號：")) {
                 sitter.setSkillNumber(value);
             } else if (title.equals("保母編號：")) {
