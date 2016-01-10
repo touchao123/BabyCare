@@ -102,7 +102,7 @@ public class GovDataHelper {
             } else if (title.equals("性別：")) {
                 sitter.setSex(value);
             } else if (title.equals("連絡電話：")) {
-                sitter.setTel(value);
+                sitter.setTel(getMobilePhone(value));
             } else if (title.equals("托育服務地址：")) {
                 String filterAddress = value.replace(" ", "").replace("null", "");
                 sitter.setAddress(filterAddress);
@@ -135,5 +135,18 @@ public class GovDataHelper {
 
     public static String getImageUrl(Document doc) {
         return doc.select("div[style=width:170px;float:left;]").select("img").attr("src");
+    }
+
+    private static String getMobilePhone(String filterValue) {
+        Pattern pattern = Pattern.compile("(09)+[\\d]{8}");
+        Matcher matcher = pattern.matcher(filterValue);
+
+        String value;
+        if (matcher.find()) {
+            value = matcher.group();
+        } else {
+            value = "";
+        }
+        return value;
     }
 }
