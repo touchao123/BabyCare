@@ -4,8 +4,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,12 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.parse.ParseQuery;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
@@ -104,7 +103,7 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
 
         initView();
         initListener();
-        loadData();
+        initData();
 
         return mRootView;
     }
@@ -164,9 +163,9 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
         });
     }
 
-    private void loadData() {
+    private void initData() {
         if (BuildConfig.DEBUG) {
-            // mSitterRegisterNumber.setText("031080");
+            // 高市社兒少居證10340183700-A03 no mobile phone
             mInputSitterRegisterNumber.setText("北府社兒托10300591");
         }
     }
@@ -226,9 +225,10 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
             if (result.isEmpty()) {
                 DisplayUtils.makeToast(getActivity(), "網站發生錯誤，請再試一次。");
 
+            } else if (result.equals("wrong_registr_number")) {
+                DisplayUtils.makeToast(getActivity(), "找不到您的資料，請確認是否輸入錯誤。");
             } else {
                 fillDataToUI(ParseHelper.getSitterFromCache());
-
                 //mTel.setText("聯絡電話：" + result);
                 //Config.sitter.setTel(result);
                 mDataLayout.setVisibility(View.VISIBLE);
@@ -239,12 +239,16 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
 
     @DebugLog
     protected String syncGovData(String sitterReigsterNumber) {
-        String cwregno = "北府社兒托";
-        String cwregno2 = "10300591";
+        String cwregno = getCwregno(sitterReigsterNumber);
+        String cwregno2 = sitterReigsterNumber.replace(cwregno, "");
 
         try {
             Document snPage = GovDataHelper.getSNPageFromGovWebSite(cwregno, cwregno2);
             String sn = GovDataHelper.getSN(snPage);
+            if (sn.equals("")) {
+
+                return "wrong_registr_number";
+            }
 
             Document sitterInfoPage = GovDataHelper.getSitterInfoFromGovWebSite(sn);
 
@@ -270,6 +274,17 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
             return "";
         }
 
+    }
+
+    private static String getCwregno(String filterValue) {
+        Pattern pattern = Pattern.compile("[\\u4e00-\\u9fa5]");
+        Matcher matcher = pattern.matcher(filterValue);
+
+        String value = "";
+        while (matcher.find()) {
+            value = value + matcher.group();
+        }
+        return value;
     }
 
     private void fillDataToUI(Babysitter sitter) {
