@@ -165,8 +165,8 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
 
     private void initData() {
         if (BuildConfig.DEBUG) {
-            // 高市社兒少居證10340183700-A03 no mobile phone
-            mInputSitterRegisterNumber.setText("北府社兒托10300591");
+            mInputSitterRegisterNumber.setText("高市社兒少居證10340183700-A03");
+            // mInputSitterRegisterNumber.setText("北府社兒托10300591");
         }
     }
 
@@ -175,16 +175,13 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
         int id = v.getId();
         switch (id) {
             case R.id.confirm:
-                //String tel = Config.sitter.getTel();
+                String mobilePhone = ParseHelper.getSitterFromCache().getTel();
 
-                //if (tel.indexOf("09") > -1) {
-                //    mListener.onSwitchToNextFragment(SignUpActivity.STEP_VERIFY_CODE);
-                //} else {
-                //    mListener.onSwitchToNextFragment(SignUpActivity.STEP_CHANGE_PHONE);
-                //}
-
-                 mListener.onSwitchToNextFragment(SitterSyncDataActivity.STEP_VERIFY_CODE);
-
+                if (mobilePhone.equals("")) {
+                    DisplayUtils.makeToast(getContext(), "很抱歉!認證程序需要「手機號碼」以完成驗證。");
+                } else {
+                    mListener.onSwitchToNextFragment(SitterSyncDataActivity.STEP_VERIFY_CODE);
+                }
                 break;
 
             default:
