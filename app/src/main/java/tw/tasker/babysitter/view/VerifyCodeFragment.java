@@ -152,7 +152,8 @@ public class VerifyCodeFragment extends Fragment implements OnClickListener {
                 String inputVerifyCode = mVerifyCode.getText().toString();
                 LogUtils.LOGD("vic", "sourc: " + mVerifyCodeNumber + " input:" + inputVerifyCode);
                 if (inputVerifyCode.equals(mVerifyCodeNumber)) {
-                    mListener.onSwitchToNextFragment(SignUpActivity.STEP_CREATE_ACCOUNT);
+                    //mListener.onSwitchToNextFragment(SignUpActivity.STEP_CREATE_ACCOUNT);
+                    getActivity().finish();
                 } else {
                     mError.setVisibility(View.VISIBLE);
                 }

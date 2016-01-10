@@ -184,7 +184,7 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
                 //    mListener.onSwitchToNextFragment(SignUpActivity.STEP_CHANGE_PHONE);
                 //}
 
-                // mListener.onSwitchToNextFragment(SignUpActivity.STEP_CREATE_ACCOUNT);
+                 mListener.onSwitchToNextFragment(SitterSyncDataActivity.STEP_VERIFY_CODE);
 
                 break;
 
