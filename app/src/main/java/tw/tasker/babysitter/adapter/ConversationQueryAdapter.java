@@ -158,7 +158,7 @@ public class ConversationQueryAdapter extends QueryAdapter<Conversation, Convers
         //Grab the last message in the conversation and show it in the format "sender: last message content"
         final Message message = conversation.getLastMessage();
         if (message != null) {
-            viewHolder.lastMsgContent.setText(mConfirm.getTitle1() + ": " + LayerImpl.getMessageText(message));
+            viewHolder.lastMsgContent.setText(LayerImpl.getMessageText(message));
         } else {
             viewHolder.lastMsgContent.setText("");
         }
