@@ -24,7 +24,7 @@ public class SitterVerificationActivity extends BaseActivity implements OnClickL
         setContentView(R.layout.activity_container);
 
         mSitterSyncDataFragment = SitterSyncDataFragment.newInstance(mListener);
-        mSitterVerifyCodeFragment = VerifyCodeFragment.newInstance(mListener);
+        mSitterVerifyCodeFragment = SitterInputCodeFragment.newInstance(mListener);
 
         mFragmentTransaction = getSupportFragmentManager().beginTransaction();
 

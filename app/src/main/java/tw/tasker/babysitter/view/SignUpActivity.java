@@ -210,7 +210,7 @@ public class SignUpActivity extends BaseActivity {
                     mFragmentAtPos1 = SitterSignUpFragment.newInstance(mListener);
 
 
-                } else if (mFragmentAtPos1 instanceof VerifyCodeFragment) { // Page3
+                } else if (mFragmentAtPos1 instanceof SitterInputCodeFragment) { // Page3
                     if (type == STEP_CREATE_ACCOUNT) // confirm
                     {
                         mFragmentAtPos1 = SitterSignUpFragment.newInstance(mListener);

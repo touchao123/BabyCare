@@ -38,7 +38,7 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class VerifyCodeFragment extends Fragment implements OnClickListener {
+public class SitterInputCodeFragment extends Fragment implements OnClickListener {
 
     private static final int MAX_LENGTH = 5;
     private static SignUpListener mListener;
@@ -54,12 +54,12 @@ public class VerifyCodeFragment extends Fragment implements OnClickListener {
     private ScrollView mAllScreen;
     private View mRootView;
 
-    public VerifyCodeFragment() {
+    public SitterInputCodeFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance(SignUpListener listener) {
-        Fragment fragment = new VerifyCodeFragment();
+        Fragment fragment = new SitterInputCodeFragment();
         mListener = listener;
         return fragment;
     }

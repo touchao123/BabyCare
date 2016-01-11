@@ -14,13 +14,13 @@ import java.util.regex.Pattern;
 
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
-import tw.tasker.babysitter.view.VerifyCodeFragment;
+import tw.tasker.babysitter.view.SitterInputCodeFragment;
 
 // adb shell am broadcast -a android.provider.Telephony.SMS_RECEIVED
 public class SmsReceiver extends BroadcastReceiver {
     // Get the object of SmsManager
     final SmsManager sms = SmsManager.getDefault();
-    private VerifyCodeFragment mFragment;
+    private SitterInputCodeFragment mFragment;
     private Context mContext;
 
     public SmsReceiver() {
@@ -75,7 +75,7 @@ public class SmsReceiver extends BroadcastReceiver {
         }
     }
 
-    public void setFragment(VerifyCodeFragment verifyCodeFragment) {
+    public void setFragment(SitterInputCodeFragment verifyCodeFragment) {
         mFragment = verifyCodeFragment;
     }
 
