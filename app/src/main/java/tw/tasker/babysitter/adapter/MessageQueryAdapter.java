@@ -20,6 +20,7 @@ import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.layer.LayerImpl;
+import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
@@ -135,7 +136,10 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
                     imageUrl = parent.getAvatorFile().getUrl();
                 }
             } else {
-                imageUrl = ParseHelper.getSitterFromCache().getImageUrl();
+                Babysitter sitter = ParseHelper.getSitterFromCache();
+                if (sitter.getAvatarFile() != null) {
+                    imageUrl = sitter.getAvatarFile().getUrl();
+                }
             }
             DisplayUtils.loadAvatorWithUrl(viewHolder.avatar, imageUrl);
 
