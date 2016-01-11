@@ -32,7 +32,9 @@ import java.util.regex.Pattern;
 import tw.tasker.babysitter.BuildConfig;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.SmsReceiver;
+import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
@@ -153,10 +155,25 @@ public class VerifyCodeFragment extends Fragment implements OnClickListener {
                 LogUtils.LOGD("vic", "sourc: " + mVerifyCodeNumber + " input:" + inputVerifyCode);
                 if (inputVerifyCode.equals(mVerifyCodeNumber)) {
                     //mListener.onSwitchToNextFragment(SignUpActivity.STEP_CREATE_ACCOUNT);
-                    getActivity().finish();
+                    //getActivity().finish();
+
+                    Babysitter oldSitter = ParseHelper.getSitter();
+                    Babysitter newSitter = ParseHelper.getSitterFromCache();
+
+                    oldSitter.setRegisterNumber(newSitter.getRegisterNumber());
+                    oldSitter.setSkillNumber(newSitter.getSkillNumber());
+                    oldSitter.setEducation(newSitter.getEducation());
+                    oldSitter.setCommunityName(newSitter.getCommunityName());
+                    oldSitter.setCommunityTel(newSitter.getCommunityTel());
+                    oldSitter.setCommunityAddress(newSitter.getCommunityAddress());
+
+                    ParseHelper.pinDataLocal(oldSitter);
                 } else {
                     mError.setVisibility(View.VISIBLE);
                 }
+
+                getActivity().finish();
+                startActivity(IntentUtil.startProfileActivity());
 
                 break;
 
