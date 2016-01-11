@@ -121,7 +121,6 @@
         <activity
             android:name=".view.SitterDetailActivity"
             android:label="詳細資料"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
