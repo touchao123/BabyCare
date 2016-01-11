@@ -23,7 +23,7 @@ import tw.tasker.babysitter.model.BabysitterComment;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.City;
 import tw.tasker.babysitter.model.Sitter;
-import tw.tasker.babysitter.model.SitterHomeImage;
+import tw.tasker.babysitter.model.UploadImage;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.LogUtils;
 
@@ -74,7 +74,7 @@ public class MyApplication extends Application {
         ParseObject.registerSubclass(City.class);
         ParseObject.registerSubclass(UserInfo.class);
         ParseObject.registerSubclass(Sitter.class);
-        ParseObject.registerSubclass(SitterHomeImage.class);
+        ParseObject.registerSubclass(UploadImage.class);
 
         if (isRelease())
             ParseCrashReporting.enable(this);

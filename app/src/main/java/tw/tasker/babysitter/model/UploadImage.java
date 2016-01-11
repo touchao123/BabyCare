@@ -5,8 +5,16 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-@ParseClassName("SitterHomeImage")
-public class SitterHomeImage extends ParseObject {
+@ParseClassName("UploadImage")
+public class UploadImage extends ParseObject {
+
+    public String getType() {
+        return getString("type");
+    }
+
+    public void setType(String value) {
+        put("type", value);
+    }
 
     public ParseFile getImageFile() {
         return getParseFile("imageFile");

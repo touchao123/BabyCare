@@ -18,6 +18,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import me.nereo.multi_image_selector.bean.Image;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UploadService;
@@ -76,6 +78,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private ProgressDialog mRingProgressDialog;
     private PictureHelper mPictureHelper;
+    private ImageView mSitterHome;
 
     public SitterProfileEditFragment() {
         // TODO Auto-generated constructor stub
@@ -138,7 +141,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 //        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
 
 
-//        mSitterHome = (LinearLayout) mRootView.findViewById(R.id.sitter_home);
+        mSitterHome = (ImageView) mRootView.findViewById(R.id.sitter_home);
 
     }
 
@@ -159,7 +162,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         mSitterBabycareTime.setOnClickListener(this);
 
 //        mConfirm.setOnClickListener(this);
-//        mSitterHome.setOnClickListener(this);
+        mSitterHome.setOnClickListener(this);
     }
 
     private void initData() {
@@ -347,7 +350,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                     // Get the result list of select image paths
                     ArrayList<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     // do your logic ....
-                    startUploadService(paths);
+                    startUploadService(paths, "home");
 
                 }
                 //getFromGallery(data);
@@ -357,9 +360,10 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         }
     }
 
-    private void startUploadService(ArrayList<String> paths) {
+    private void startUploadService(ArrayList<String> paths, String type) {
         Intent intent = new Intent(getContext(), UploadService.class);
         intent.putStringArrayListExtra(UploadService.PARAM_PATHS, paths);
+        intent.putExtra("type", type);
         intent.setAction(UploadService.getActionUpload());
         getActivity().startService(intent);
     }

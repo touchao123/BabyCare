@@ -14,8 +14,6 @@ import android.support.v4.app.NotificationCompat.Builder;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.ProgressCallback;
-import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -24,8 +22,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import hugo.weaving.DebugLog;
-import tw.tasker.babysitter.model.SitterHomeImage;
-import tw.tasker.babysitter.utils.ParseHelper;
+import tw.tasker.babysitter.model.UploadImage;
 
 
 public class UploadService extends IntentService {
@@ -82,6 +79,7 @@ public class UploadService extends IntentService {
 
             if (getActionUpload().equals(action)) {
                 ArrayList<String> paths = intent.getStringArrayListExtra(PARAM_PATHS);
+                String type = intent.getStringExtra("type");
                 PERCENT_TOTAL = paths.size();
                 notificationConfig = new UploadNotificationConfig(
                         R.drawable.ic_launcher,
@@ -106,7 +104,7 @@ public class UploadService extends IntentService {
                 createNotification();
 
 
-                startUpload(paths);
+                startUpload(paths, type);
 
 
 //                currentTask.run();
@@ -114,7 +112,7 @@ public class UploadService extends IntentService {
         }
     }
 
-    private void startUpload(ArrayList<String> paths) {
+    private void startUpload(ArrayList<String> paths, String type) {
         int count = 1;
         for(String path : paths) {
             final String uploadId = UUID.randomUUID().toString();
@@ -125,7 +123,7 @@ public class UploadService extends IntentService {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 // Compress image to lower quality scale 1 - 100
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                 byte[] image = stream.toByteArray();
 
 
@@ -134,7 +132,7 @@ public class UploadService extends IntentService {
 
                 try {
                     parseFile.save();
-                    saveToParse(uploadId, parseFile, count);
+                    saveToParse(uploadId, parseFile, type, count);
 
                 } catch (ParseException parseException) {
                     broadcastError(uploadId, parseException);
@@ -151,13 +149,15 @@ public class UploadService extends IntentService {
     }
 
     @DebugLog
-    private void saveToParse(final String uploadId, ParseFile parseFile, int count) {
-        SitterHomeImage sitterHomeImage = new SitterHomeImage();
-        sitterHomeImage.setUser(ParseUser.getCurrentUser());
-        sitterHomeImage.setImageFile(parseFile);
+    private void saveToParse(final String uploadId, ParseFile parseFile, String type, int count) {
+        UploadImage uploadImage = new UploadImage();
+
+        uploadImage.setImageFile(parseFile);
+        uploadImage.setUser(ParseUser.getCurrentUser());
+        uploadImage.setType(type);
 
         try {
-            sitterHomeImage.save();
+            uploadImage.save();
             broadcastProgress(uploadId, count);
         } catch (ParseException parseException) {
             broadcastError(uploadId, parseException);
