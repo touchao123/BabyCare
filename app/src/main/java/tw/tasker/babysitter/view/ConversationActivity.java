@@ -197,9 +197,10 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
 
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_message_sitter);
+        dialog.setContentView(R.layout.item_list_sitter);
 
-        Button ok = (Button) dialog.findViewById(R.id.ok);
+        Button ok = (Button) dialog.findViewById(R.id.contact);
+        ok.setText("確認");
         TextView detail = (TextView) dialog.findViewById(R.id.detail);
 
         // adjust dialog width
@@ -229,26 +230,27 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
         });
 
         CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.avatar);
-        TextView name = (TextView) dialog.findViewById(R.id.name);
-        TextView age = (TextView) dialog.findViewById(R.id.age);
-        TextView education = (TextView) dialog.findViewById(R.id.education);
-        TextView address = (TextView) dialog.findViewById(R.id.address);
-        TextView babycareTime = (TextView) dialog.findViewById(R.id.babycare_time);
-        RatingBar babyCount = (RatingBar) dialog.findViewById(R.id.babycare_count);
+        TextView sitterName = (TextView) dialog.findViewById(R.id.sitter_name);
+        TextView sitterAge = (TextView) dialog.findViewById(R.id.sitter_age);
+        TextView sitterAddress = (TextView) dialog.findViewById(R.id.sitter_address);
+        TextView sitterBabycareCount = (TextView) dialog.findViewById(R.id.sitter_babycare_count);
+        TextView sitterBabycareType = (TextView) dialog.findViewById(R.id.sitter_babycare_type);
+        TextView sitterBabycareTime = (TextView) dialog.findViewById(R.id.sitter_babycare_time);
+        TextView sitterNote = (TextView) dialog.findViewById(R.id.sitter_note);
 
         //Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
         Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
         if (sitter != null) {
             ParseHelper.pinSitter(sitter);
-            DisplayUtils.loadAvatorWithUrl(avatar, sitter.getImageUrl());
-            name.setText(sitter.getName());
-            age.setText(sitter.getAge());
-            education.setText(sitter.getEducation());
-            address.setText(sitter.getAddress());
-            babycareTime.setText(sitter.getBabycareTime());
-            int showBabyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
-            babyCount.setRating(showBabyCount);
-
+            DisplayUtils.loadAvatorWithUrl(avatar, sitter.getAvatarFile().getUrl());
+            sitterName.setText(sitter.getName());
+            sitterAge.setText("(" + sitter.getAge() + ")");
+            float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+            sitterAddress.setText(sitter.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
+            sitterBabycareCount.setText("托育人數：" + sitter.getBabycareCount());
+            sitterBabycareType.setText("托育類別：" + sitter.getBabycareType());
+            sitterBabycareTime.setText("托育時段：" + sitter.getBabycareTime());
+            sitterNote.setText(sitter.getSitterNote());
         }
 
         //mSignupDialogLogin.setOnClickListener(this);
