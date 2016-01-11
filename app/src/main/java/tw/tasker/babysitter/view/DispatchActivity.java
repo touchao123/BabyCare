@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import com.parse.ParseUser;
 
+import tw.tasker.babysitter.utils.AccountChecker;
+import tw.tasker.babysitter.utils.IntentUtil;
+
 /**
  * Activity which starts an intent for either the logged in (MainActivity) or logged out
  * (SignUpOrLoginActivity) activity.
@@ -18,13 +21,16 @@ public class DispatchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Check if there is current user info
+
         if (ParseUser.getCurrentUser() != null) {
-            // Start an intent for the logged in activity
-            //startActivity(new Intent(this, UserTypeActivity.class));
-            startActivity(new Intent(this, HomeActivity.class));
+
+            if (AccountChecker.isSitter()) {
+                startActivity(IntentUtil.startHomeActivity());
+            } else {
+                startActivity(IntentUtil.startConversationActivity());
+            }
+
         } else {
-            // Start and intent for the logged out activity
             startActivity(new Intent(this, LogInActivity.class));
         }
     }
