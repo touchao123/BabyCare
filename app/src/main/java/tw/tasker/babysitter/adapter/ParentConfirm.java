@@ -34,7 +34,7 @@ public class ParentConfirm extends Confirm {
 
     @Override
     public String getAvatarUrl() {
-        return mSitter == null ? "" : mSitter.getImageUrl();
+        return mSitter.getAvatarFile() == null ? "" : mSitter.getAvatarFile().getUrl();
     }
 
     @Override
