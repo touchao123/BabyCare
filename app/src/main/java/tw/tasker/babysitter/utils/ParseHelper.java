@@ -138,7 +138,9 @@ public class ParseHelper {
             @Override
             public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
                 if (isSuccess(parseException)) {
-                    EventBus.getDefault().post(favorites);
+                    if (favorites.isEmpty()) {
+                        loadSitterFavoriteFromServer(sitter);
+                    }
                 } else {
                     loadSitterFavoriteFromServer(sitter);
                 }
@@ -224,7 +226,9 @@ public class ParseHelper {
             @Override
             public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
                 if (isSuccess(parseException)) {
-                    EventBus.getDefault().post(favorites);
+                    if (favorites.isEmpty()) {
+                        loadParentFavoriteFromServer(parent);
+                    }
                 } else {
                     loadParentFavoriteFromServer(parent);
                 }
