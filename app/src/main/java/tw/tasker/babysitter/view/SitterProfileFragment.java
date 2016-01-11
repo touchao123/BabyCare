@@ -183,7 +183,7 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
         mStaticMapDistance.setText("距離您的位置：" + DisplayUtils.showDistance(distance));
 
         // sitter sync info
-        mSitterRegisterNumber.setText("登記證號：");
+        mSitterRegisterNumber.setText("登記證號：" + sitter.getRegisterNumber());
         mSitterSkillNumber.setText("保母證號：" + sitter.getSkillNumber());
         mSitterEducation.setText("教育程度：" + sitter.getEducation());
 
