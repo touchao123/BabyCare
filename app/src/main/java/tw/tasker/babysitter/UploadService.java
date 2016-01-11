@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
+import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UploadImage;
 
 
@@ -261,6 +263,9 @@ public class UploadService extends IntentService {
                     .setOngoing(false);
             setRingtone();
             notificationManager.notify(UPLOAD_NOTIFICATION_ID_DONE, notification.build());
+
+            EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_UPLOAD_IMAGE_DONE));
+
         }
     }
 

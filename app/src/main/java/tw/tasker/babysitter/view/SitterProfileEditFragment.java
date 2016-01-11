@@ -37,7 +37,6 @@ import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
-import me.nereo.multi_image_selector.bean.Image;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UploadService;
@@ -531,8 +530,8 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 //mMaterialDialog.dismiss();
                 DisplayUtils.makeToast(getContext(), "資料儲存成功!");
                 break;
-            case HomeEvent.UPLOAD_IMAGE_DONE:
-
+            case HomeEvent.ACTION_UPLOAD_IMAGE_DONE:
+                ParseHelper.getUploadImagesFromServer("home", ParseUser.getCurrentUser());
                 break;
         }
     }
