@@ -79,7 +79,7 @@ public class SitterDataCheckEditFragment extends Fragment implements OnClickList
         mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
         mConfirm = (Button) mRootView.findViewById(R.id.confirm);
         mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
-        mNumber = (TextView) mRootView.findViewById(R.id.number);
+        //mNumber = (TextView) mRootView.findViewById(R.id.number);
         //mSitterName = (TextView) mRootView.findViewById(R.id.name);
         //mSex = (TextView) mRootView.findViewById(R.id.sex);
         //mAge = (TextView) mRootView.findViewById(R.id.age);
@@ -89,7 +89,7 @@ public class SitterDataCheckEditFragment extends Fragment implements OnClickList
         mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
         mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
 
-        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
+        //mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
         mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
 
         mDayTime = (CheckBox) mRootView.findViewById(R.id.day_time);

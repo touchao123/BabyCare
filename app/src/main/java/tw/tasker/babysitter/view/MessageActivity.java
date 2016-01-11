@@ -109,122 +109,6 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
 
     }
 
-    private Dialog getSitterDailog(String conversationId) {
-
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_message_sitter);
-
-        Button ok = (Button) dialog.findViewById(R.id.ok);
-        TextView detail = (TextView) dialog.findViewById(R.id.detail);
-
-        // adjust dialog width
-        Point size = new Point();
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getSize(size);
-        int width = size.x;
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        //lp.width = (int) (width - (width * 0.07) );
-        lp.width = width;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        dialog.getWindow().setAttributes(lp);
-
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(IntentUtil.startSitterDetailActivity());
-            }
-        });
-
-        CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.avatar);
-        TextView name = (TextView) dialog.findViewById(R.id.name);
-        TextView age = (TextView) dialog.findViewById(R.id.age);
-        TextView education = (TextView) dialog.findViewById(R.id.education);
-        TextView address = (TextView) dialog.findViewById(R.id.address);
-        TextView babycareTime = (TextView) dialog.findViewById(R.id.babycare_time);
-        RatingBar babyCount = (RatingBar) dialog.findViewById(R.id.babycare_count);
-
-        //Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
-        Babysitter sitter = ParseHelper.getSitterFromCache();
-        if (sitter != null) {
-            ParseHelper.pinSitter(sitter);
-            DisplayUtils.loadAvatorWithUrl(avatar, sitter.getImageUrl());
-            name.setText(sitter.getName());
-            age.setText(sitter.getAge());
-            education.setText(sitter.getEducation());
-            address.setText(sitter.getAddress());
-            babycareTime.setText(sitter.getBabycareTime());
-            int showBabyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
-            babyCount.setRating(showBabyCount);
-
-        }
-
-        //mSignupDialogLogin.setOnClickListener(this);
-
-        return dialog;
-    }
-
-    private Dialog getParentDailog(String conversationId) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_message_parent);
-
-        Button ok = (Button) dialog.findViewById(R.id.ok);
-
-        // adjust dialog width
-        Point size = new Point();
-        Display display = getWindowManager().getDefaultDisplay();
-        display.getSize(size);
-        int width = size.x;
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        //lp.width = (int) (width - (width * 0.07) );
-        lp.width = width;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        dialog.getWindow().setAttributes(lp);
-
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.parent_avatar);
-        TextView name = (TextView) dialog.findViewById(R.id.parent_name);
-        TextView address = (TextView) dialog.findViewById(R.id.parent_address);
-        TextView babyAge = (TextView) dialog.findViewById(R.id.parent_baby_age);
-        TextView babyGender = (TextView) dialog.findViewById(R.id.parent_baby_gender);
-
-        UserInfo parent = ParseHelper.getParentFromCache();
-        if (parent != null) {
-            String url = "";
-            if (parent.getAvatorFile() != null) {
-                url = parent.getAvatorFile().getUrl();
-            }
-            DisplayUtils.loadAvatorWithUrl(avatar, url);
-
-            name.setText(parent.getName());
-
-            float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
-            address.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
-
-            babyAge.setText(parent.getKidsAge());
-            babyGender.setText(parent.getKidsGender());
-        }
-
-        //mSignupDialogLogin.setOnClickListener(this);
-
-        return dialog;
-    }
 
     @Override
     protected void onStart() {
@@ -238,9 +122,9 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
 
         UserType userType = AccountChecker.getUserType();
         if (userType == UserType.PARENT) { // 爸媽，抓保母資料
-            mInfoDialog = getSitterDailog(conversationId);
+            mInfoDialog = DisplayUtils.getSitterDailog(this, conversationId);
         } else {
-            mInfoDialog = getParentDailog(conversationId);
+            mInfoDialog = DisplayUtils.getParentDailog(this, conversationId);
         }
 
         mInfoDialog.show();
