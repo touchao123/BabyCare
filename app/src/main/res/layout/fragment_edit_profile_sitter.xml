@@ -30,13 +30,24 @@
                     android:layout_height="match_parent" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="10dp"
                     android:background="#55000000"
                     android:padding="10dp"
-                    android:text="增加托育環境的照片，可以讓爸媽更安心唷。"
+                    android:text="6 位爸媽主動媒合"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/sitter_home_image_no"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginBottom="10dp"
+                    android:background="#55000000"
+                    android:padding="10dp"
+                    android:text="沒有托育環境照片"
                     android:textColor="@android:color/white" />
 
                 <ImageView

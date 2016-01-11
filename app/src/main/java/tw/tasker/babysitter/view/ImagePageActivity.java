@@ -21,7 +21,11 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.List;
+
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.model.UploadImage;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ImagePageActivity extends BaseActivity {
 
@@ -31,7 +35,7 @@ public class ImagePageActivity extends BaseActivity {
         setContentView(R.layout.activity_page_image);
 
         ViewPager pager = (HackyViewPager) findViewById(R.id.pager);
-        pager.setAdapter(new ImageAdapter(this));
+        pager.setAdapter(new ImageAdapter(this, ParseHelper.getUploadImagesFromCache()));
         //pager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
         pager.setCurrentItem(0);
 
@@ -39,17 +43,18 @@ public class ImagePageActivity extends BaseActivity {
     }
 
     private static class ImageAdapter extends PagerAdapter {
+        private final List<UploadImage> mUploadImages;
 
-        private static final String[] IMAGE_URLS = new String[]{
-                "https://a0.muscache.com/im/pictures/94939537/c273236b_original.jpg?aki_policy=xx_large",
-                "https://a0.muscache.com/im/pictures/94939511/df31e96c_original.jpg?aki_policy=x_large",
-                "https://a2.muscache.com/im/pictures/94939526/e7e7c5e0_original.jpg?aki_policy=x_large"
-        };
+//        private static final String[] IMAGE_URLS = new String[]{
+//                "https://a0.muscache.com/im/pictures/94939537/c273236b_original.jpg?aki_policy=xx_large",
+//                "https://a0.muscache.com/im/pictures/94939511/df31e96c_original.jpg?aki_policy=x_large",
+//                "https://a2.muscache.com/im/pictures/94939526/e7e7c5e0_original.jpg?aki_policy=x_large"
+//        };
 
         private LayoutInflater inflater;
         private DisplayImageOptions options;
 
-        ImageAdapter(Context context) {
+        ImageAdapter(Context context, List<UploadImage> uploadImages) {
             inflater = LayoutInflater.from(context);
 
             options = new DisplayImageOptions.Builder()
@@ -62,6 +67,8 @@ public class ImagePageActivity extends BaseActivity {
                     .considerExifParams(true)
                     .displayer(new FadeInBitmapDisplayer(300))
                     .build();
+
+            mUploadImages = uploadImages;
         }
 
         @Override
@@ -71,7 +78,7 @@ public class ImagePageActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return IMAGE_URLS.length;
+            return mUploadImages.size();
         }
 
         @Override
@@ -81,7 +88,9 @@ public class ImagePageActivity extends BaseActivity {
             ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
             final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
-            ImageLoader.getInstance().displayImage(IMAGE_URLS[position], imageView, options, new SimpleImageLoadingListener() {
+            String imageUrl = mUploadImages.get(position).getImageFile().getUrl();
+
+            ImageLoader.getInstance().displayImage(imageUrl, imageView, options, new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     spinner.setVisibility(View.VISIBLE);

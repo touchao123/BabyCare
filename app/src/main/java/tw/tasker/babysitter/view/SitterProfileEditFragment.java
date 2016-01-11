@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -41,6 +43,7 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UploadService;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.HomeEvent;
+import tw.tasker.babysitter.model.UploadImage;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
@@ -52,6 +55,9 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private static final int RESULT_OK = -1;
 
     private static SignUpListener mListener;
+
+    private ViewPager mPager;
+    private TextView mSitterHomeImageNo;
 
     private CircleImageView mAvatar;
 
@@ -105,6 +111,9 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private void initView() {
         mAllScreen = (ScrollView) mRootView.findViewById(R.id.all_screen);
 
+        mPager = (ViewPager) mRootView.findViewById(R.id.pager);
+        mSitterHomeImageNo = (TextView) mRootView.findViewById(R.id.sitter_home_image_no);
+
         mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
         // Set up the signup form.
         mAccount = (EditText) mRootView.findViewById(R.id.account);
@@ -125,24 +134,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         mConfirm = (Button) mRootView.findViewById(R.id.confirm);
         mMaterialDialog = DisplayUtils.getMaterialProgressDialog(getActivity(), R.string.dialog_signup_please_wait);
 
-
-//        mConfirm = (Button) mRootView.findViewById(R.id.confirm);
-//        mNumber = (TextView) mRootView.findViewById(R.id.number);
-//        mSitterName = (TextView) mRootView.findViewById(R.id.name);
-        //mSex = (TextView) mRootView.findViewById(R.id.sex);
-        //mAge = (TextView) mRootView.findViewById(R.id.age);
-//        mEducation = (TextView) mRootView.findViewById(R.id.education);
-//        mTel = (TextView) mRootView.findViewById(R.id.tel);
-//        mAddress = (TextView) mRootView.findViewById(R.id.address);
-//        mBabycareCount = (RatingBar) mRootView.findViewById(R.id.babycare_count);
-//        mBabycareTime = (TextView) mRootView.findViewById(R.id.babycare_time);
-
-//        mSkillNumber = (TextView) mRootView.findViewById(R.id.skill_number);
-//        mCommunityName = (TextView) mRootView.findViewById(R.id.community_name);
-
-
         mSitterHome = (ImageView) mRootView.findViewById(R.id.sitter_home);
-
     }
 
     private void initListener() {
@@ -154,20 +146,51 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 return false;
             }
         });
+        mSitterHome.setOnClickListener(this);
+
         mAvatar.setOnClickListener(this);
 
-        mConfirm.setOnClickListener(this);
         mSitterBabycareCount.setOnClickListener(this);
         mSitterBabycareType.setOnClickListener(this);
         mSitterBabycareTime.setOnClickListener(this);
 
-//        mConfirm.setOnClickListener(this);
-        mSitterHome.setOnClickListener(this);
+        mConfirm.setOnClickListener(this);
+
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mSitterHomeImageNo.setText((position + 1) + "/" + mPager.getAdapter().getCount());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void initData() {
-
+        ParseHelper.getUploadImagesFromServer("home", ParseUser.getCurrentUser());
     }
+
+    @DebugLog
+    public void onEvent(List<UploadImage> uploadImages) {
+
+        if (uploadImages.isEmpty()) {
+        } else {
+            mPager.setAdapter(new ImageAdapter(getActivity(), uploadImages));
+            mSitterHomeImageNo.setText("1/" + uploadImages.size());
+        }
+        //mPager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
+        //mPager.setCurrentItem(0);
+    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -507,6 +530,9 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
             case HomeEvent.ACTION_ADD_SITTER_INFO_DOEN:
                 //mMaterialDialog.dismiss();
                 DisplayUtils.makeToast(getContext(), "資料儲存成功!");
+                break;
+            case HomeEvent.UPLOAD_IMAGE_DONE:
+
                 break;
         }
     }

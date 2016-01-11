@@ -25,6 +25,7 @@ import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.HomeEvent;
+import tw.tasker.babysitter.model.UploadImage;
 import tw.tasker.babysitter.model.UserInfo;
 
 public class ParseHelper {
@@ -32,6 +33,7 @@ public class ParseHelper {
     // Only for signing up
     public static Babysitter mSitter;
     public static UserInfo mParent;
+    private static List<UploadImage> mUploadImages;
 
     public static void pinSitterToCache(Babysitter sitter) {
         mSitter = sitter;
@@ -504,6 +506,33 @@ public class ParseHelper {
 
     private static void saveDataServer(Babysitter sitterInfo) {
         sitterInfo.saveEventually();
+    }
+
+    public static void getUploadImagesFromServer(String type, ParseUser user) {
+        ParseQuery<UploadImage> query = UploadImage.getQuery();
+        query.whereEqualTo("user", user);
+        if (type != null) {
+            query.whereEqualTo("type", type);
+        }
+        query.findInBackground(new FindCallback<UploadImage>() {
+            @Override
+            public void done(List<UploadImage> uploadImages, ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    pinUploadImagesToCache(uploadImages);
+                    EventBus.getDefault().post(uploadImages);
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
+
+    private static void pinUploadImagesToCache(List<UploadImage> uploadImages) {
+        mUploadImages = uploadImages;
+    }
+
+    public static List<UploadImage> getUploadImagesFromCache() {
+        return mUploadImages;
     }
 }
 

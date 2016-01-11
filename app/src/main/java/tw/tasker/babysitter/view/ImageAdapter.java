@@ -16,8 +16,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+import java.util.List;
+
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.model.UploadImage;
 
 public class ImageAdapter extends PagerAdapter {
 
@@ -27,12 +30,14 @@ public class ImageAdapter extends PagerAdapter {
             "https://a2.muscache.com/im/pictures/94939526/e7e7c5e0_original.jpg?aki_policy=x_large"
     };
     private final Context mContext;
+    private final List<UploadImage> mUploadImages;
 
     private LayoutInflater inflater;
 
-    ImageAdapter(Context context) {
+    ImageAdapter(Context context, List<UploadImage> uploadImages) {
         mContext = context;
         inflater = LayoutInflater.from(context);
+        mUploadImages = uploadImages;
     }
 
     @Override
@@ -42,7 +47,7 @@ public class ImageAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return IMAGE_URLS.length;
+        return mUploadImages.size();
     }
 
     @Override
@@ -61,7 +66,9 @@ public class ImageAdapter extends PagerAdapter {
 
         final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
-        ImageLoader.getInstance().displayImage(IMAGE_URLS[position], imageView, Config.OPTIONS, new SimpleImageLoadingListener() {
+        String imageUrl = mUploadImages.get(position).getImageFile().getUrl();
+
+        ImageLoader.getInstance().displayImage(imageUrl, imageView, Config.OPTIONS, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 spinner.setVisibility(View.VISIBLE);

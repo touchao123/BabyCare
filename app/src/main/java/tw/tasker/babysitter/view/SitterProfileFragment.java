@@ -16,14 +16,20 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.List;
+
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
+import tw.tasker.babysitter.model.UploadImage;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.MapHelper;
@@ -35,6 +41,7 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
     private ViewPager mPager;
+    private TextView mSitterHomeImageNo;
 
     private CircleImageView mAvatar;
     private TextView mSitterName;
@@ -80,13 +87,14 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
 
         initView();
         initListener();
-        //initData();
+        initData();
 
         return mRootView;
     }
 
     private void initView() {
         mPager = (ViewPager) mRootView.findViewById(R.id.pager);
+        mSitterHomeImageNo = (TextView) mRootView.findViewById(R.id.sitter_home_image_no);
 
         mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
         mSitterName = (TextView) mRootView.findViewById(R.id.sitter_name);
@@ -117,12 +125,40 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
     }
 
     private void initListener() {
-        mPager.setAdapter(new ImageAdapter(getActivity()));
-        //mPager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
-        mPager.setCurrentItem(0);
-
         mSync.setOnClickListener(this);
         mEidt.setOnClickListener(this);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mSitterHomeImageNo.setText((position + 1) + "/" + mPager.getAdapter().getCount());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void initData() {
+        ParseHelper.getUploadImagesFromServer("home", ParseUser.getCurrentUser());
+    }
+
+    @DebugLog
+    public void onEvent(List<UploadImage> uploadImages) {
+
+        if (uploadImages.isEmpty()) {
+        } else {
+            mPager.setAdapter(new ImageAdapter(getActivity(), uploadImages));
+            mSitterHomeImageNo.setText("1/" + uploadImages.size());
+        }
+        //mPager.setCurrentItem(getArguments().getInt(Constants.Extra.IMAGE_POSITION, 0));
+        //mPager.setCurrentItem(0);
     }
 
     @Override
@@ -227,6 +263,18 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
                 break;
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
 }

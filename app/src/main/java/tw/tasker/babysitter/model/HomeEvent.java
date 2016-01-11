@@ -18,6 +18,8 @@ public class HomeEvent {
     public static final int ACTION_ADD_PARENT_INFO_DOEN = 9;
     public static final int ACTION_ADD_SITTER_INFO_DOEN = 10;
     public static final int ACTION_DIALOG_AGREE = 11;
+
+    public static final int UPLOAD_IMAGE_DONE = 12;
     private int mAction;
 
     public HomeEvent(int action) {
@@ -74,7 +76,9 @@ public class HomeEvent {
             case ACTION_DIALOG_AGREE:
                 actionName = "ACTION_DIALOG_AGREE";
                 break;
-
+            case UPLOAD_IMAGE_DONE:
+                actionName = "UPLOAD_IMAGE_DONE";
+                break;
             default:
                 actionName = "Please add action [" + mAction + "] name.";
         }
