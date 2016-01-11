@@ -218,6 +218,10 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
                 .distanceInKilometersTo(Config.MY_LOCATION);
         mStaticMapDistance.setText("距離您的位置：" + DisplayUtils.showDistance(distance));
 
+        if (sitter.getRegisterNumber() == null) {
+            mSync.setVisibility(View.VISIBLE);
+        }
+
         // sitter sync info
         mSitterRegisterNumber.setText("登記證號：" + sitter.getRegisterNumber());
         mSitterSkillNumber.setText("保母證號：" + sitter.getSkillNumber());

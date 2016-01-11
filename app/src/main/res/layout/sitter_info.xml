@@ -22,7 +22,8 @@
             android:padding="10dp"
             android:text="若您有保母「登記證號」，可以進行資格確認，以取得下列資訊。 請點選 >"
             android:textColor="@android:color/white"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
