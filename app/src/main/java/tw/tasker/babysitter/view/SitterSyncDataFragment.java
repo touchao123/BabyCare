@@ -180,7 +180,7 @@ public class SitterSyncDataFragment extends Fragment implements OnClickListener 
                 if (mobilePhone.equals("")) {
                     DisplayUtils.makeToast(getContext(), "很抱歉!認證程序需要「手機號碼」以完成驗證。");
                 } else {
-                    mListener.onSwitchToNextFragment(SitterSyncDataActivity.STEP_VERIFY_CODE);
+                    mListener.onSwitchToNextFragment(SitterVerificationActivity.STEP_VERIFY_CODE);
                 }
                 break;
 

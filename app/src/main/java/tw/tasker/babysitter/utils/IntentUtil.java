@@ -10,7 +10,7 @@ import tw.tasker.babysitter.view.HomeActivity;
 import tw.tasker.babysitter.view.ProfileActivity;
 import tw.tasker.babysitter.view.SignUpActivity;
 import tw.tasker.babysitter.view.SitterDetailActivity;
-import tw.tasker.babysitter.view.SitterSyncDataActivity;
+import tw.tasker.babysitter.view.SitterVerificationActivity;
 
 public class IntentUtil {
     private static final String PACKAGE_NAME = "tw.tasker.babysitter";
@@ -107,7 +107,7 @@ public class IntentUtil {
     }
 
     public static Intent startSitterSyncDataActivity() {
-        Class<SitterSyncDataActivity> clazz = SitterSyncDataActivity.class;
+        Class<SitterVerificationActivity> clazz = SitterVerificationActivity.class;
         String className = clazz.getName();
 
         Intent intent = new Intent();

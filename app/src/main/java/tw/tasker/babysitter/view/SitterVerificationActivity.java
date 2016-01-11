@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 
 import tw.tasker.babysitter.R;
 
-public class SitterSyncDataActivity extends BaseActivity implements OnClickListener {
+public class SitterVerificationActivity extends BaseActivity implements OnClickListener {
     public static final int STEP_SYNC_DATA = 0;
     public static final int STEP_VERIFY_CODE = 1;
 

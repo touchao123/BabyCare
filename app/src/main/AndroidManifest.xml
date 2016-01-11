@@ -134,7 +134,7 @@
             android:configChanges="orientation|screenSize" />
 
         <activity
-            android:name=".view.SitterSyncDataActivity"
+            android:name=".view.SitterVerificationActivity"
             android:label="資格確認"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
