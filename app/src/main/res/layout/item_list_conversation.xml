@@ -67,7 +67,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/demo_babycare_time"
                 android:textColor="@color/gray_dark"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/message"
@@ -83,6 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
+                android:layout_marginTop="5dp"
                 android:gravity="left">
 
                 <Button
