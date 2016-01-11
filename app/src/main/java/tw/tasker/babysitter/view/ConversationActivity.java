@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.layer.sdk.exceptions.LayerException;
 import com.layer.sdk.messaging.Conversation;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -24,7 +23,6 @@ import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
 import tw.tasker.babysitter.adapter.QueryAdapter;
-import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
@@ -36,7 +34,7 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class ConversationActivity extends AppCompatActivity implements LayerCallbacks, ConversationQueryAdapter.ConversationClickHandler {
+public class ConversationActivity extends AppCompatActivity implements ConversationQueryAdapter.ConversationClickHandler {
     public static final String PARSE_DATA_KEY = "com.parse.Data";
     private TextView mInfo;
     private Button mOk;
@@ -55,27 +53,12 @@ public class ConversationActivity extends AppCompatActivity implements LayerCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
-        initLayer();
     }
 
-    private void initLayer() {
-        //Initializes and connects the LayerClient if it hasn't been created already
-        LayerImpl.initialize(getApplicationContext());
-
-        //Registers the activity so callbacks are executed on the correct class
-        LayerImpl.setContext(this);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        //Registers the activity so callbacks are executed on the correct class
-        LayerImpl.setContext(this);
-
-        //Runs a Parse Query to return all users registered with the app
-        ParseImpl.cacheAllUsers();
-
 
         //If the user is not authenticated, make sure they are logged in, and if they are, re-authenticate
         if (!LayerImpl.isAuthenticated()) {
@@ -128,43 +111,6 @@ public class ConversationActivity extends AppCompatActivity implements LayerCall
         mConversationsAdapter.refresh();
     }
 
-    //Layer events
-    @Override
-    public void onLayerConnected() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onLayerDisconnected() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onLayerConnectionError(LayerException e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onUserAuthenticated(String id) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onUserAuthenticatedError(LayerException e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onUserDeauthenticated() {
-        // TODO Auto-generated method stub
-
-    }
-
     // Conversation
     @Override
     public void onConversationClick(Conversation conversation) {
@@ -194,7 +140,6 @@ public class ConversationActivity extends AppCompatActivity implements LayerCall
         }
 
     }
-
 
     private boolean isConfirmBothParentAndSitter(String conversationId) {
         ParseQuery<BabysitterFavorite> query = BabysitterFavorite.getQuery();
