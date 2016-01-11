@@ -29,20 +29,25 @@ public class BaseActivity extends AppCompatActivity implements LayerCallbacks {
 
         mDialog = new ProgressDialog(this);
 
+        initStatusBar();
+        initLayer();
+    }
+
+    private void initStatusBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
         }
-
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setStatusBarTintResource(R.color.primary_dark);
+    }
 
+    private void initLayer() {
         //Initializes and connects the LayerClient if it hasn't been created already
         LayerImpl.initialize(getApplicationContext());
 
         //Registers the activity so callbacks are executed on the correct class
         LayerImpl.setContext(this);
-
     }
 
     //This can be called when the app moves from the foreground to the background, and when the
