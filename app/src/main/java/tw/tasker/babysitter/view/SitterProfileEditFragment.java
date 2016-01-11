@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -84,6 +85,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private ProgressDialog mRingProgressDialog;
     private PictureHelper mPictureHelper;
     private ImageView mSitterHome;
+    private List<UploadImage> mUploadImages;
 
     public SitterProfileEditFragment() {
         // TODO Auto-generated constructor stub
@@ -180,6 +182,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     @DebugLog
     public void onEvent(List<UploadImage> uploadImages) {
+        mUploadImages = uploadImages;
 
         if (uploadImages.isEmpty()) {
         } else {
@@ -368,7 +371,11 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 break;
 
             case REQUEST_IMAGE:
-                if(resultCode == RESULT_OK){
+                if(resultCode == RESULT_OK) {
+
+                    if (mUploadImages != null && !mUploadImages.isEmpty()) {
+                        ParseObject.deleteAllInBackground(mUploadImages);
+                    }
                     // Get the result list of select image paths
                     ArrayList<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     // do your logic ....
