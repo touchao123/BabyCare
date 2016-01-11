@@ -2,27 +2,24 @@ package tw.tasker.babysitter.view;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.layer.sdk.exceptions.LayerException;
 import com.layer.sdk.messaging.Conversation;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
@@ -39,7 +36,7 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class ConversationActivity extends ActionBarActivity implements LayerCallbacks, ConversationQueryAdapter.ConversationClickHandler {
+public class ConversationActivity extends AppCompatActivity implements LayerCallbacks, ConversationQueryAdapter.ConversationClickHandler {
     public static final String PARSE_DATA_KEY = "com.parse.Data";
     private TextView mInfo;
     private Button mOk;
@@ -48,6 +45,11 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
     //The Query Adapter that grabs all Conversations and displays them based on the last lastMsgContent
     private ConversationQueryAdapter mConversationsAdapter;
     private Dialog mInfoDialog;
+
+    private MenuItem mItem;
+    private MenuItem mLogoutItem;
+    private MenuItem mProfileItem;
+    private SubMenu mSubMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,22 +248,68 @@ public class ConversationActivity extends ActionBarActivity implements LayerCall
         }
     }
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.push_info, menu);
-//		return true;
-//	}
 
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		// Handle action bar item clicks here. The action bar will
-//		// automatically handle clicks on the Home/Up button, so long
-//		// as you specify a parent activity in AndroidManifest.xml.
-//		int id = item.getItemId();
-//		if (id == R.id.action_settings) {
-//			return true;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+
+        inflater.inflate(R.menu.sign_up, menu);
+
+        mItem = menu.findItem(R.id.action_more);
+        mSubMenu = mItem.getSubMenu();
+        mLogoutItem = mSubMenu.findItem(R.id.action_logout);
+        mProfileItem = mSubMenu.findItem(R.id.action_profile);
+
+        if (ParseUser.getCurrentUser() == null) {
+            mLogoutItem.setTitle("登入");
+            mProfileItem.setVisible(false);
+
+        } else {
+            mLogoutItem.setTitle("登出");
+        }
+
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+
+            case R.id.action_profile:
+                startActivity(IntentUtil.startProfileActivity());
+                break;
+
+            case R.id.action_fb:
+                startActivity(IntentUtil.startFacebook());
+                break;
+
+            case R.id.action_gmail:
+                startActivity(IntentUtil.startEmail());
+                break;
+
+            case R.id.action_logout:
+                if (ParseUser.getCurrentUser() == null) { // 沒有登入
+                } else { // 有登入
+                    // Call the Parse log out method
+                    ParseUser.logOut();
+                }
+
+                startActivity(IntentUtil.startDispatchActivity());
+
+                break;
+            default:
+                break;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }
