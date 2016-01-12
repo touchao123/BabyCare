@@ -9,10 +9,10 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.parse.Parse;
-import com.parse.ParseCrashReporting;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import tw.tasker.babysitter.model.BabyDiary;
@@ -76,9 +76,6 @@ public class MyApplication extends Application {
         ParseObject.registerSubclass(Sitter.class);
         ParseObject.registerSubclass(UploadImage.class);
 
-        if (isRelease())
-            ParseCrashReporting.enable(this);
-
         Parse.enableLocalDatastore(this);
 
         if (isRelease()) {
@@ -86,7 +83,6 @@ public class MyApplication extends Application {
         } else {
             Parse.initialize(this, APPLICATION_ID_TEST, CLIENT_KEY_TEST);
         }
-
         enablePushNotifications();
 
         initImageLoader(getApplicationContext());
