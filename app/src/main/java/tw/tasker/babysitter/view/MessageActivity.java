@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -27,12 +30,29 @@ import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 
-public class MessageActivity extends ActivityBase implements MessageQueryAdapter.MessageClickHandler {
+public class MessageActivity extends BaseActivity implements MessageQueryAdapter.MessageClickHandler, View.OnClickListener {
 
     private Conversation mConversation;
     private MessageQueryAdapter mMessagesAdapter;
     private RecyclerView mMessagesView;
     private Dialog mInfoDialog;
+
+    private boolean mKeyboardListenersAttached = false;
+    private ViewGroup targetView;
+    private ViewTreeObserver.OnGlobalLayoutListener keyboardLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            int heightDiff = targetView.getRootView().getHeight() - targetView.getHeight();
+            int contentViewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
+
+            if (heightDiff <= contentViewTop) {
+                onHideKeyboard();
+            } else {
+                int keyboardHeight = heightDiff - contentViewTop;
+                onShowKeyboard(keyboardHeight);
+            }
+        }
+    };
 
 
     //Grab all the view objects on the message_screen layout when the Activity starts
@@ -49,6 +69,20 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         attachKeyboardListeners(mMessagesView);
 
     }
+
+    protected void attachKeyboardListeners(ViewGroup group) {
+        if (mKeyboardListenersAttached) {
+            return;
+        }
+
+        targetView = group;
+        if (targetView != null) {
+            targetView.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+            mKeyboardListenersAttached = true;
+        }
+    }
+
 
 
     @Override
@@ -191,6 +225,14 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
         }
     }
 
+    protected String getTextAsString(EditText view) {
+
+        if (view != null && view.getText() != null)
+            return view.getText().toString();
+
+        return "";
+    }
+
     protected void onShowKeyboard(int keyboardHeight) {
         mMessagesView.smoothScrollToPosition(Integer.MAX_VALUE);
     }
@@ -198,4 +240,14 @@ public class MessageActivity extends ActivityBase implements MessageQueryAdapter
     protected void onHideKeyboard() {
         mMessagesView.smoothScrollToPosition(Integer.MAX_VALUE);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mKeyboardListenersAttached) {
+            targetView.getViewTreeObserver().removeGlobalOnLayoutListener(keyboardLayoutListener);
+        }
+    }
+
 }
