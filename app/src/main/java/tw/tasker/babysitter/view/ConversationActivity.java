@@ -3,7 +3,6 @@ package tw.tasker.babysitter.view;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -19,6 +18,10 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.List;
+
+import de.greenrobot.event.EventBus;
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter;
@@ -34,7 +37,7 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class ConversationActivity extends AppCompatActivity implements ConversationQueryAdapter.ConversationClickHandler {
+public class ConversationActivity extends BaseActivity implements ConversationQueryAdapter.ConversationClickHandler {
     public static final String PARSE_DATA_KEY = "com.parse.Data";
     private TextView mInfo;
     private Button mOk;
@@ -53,13 +56,29 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
+        setTitle("保母訊息");
+
+        ParseHelper.loadParentsProfileData();
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
+    }
 
+    @DebugLog
+    public void onEvent(UserInfo parent) {
+        ParseHelper.pinParent(parent);
+        ParseHelper.loadParentFavoriteFromLocal(parent);
+    }
+
+    @DebugLog
+    public void onEvent(List<BabysitterFavorite> favorites) {
+        setupConversation();
+    }
+
+    private void setupConversation() {
         //If the user is not authenticated, make sure they are logged in, and if they are, re-authenticate
         if (!LayerImpl.isAuthenticated()) {
 
@@ -73,7 +92,6 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
 
                 LogUtils.LOGD("Activity", "User is not authenticated, but is logged in - re-authenticating user");
                 LayerImpl.authenticateUser();
-
             }
 
             //Everything is set up, so start populating the Conversation list
@@ -82,14 +100,10 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
             LogUtils.LOGD("Activity", "Starting conversation view");
             setupConversationView();
         }
-
     }
 
     //Set up the Query Adapter that will drive the RecyclerView on the conversations_screen
     private void setupConversationView() {
-
-        LogUtils.LOGD("Activity", "Setting conversation view");
-
         //Grab the Recycler View and list all conversation objects in a vertical list
         RecyclerView conversationsView = (RecyclerView) findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -136,7 +150,6 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
 
             mInfoDialog.show();
 
-            //DisplayUtils.makeToast(this, "確認「媒合」後，才可以進行對話。");
         }
 
     }
@@ -165,7 +178,6 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
 
     @Override
     public boolean onConversationLongClick(Conversation conversation) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -240,14 +252,8 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
                 break;
 
             case R.id.action_logout:
-                if (ParseUser.getCurrentUser() == null) { // 沒有登入
-                } else { // 有登入
-                    // Call the Parse log out method
-                    ParseUser.logOut();
-                }
-
+                AccountChecker.logout();
                 startActivity(IntentUtil.startDispatchActivity());
-
                 break;
             default:
                 break;
@@ -255,6 +261,24 @@ public class ConversationActivity extends AppCompatActivity implements Conversat
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @DebugLog
+    public void onEvent(ParseException parseException) {
+        String errorMessage = DisplayUtils.getErrorMessage(this, parseException);
+        DisplayUtils.makeToast(this, errorMessage);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
 }

@@ -19,7 +19,6 @@ import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
-import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.IntentUtil;
@@ -64,6 +63,9 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
         mLogIn.setOnClickListener(this);
         mSignUp.setOnClickListener(this);
         mLater.setOnClickListener(this);
+        //Registers the activity so callbacks are executed on the correct class
+        LayerImpl.setContext(this);
+
     }
 
     @Override
@@ -118,7 +120,7 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
     public void onEvent(ParseUser user) {
 
         if (LayerImpl.isAuthenticated()) {
-            onUserAuthenticated(ParseImpl.getRegisteredUser().getObjectId());
+            onUserAuthenticated(user.getObjectId());
         } else {
             LayerImpl.authenticateUser();
         }
@@ -141,19 +143,16 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
     // Layer callback
     @Override
     public void onLayerConnected() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onLayerDisconnected() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onLayerConnectionError(LayerException e) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -171,7 +170,6 @@ public class LogInActivity extends BaseActivity implements OnTouchListener,
 
     @Override
     public void onUserDeauthenticated() {
-        // TODO Auto-generated method stub
 
     }
 
