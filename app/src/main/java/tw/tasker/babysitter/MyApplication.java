@@ -83,6 +83,7 @@ public class MyApplication extends Application {
         } else {
             Parse.initialize(this, APPLICATION_ID_TEST, CLIENT_KEY_TEST);
         }
+        ParseUser.enableRevocableSessionInBackground();
         enablePushNotifications();
 
         initImageLoader(getApplicationContext());
