@@ -307,7 +307,7 @@ public class ParentDataCheckEditFragment extends Fragment implements OnClickList
 
     }
 
-    public class BabyRecordSaveCallback extends SaveCallback {
+    public class BabyRecordSaveCallback implements SaveCallback {
 
         @Override
         public void done(ParseException e) {

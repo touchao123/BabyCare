@@ -506,7 +506,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     }
 
-    public class BabyRecordSaveCallback extends SaveCallback {
+    public class BabyRecordSaveCallback implements SaveCallback {
 
         @Override
         public void done(ParseException e) {

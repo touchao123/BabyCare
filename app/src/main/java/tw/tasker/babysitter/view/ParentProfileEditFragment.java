@@ -672,7 +672,7 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
         ParseHelper.pinDataLocal(userInfo);
     }
 
-    public class BabyRecordSaveCallback extends SaveCallback {
+    public class BabyRecordSaveCallback implements SaveCallback {
 
         @Override
         public void done(ParseException e) {
