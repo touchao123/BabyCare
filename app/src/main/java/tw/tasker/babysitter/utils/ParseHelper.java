@@ -228,6 +228,8 @@ public class ParseHelper {
                 if (isSuccess(parseException)) {
                     if (favorites.isEmpty()) {
                         loadParentFavoriteFromServer(parent);
+                    } else {
+                        EventBus.getDefault().post(favorites);
                     }
                 } else {
                     loadParentFavoriteFromServer(parent);
@@ -247,7 +249,6 @@ public class ParseHelper {
             public void done(List<BabysitterFavorite> favorites, ParseException parseException) {
                 if (isSuccess(parseException)) {
                     pinFavorites(favorites);
-                    //EventBus.getDefault().post(favorites);
                 } else {
                     EventBus.getDefault().post(parseException);
                 }
@@ -257,12 +258,12 @@ public class ParseHelper {
 
     // Message
     @DebugLog
-    public static void pinFavorites(List<BabysitterFavorite> favorites) {
+    public static void pinFavorites(final List<BabysitterFavorite> favorites) {
         ParseObject.unpinAllInBackground(favorites, new DeleteCallback() {
             @Override
             public void done(ParseException parseException) {
                 if (isSuccess(parseException)) {
-
+                    EventBus.getDefault().post(favorites);
                 } else {
                     EventBus.getDefault().post(parseException);
                 }
