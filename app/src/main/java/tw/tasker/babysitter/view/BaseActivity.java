@@ -8,15 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.layer.sdk.exceptions.LayerException;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import tw.tasker.babysitter.R;
-import tw.tasker.babysitter.layer.LayerCallbacks;
 import tw.tasker.babysitter.layer.LayerImpl;
-import tw.tasker.babysitter.parse.ParseImpl;
 
-public class BaseActivity extends AppCompatActivity implements LayerCallbacks {
+public class BaseActivity extends AppCompatActivity {
     protected ProgressDialog mDialog;
 
     public BaseActivity() {
@@ -26,8 +23,6 @@ public class BaseActivity extends AppCompatActivity implements LayerCallbacks {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mDialog = new ProgressDialog(this);
 
         initStatusBar();
         initLayer();
@@ -46,20 +41,6 @@ public class BaseActivity extends AppCompatActivity implements LayerCallbacks {
         //Initializes and connects the LayerClient if it hasn't been created already
         LayerImpl.initialize(getApplicationContext());
 
-        //Registers the activity so callbacks are executed on the correct class
-        LayerImpl.setContext(this);
-    }
-
-    //This can be called when the app moves from the foreground to the background, and when the
-    // Activity is created
-    protected void onResume() {
-        super.onResume();
-
-        //Registers the activity so callbacks are executed on the correct class
-        LayerImpl.setContext(this);
-
-        //Runs a Parse Query to return all users registered with the app
-        ParseImpl.cacheAllUsers();
     }
 
     @TargetApi(19)
@@ -74,52 +55,4 @@ public class BaseActivity extends AppCompatActivity implements LayerCallbacks {
         }
         win.setAttributes(winParams);
     }
-
-    protected void showDialog(String title, String message) {
-        // Set up a progress dialog
-        mDialog.setTitle(title);
-        mDialog.setMessage(message);
-        mDialog.show();
-    }
-
-    protected void hideDialog() {
-        mDialog.dismiss();
-    }
-
-    @Override
-    public void onLayerConnected() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onLayerDisconnected() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onLayerConnectionError(LayerException e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onUserAuthenticated(String id) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onUserAuthenticatedError(LayerException e) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void onUserDeauthenticated() {
-        // TODO Auto-generated method stub
-
-    }
-
 }
