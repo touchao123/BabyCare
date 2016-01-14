@@ -1,5 +1,7 @@
 package tw.tasker.babysitter.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -16,7 +18,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -38,13 +45,14 @@ import tw.tasker.babysitter.utils.ParseHelper;
 public class ParentSignUpFragment extends Fragment
         implements OnClickListener {
 
+    private static final int REQUEST_PLACE_PICKER = 0;
     private EditText mAccount;
     private EditText mPassword;
     private EditText mPasswordAgain;
     private EditText mEMail;
 
     private EditText mParentName;
-    private EditText mParentAddress;
+    private TextView mParentAddress;
     private EditText mParentPhone;
 
     private TextView mParentKidsAge;
@@ -65,6 +73,7 @@ public class ParentSignUpFragment extends Fragment
     private ScrollView mAllScreen;
     private Button mSignUp;
     private MaterialDialog mMaterialDialog;
+    private ParseGeoPoint mLocation;
 
     public static Fragment newInstance() {
         ParentSignUpFragment fragment = new ParentSignUpFragment();
@@ -99,7 +108,7 @@ public class ParentSignUpFragment extends Fragment
         mEMail = (EditText) mRootView.findViewById(R.id.email);
         // Parent contact info
         mParentName = (EditText) mRootView.findViewById(R.id.parent_name);
-        mParentAddress = (EditText) mRootView.findViewById(R.id.parent_address);
+        mParentAddress = (TextView) mRootView.findViewById(R.id.parent_address);
         mParentPhone = (EditText) mRootView.findViewById(R.id.parent_phone);
 
         // Baby info
@@ -138,6 +147,7 @@ public class ParentSignUpFragment extends Fragment
         mParentBabycareTimeEnd.setOnClickListener(this);
         mParentBabycareWeek.setOnClickListener(this);
         mParentBabycareCount.setOnClickListener(this);
+        mParentAddress.setOnClickListener(this);
     }
 
     private void initData() {
@@ -213,8 +223,50 @@ public class ParentSignUpFragment extends Fragment
             case R.id.parent_babycare_count:
                 showMaxBabiesDialog();
                 break;
+
+            case R.id.parent_address:
+                showPlacePicker();
+                break;
             default:
                 break;
+        }
+    }
+
+    private void showPlacePicker() {
+        // Construct an intent for the place picker
+        try {
+            PlacePicker.IntentBuilder intentBuilder =
+                    new PlacePicker.IntentBuilder();
+            Intent intent = intentBuilder.build(getActivity());
+            DisplayUtils.makeToast(getContext(), "選擇地點開啟中...");
+            // Start the intent by requesting a result,
+            // identified by a request code.
+            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+
+        } catch (GooglePlayServicesRepairableException e) {
+            // ...
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // ...
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_PLACE_PICKER
+                && resultCode == Activity.RESULT_OK) {
+
+            // The user has selected a place. Extract the name and address.
+            final Place place = PlacePicker.getPlace(data, getActivity());
+
+            final CharSequence address = place.getAddress();
+
+            mParentAddress.setText(address);
+            mLocation = new ParseGeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -282,7 +334,7 @@ public class ParentSignUpFragment extends Fragment
                         for (CharSequence item : items) {
                             dayOfWeek = dayOfWeek + item + "，";
                         }
-                        dayOfWeek = dayOfWeek.substring(0, dayOfWeek.length()-1);
+                        dayOfWeek = dayOfWeek.substring(0, dayOfWeek.length() - 1);
                         dayOfWeek = dayOfWeek.replace("星期", "");
                         mParentBabycareWeek.setText(dayOfWeek);
 
@@ -443,6 +495,7 @@ public class ParentSignUpFragment extends Fragment
         // parent info
         userInfo.setName(mParentName.getText().toString());
         userInfo.setAddress(mParentAddress.getText().toString());
+        userInfo.setLocation(mLocation);
         userInfo.setPhone(mParentPhone.getText().toString());
 
         // baby info
