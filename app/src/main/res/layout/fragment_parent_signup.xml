@@ -291,7 +291,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="  保母1對："
+                android:text="@string/parent_babycare_count_ttile"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 

@@ -241,7 +241,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 
         mParentBabyInfo.setText("(" + parent.getKidsGender() + "，" + age + ")");
 
-        mParentBabycareCount.setText(parentBabycareCountTitile + parent.getBabycareCount());
+        mParentBabycareCount.setText(parentBabycareCountTitile + parent.getBabycareCount() + " 人");
         mParentBabycareType.setText(parentBabycareTypeTitle + parent.getBabycareType());
 
 

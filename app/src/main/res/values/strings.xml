@@ -17,7 +17,7 @@
     <string name="hint_parent_name">方便保母聯絡用</string>
     <string name="hint_parent_address">只顯示部份地址</string>
     <string name="hint_parent_phone">您同意後才顯示</string>
-    <string name="hint_parent_babycare_count">(希望保母最多照顧幾個寶寶)</string>
+    <string name="hint_parent_babycare_count">人</string>
     <string name="hint_parent_note">其它補充資訊</string>
 
     <!-- Sitter list  -->
@@ -69,7 +69,7 @@
 
     <!-- Parent info title -->
     <string name="parent_babycare_plan_ttile">開始日期：</string>
-    <string name="parent_babycare_count_ttile">  保母1對：</string>
+    <string name="parent_babycare_count_ttile">希望保母最多照顧：</string>
     <string name="parent_babycare_type_title">托育類別：</string>
     <string name="parent_babycare_week_title">　　每週：</string>
     <string name="parent_babycare_time_title">　　每日：</string>
