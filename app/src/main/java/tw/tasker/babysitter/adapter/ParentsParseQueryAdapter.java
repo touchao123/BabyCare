@@ -246,6 +246,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 
 
         startDate = DisplayUtils.getCalendarFromString(parent.getBabycarePlan());
+        endDate = Calendar.getInstance();
         String plan = "";
         if (startDate.before(endDate)) {
             plan = DisplayUtils.getAge(startDate, endDate, DisplayUtils.STARTDAY_BEFORE_CURREENTDAY);
@@ -287,7 +288,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         try {
             favorite = query.getFirst();
         } catch (ParseException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
 
         if (favorite != null) {
