@@ -18,8 +18,6 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.util.List;
-
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.R;
@@ -37,7 +35,7 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
-public class ConversationActivity extends BaseActivity implements ConversationQueryAdapter.ConversationClickHandler {
+public class SitterConversationActivity extends BaseActivity implements ConversationQueryAdapter.ConversationClickHandler {
     public static final String PARSE_DATA_KEY = "com.parse.Data";
     private TextView mInfo;
     private Button mOk;
@@ -56,24 +54,13 @@ public class ConversationActivity extends BaseActivity implements ConversationQu
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
-        ParseHelper.loadParentsProfileData();
+        setupConversation();
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    @DebugLog
-    public void onEvent(UserInfo parent) {
-        ParseHelper.pinParent(parent);
-        ParseHelper.loadParentFavoriteFromLocal(parent);
-    }
-
-    @DebugLog
-    public void onEvent(List<BabysitterFavorite> favorites) {
-        setupConversation();
     }
 
     private void setupConversation() {
@@ -83,7 +70,7 @@ public class ConversationActivity extends BaseActivity implements ConversationQu
             if (ParseImpl.getRegisteredUser() == null) {
 
                 LogUtils.LOGD("Activity", "User is not authenticated or logged in - returning to login screen");
-                Intent intent = new Intent(ConversationActivity.this, LogInActivity.class);
+                Intent intent = new Intent(SitterConversationActivity.this, LogInActivity.class);
                 startActivity(intent);
 
             } else {
@@ -129,7 +116,7 @@ public class ConversationActivity extends BaseActivity implements ConversationQu
         //If the Conversation is valid, start the MessageActivity and pass in the Conversation ID
         if (conversation != null && conversation.getId() != null && !conversation.isDeleted()
                 && isConfirmBothParentAndSitter(conversation.getId().toString())) {
-            Intent intent = new Intent(ConversationActivity.this, MessageActivity.class);
+            Intent intent = new Intent(SitterConversationActivity.this, MessageActivity.class);
             intent.putExtra("conversation-id", conversation.getId());
 
             String conversationId = conversation.getId().toString();
@@ -183,7 +170,7 @@ public class ConversationActivity extends BaseActivity implements ConversationQu
     public void onConfirmClick(Conversation conversation) {
         //If the Conversation is valid, start the MessageActivity and pass in the Conversation ID
         if (conversation != null && conversation.getId() != null && !conversation.isDeleted()) {
-            Intent intent = new Intent(ConversationActivity.this, MessageActivity.class);
+            Intent intent = new Intent(SitterConversationActivity.this, MessageActivity.class);
             intent.putExtra("conversation-id", conversation.getId());
 
             String conversationId = conversation.getId().toString();

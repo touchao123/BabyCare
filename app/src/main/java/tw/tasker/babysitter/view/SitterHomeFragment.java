@@ -255,7 +255,7 @@ public class SitterHomeFragment extends Fragment implements
             case R.id.action_message:
                 FlurryAgent.logEvent("see sitter message.");
 
-                startActivity(IntentUtil.startConversationActivity());
+                startActivity(IntentUtil.startSitterConversationActivity());
                 break;
 
             case R.id.action_profile:

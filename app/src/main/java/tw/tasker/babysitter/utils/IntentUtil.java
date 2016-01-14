@@ -9,6 +9,7 @@ import tw.tasker.babysitter.view.DispatchActivity;
 import tw.tasker.babysitter.view.HomeActivity;
 import tw.tasker.babysitter.view.ProfileActivity;
 import tw.tasker.babysitter.view.SignUpActivity;
+import tw.tasker.babysitter.view.SitterConversationActivity;
 import tw.tasker.babysitter.view.SitterDetailActivity;
 import tw.tasker.babysitter.view.SitterVerificationActivity;
 
@@ -48,6 +49,16 @@ public class IntentUtil {
         intent.setClassName(PACKAGE_NAME, className);
         return intent;
     }
+
+    public static Intent startSitterConversationActivity() {
+        Class<SitterConversationActivity> clazz = SitterConversationActivity.class;
+        String className = clazz.getName();
+
+        Intent intent = new Intent();
+        intent.setClassName(PACKAGE_NAME, className);
+        return intent;
+    }
+
 
     public static Intent startProfileActivity() {
         Class<ProfileActivity> clazz = ProfileActivity.class;

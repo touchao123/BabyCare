@@ -106,7 +106,12 @@
 
         <activity
             android:name=".view.ConversationActivity"
-            android:label="訊息欄"
+            android:label="保母訊息欄"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".view.SitterConversationActivity"
+            android:label="爸媽來訊息"
             android:launchMode="singleTop" />
 
         <activity
