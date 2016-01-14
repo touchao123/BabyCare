@@ -127,12 +127,12 @@ public class SitterHomeFragment extends Fragment implements
             Button contact = (Button) v;
             contact.setText("已送出媒合邀請");
             contact.setEnabled(false);
-            if (LocalData.getIsDataCheck(getContext())) {
+            //if (LocalData.getIsDataCheck(getContext())) {
                 TalkToParent talkToParent = new TalkToParent();
                 talkToParent.send(mUserInfo);
-            } else {
-                startActivityForResult(IntentUtil.startDataCheckActivity(), HomeActivity.REQUEST_DATA_CHECK);
-            }
+            //} else {
+                // startActivityForResult(IntentUtil.startDataCheckActivity(), HomeActivity.REQUEST_DATA_CHECK);
+            //}
 
         } else {
             mMaterialLoginDialog.show();

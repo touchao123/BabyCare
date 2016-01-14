@@ -3,19 +3,15 @@ package tw.tasker.babysitter.view;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.layer.LayerImpl;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
-import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.ParseHelper;
 
@@ -30,6 +26,8 @@ public class TalkToParent {
         ParseHelper.pushTextToParent(parent, pushMessage);
         newConversationWithParent(parent);
 
+        parent.incrementTotalContact();
+        ParseHelper.pinDataLocal(parent);
     }
 
     @DebugLog
@@ -98,18 +96,8 @@ public class TalkToParent {
         babysitterfavorite.setIsSitterConfirm(true);
         babysitterfavorite.setConversationId(mConversation.getId().toString());
 
-        babysitterfavorite.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException parseException) {
-                if (parseException == null) {
-                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_SEND));
-                } else {
-                    EventBus.getDefault().post(parseException);
-                }
-            }
+        ParseHelper.pinDataLocal(babysitterfavorite);
 
-        });
     }
-
 
 }

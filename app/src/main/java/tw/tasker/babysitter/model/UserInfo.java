@@ -147,4 +147,12 @@ public class UserInfo extends ParseObject {
     public void setParentNote(String value) {
         put("parentNote", value);
     }
+
+    public int getTotalContact() {
+        return getInt("totalContact");
+    }
+
+    public void incrementTotalContact() {
+        increment("totalContact");
+    }
 }

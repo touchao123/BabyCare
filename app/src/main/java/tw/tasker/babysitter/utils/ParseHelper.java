@@ -546,5 +546,34 @@ public class ParseHelper {
     public static List<UploadImage> getUploadImagesFromCache() {
         return mUploadImages;
     }
+
+
+    public static void pinDataLocal(final BabysitterFavorite babysitterfavorite) {
+
+        babysitterfavorite.pinInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+                    saveDataServer(babysitterfavorite);
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+        });
+    }
+
+    private static void saveDataServer(BabysitterFavorite babysitterfavorite) {
+        babysitterfavorite.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException parseException) {
+                if (parseException == null) {
+                    EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_SEND));
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+            }
+
+        });
+    }
 }
 
