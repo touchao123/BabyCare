@@ -60,6 +60,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDNF4K0rL0-JwnmfiIGS0usY4o9f6-l7rg"/>
 
         <!-- replace @drawable/push_icon with your push icon identifier -->
         <meta-data
