@@ -77,6 +77,7 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <!-- Card Head End -->
 
         <ImageView
@@ -167,16 +168,35 @@
             android:src="@drawable/gray_line" />
 
         <!-- Card Foot Start -->
-        <Button
-            android:id="@+id/contact"
-            android:layout_width="150dp"
-            android:layout_height="45dp"
-            android:layout_gravity="right"
-            android:layout_margin="10dp"
-            android:background="@drawable/border_button_selector"
-            android:text="@string/parent_contact"
-            android:textColor="@drawable/border_button_text_selector"
-            android:textSize="16sp" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#55000000"
+                android:padding="10dp"
+                android:text="6 位保母主動聯絡"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/contact"
+                android:layout_width="150dp"
+                android:layout_height="45dp"
+                android:layout_gravity="right"
+                android:background="@drawable/border_button_selector"
+                android:text="@string/parent_contact"
+                android:textColor="@drawable/border_button_text_selector"
+                android:textSize="16sp"
+                android:layout_margin="10dp"/>
+
+        </FrameLayout>
         <!-- Card Foot End -->
 
     </LinearLayout>
