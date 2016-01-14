@@ -30,22 +30,29 @@ class FilterPanelView implements View.OnClickListener {
     private TextView mFilter;
     private ImageView mArrow;
 
+    // babycare type
+    private CheckBox mNormal;
+    private CheckBox mPartTime;
+    private CheckBox mInHouse;
+
+    // babycare time
     private CheckBox mDayTime;
     private CheckBox mNightTime;
     private CheckBox mHalfDay;
     private CheckBox mFullDay;
-    private CheckBox mPartTime;
-    private CheckBox mInHouse;
 
+    // babycare count
     private CheckBox mKids0;
     private CheckBox mKids1;
     private CheckBox mKids2;
     private CheckBox mKids3;
 
+    // kids age
     private CheckBox mOld40;
     private CheckBox mOld40_50;
     private CheckBox mOld50;
 
+    private ArrayList<CheckBox> mTypeCheckBoxs = new ArrayList<CheckBox>();
     private ArrayList<CheckBox> mTimeCheckBoxs = new ArrayList<CheckBox>();
     private ArrayList<CheckBox> mKidsCheckBoxs = new ArrayList<CheckBox>();
     private ArrayList<CheckBox> mAgeCheckBoxs = new ArrayList<CheckBox>();
@@ -68,7 +75,7 @@ class FilterPanelView implements View.OnClickListener {
     }
 
     private void initView() {
-        mFilterPanel = (LinearLayout) mRootView.findViewById(R.id.filter_pannel);
+        mFilterPanel = (LinearLayout) mRootView.findViewById(R.id.filter_panel);
         mFilter = (TextView) mRootView.findViewById(R.id.filter);
 
         mFilterExpand = (LinearLayout) mRootView
@@ -79,14 +86,14 @@ class FilterPanelView implements View.OnClickListener {
         mArrow = (ImageView) mRootView.findViewById(R.id.arrow);
 
         // check box
-        mDayTime = (CheckBox) mRootView.findViewById(R.id.day_time);
-        mNightTime = (CheckBox) mRootView.findViewById(R.id.night_time);
-
-        mHalfDay = (CheckBox) mRootView.findViewById(R.id.half_day);
-        mFullDay = (CheckBox) mRootView.findViewById(R.id.full_day);
-
+        mNormal = (CheckBox) mRootView.findViewById(R.id.normal);
         mPartTime = (CheckBox) mRootView.findViewById(R.id.part_time);
         mInHouse = (CheckBox) mRootView.findViewById(R.id.in_house);
+
+        mDayTime = (CheckBox) mRootView.findViewById(R.id.day_time);
+        mNightTime = (CheckBox) mRootView.findViewById(R.id.night_time);
+        mHalfDay = (CheckBox) mRootView.findViewById(R.id.half_day);
+        mFullDay = (CheckBox) mRootView.findViewById(R.id.full_day);
 
         mKids0 = (CheckBox) mRootView.findViewById(R.id.kids_0);
         mKids1 = (CheckBox) mRootView.findViewById(R.id.kids_1);
@@ -105,12 +112,14 @@ class FilterPanelView implements View.OnClickListener {
     }
 
     private void initCheckboxs() {
+        mTypeCheckBoxs.add(mNormal);
+        mTypeCheckBoxs.add(mPartTime);
+        mTypeCheckBoxs.add(mInHouse);
+
         mTimeCheckBoxs.add(mDayTime);
         mTimeCheckBoxs.add(mNightTime);
         mTimeCheckBoxs.add(mHalfDay);
         mTimeCheckBoxs.add(mFullDay);
-        mTimeCheckBoxs.add(mPartTime);
-        mTimeCheckBoxs.add(mInHouse);
 
         mKidsCheckBoxs.add(mKids0);
         mKidsCheckBoxs.add(mKids1);
@@ -123,6 +132,9 @@ class FilterPanelView implements View.OnClickListener {
     }
 
     private void setCheckBoxsListener() {
+        for (CheckBox item : mTypeCheckBoxs) {
+            item.setOnClickListener(this);
+        }
         for (CheckBox item : mTimeCheckBoxs) {
             item.setOnClickListener(this);
         }
@@ -152,6 +164,18 @@ class FilterPanelView implements View.OnClickListener {
             case R.id.save:
                 saveAllCheckbox();
                 EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_QUERY));
+                EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_FILTERPANEL_SAVE));
+                break;
+
+            // type
+            case R.id.normal:
+                clearTypeCheckboxs(R.id.normal);
+                break;
+            case R.id.in_house:
+                clearTypeCheckboxs(R.id.in_house);
+                break;
+            case R.id.part_time:
+                clearTypeCheckboxs(R.id.part_time);
                 break;
 
             // time
@@ -166,12 +190,6 @@ class FilterPanelView implements View.OnClickListener {
                 break;
             case R.id.full_day:
                 clearTimeCheckboxs(R.id.full_day);
-                break;
-            case R.id.part_time:
-                clearTimeCheckboxs(R.id.part_time);
-                break;
-            case R.id.in_house:
-                clearTimeCheckboxs(R.id.in_house);
                 break;
 
             // kids
@@ -237,13 +255,14 @@ class FilterPanelView implements View.OnClickListener {
     }
 
     private void saveAllCheckbox() {
+        savePreferences("mNormal", mNormal.isChecked());
+        savePreferences("mPartTime", mPartTime.isChecked());
+        savePreferences("mInHouse", mInHouse.isChecked());
 
         savePreferences("mDayTime", mDayTime.isChecked());
         savePreferences("mNightTime", mNightTime.isChecked());
         savePreferences("mHalfDay", mHalfDay.isChecked());
         savePreferences("mFullDay", mFullDay.isChecked());
-        savePreferences("mPartTime", mPartTime.isChecked());
-        savePreferences("mInHouse", mInHouse.isChecked());
 
         savePreferences("mKids0", mKids0.isChecked());
         savePreferences("mKids1", mKids1.isChecked());
@@ -263,6 +282,15 @@ class FilterPanelView implements View.OnClickListener {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
         editor.commit();
+    }
+
+    private void clearTypeCheckboxs(int r) {
+        for (CheckBox item : mTypeCheckBoxs) {
+            if (item.getId() == r) {
+            } else {
+                item.setChecked(false);
+            }
+        }
     }
 
     private void clearTimeCheckboxs(int r) {
@@ -293,12 +321,14 @@ class FilterPanelView implements View.OnClickListener {
     }
 
     private void loadSavedPreferences() {
+        setCheckBox(mNormal, "mNormal");
+        setCheckBox(mPartTime, "mPartTime");
+        setCheckBox(mInHouse, "mInHouse");
+
         setCheckBox(mDayTime, "mDayTime");
         setCheckBox(mNightTime, "mNightTime");
         setCheckBox(mHalfDay, "mHalfDay");
         setCheckBox(mFullDay, "mFullDay");
-        setCheckBox(mPartTime, "mPartTime");
-        setCheckBox(mInHouse, "mInHouse");
 
         setCheckBox(mKids0, "mKids0");
         setCheckBox(mKids1, "mKids1");

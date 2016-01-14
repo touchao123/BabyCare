@@ -346,6 +346,12 @@ public class DisplayUtils {
         return age ;
     }
 
+    public static String getYearBy(int year) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, year);
+        return simpleDateFormat.format(calendar.getTime());
+    }
 
     public static Calendar getCalendarFromString(String twDate) {
         try {

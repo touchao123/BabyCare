@@ -1,12 +1,13 @@
 package tw.tasker.babysitter.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.parse.ParseException;
@@ -50,99 +51,96 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         ParseQueryAdapter.QueryFactory<UserInfo> factory = new ParseQueryAdapter.QueryFactory<UserInfo>() {
             public ParseQuery<UserInfo> create() {
 
-
-//				SharedPreferences sharedPreferences = PreferenceManager
-//						.getDefaultSharedPreferences(context);
+                SharedPreferences sharedPreferences = PreferenceManager
+                        .getDefaultSharedPreferences(context);
 
                 ParseQuery<UserInfo> query = UserInfo.getQuery();
 
                 //query.whereEqualTo("objectId", "HOAbpeWVF3");
-//				boolean mDayTime = sharedPreferences.getBoolean("mDayTime", false);
-//				if (mDayTime) {
-//					query.whereContains("babycareTime", "白天");
-//				}
 
-//				boolean mNightTime = sharedPreferences.getBoolean("mNightTime", false);
-//				if (mNightTime) {
-//					query.whereContains("babycareTime", "夜間");
-//				}
+                // babycare type
+                boolean mNormal = sharedPreferences.getBoolean("mNormal", false);
+                if (mNormal) {
+                    query.whereContains("babycareType", "一般");
+                }
 
-//				boolean mHelfDay = sharedPreferences.getBoolean("mHalfDay", false);
-//				if (mHelfDay) {
-//					query.whereContains("babycareTime", "半天");
-//				}
+                boolean mPartTime = sharedPreferences.getBoolean("mPartTime", false);
+                if (mPartTime) {
+                    query.whereContains("babycareType", "臨時");
+                }
 
-//				boolean mFullDay = sharedPreferences.getBoolean("mFullDay", false);
-//				if (mFullDay) {
-//					query.whereContains("babycareTime", "全天(24小時)");
-//				}
+				boolean mInHouse = sharedPreferences.getBoolean("mInHouse", false);
+				if (mInHouse) {
+					query.whereContains("babycareType", "到府");
+				}
 
-//				boolean mPartTime = sharedPreferences.getBoolean("mPartTime", false);
-//				if (mPartTime) {
-//					query.whereContains("babycareTime", "臨時托育");
-//				}
+                // babycare time
+				boolean mDayTime = sharedPreferences.getBoolean("mDayTime", false);
+				if (mDayTime) {
+					query.whereContains("babycareTime", "日間");
+				}
 
-//				boolean mInHouse = sharedPreferences.getBoolean("mInHouse", false);
-//				if (mInHouse) {
-//					query.whereContains("babycareTime", "到宅服務");
-//				}
+				boolean mNightTime = sharedPreferences.getBoolean("mNightTime", false);
+				if (mNightTime) {
+					query.whereContains("babycareTime", "夜間");
+				}
 
-                // Kids
-//				boolean mKids0 = sharedPreferences.getBoolean("mKids0", false);
-//				if (mKids0) {
-//					query.whereMatches("babycareCount", "^.{0}$");
-//				}
+				boolean mHelfDay = sharedPreferences.getBoolean("mHalfDay", false);
+				if (mHelfDay) {
+					query.whereContains("babycareTime", "半日");
+				}
 
-//				boolean mKids1 = sharedPreferences.getBoolean("mKids1", false);
-//				if (mKids1) {
-//					query.whereMatches("babycareCount", "^.{7}$");
-//				}
+				boolean mFullDay = sharedPreferences.getBoolean("mFullDay", false);
+				if (mFullDay) {
+					query.whereContains("babycareTime", "全日");
+				}
 
-//				boolean mKids2 = sharedPreferences.getBoolean("mKids2", false);
-//				if (mKids2) {
-//					query.whereMatches("babycareCount", "^.{15}$");
-//				}
+                // max baby
+				boolean mKids0 = sharedPreferences.getBoolean("mKids0", false);
+				if (mKids0) {
+					query.whereEqualTo("babycareCount", "1");
+				}
 
-//				boolean mKids3 = sharedPreferences.getBoolean("mKids3", false);
-//				if (mKids3) {
-//					query.whereMatches("babycareCount", "^.{23}$");
-//				}
+				boolean mKids1 = sharedPreferences.getBoolean("mKids1", false);
+				if (mKids1) {
+					query.whereEqualTo("babycareCount", "2");
+				}
 
-//				boolean mOld40 = sharedPreferences.getBoolean("mOld40", false);
-//				if (mOld40) {
-//					query.whereMatches("age", "^[1-3][0-9]");
-//				}
+				boolean mKids2 = sharedPreferences.getBoolean("mKids2", false);
+				if (mKids2) {
+					query.whereEqualTo("babycareCount", "3");
+				}
 
-//				boolean mOld40_50 = sharedPreferences.getBoolean("mOld40_50", false);
-//				if (mOld40_50) {
-//					query.whereMatches("age", "^[4][0-9]");
-//				}
+				boolean mKids3 = sharedPreferences.getBoolean("mKids3", false);
+				if (mKids3) {
+					query.whereEqualTo("babycareCount", "4");
+				}
 
-//				boolean mOld50 = sharedPreferences.getBoolean("mOld50", false);
-//				if (mOld50) {
-//					query.whereMatches("age", "^[5][0-9]");
-//				}
+                // baby age
+				boolean mOld40 = sharedPreferences.getBoolean("mOld40", false);
+				if (mOld40) {
+					query.whereGreaterThan("kidsAge", DisplayUtils.getYearBy(-2));
+				}
 
-//				if (Config.keyWord.equals("")) {
-//					query.whereNear("location", Config.MY_LOCATION);
-//				} else {
-//					String keyword = Config.keyWord;
-//					keyword = keyword.replace("台", "臺");
-//					query.whereContains("address", keyword);
-//					query.orderByAscending("address");
-//				}
+				boolean mOld40_50 = sharedPreferences.getBoolean("mOld40_50", false);
+				if (mOld40_50) {
+					query.whereLessThanOrEqualTo("kidsAge", DisplayUtils.getYearBy(-2));
+                    query.whereGreaterThanOrEqualTo("kidsAge", DisplayUtils.getYearBy(-4));
+				}
 
+				boolean mOld50 = sharedPreferences.getBoolean("mOld50", false);
+				if (mOld50) {
+					query.whereLessThan("kidsAge", DisplayUtils.getYearBy(-4));
+				}
 
-//				if (!Config.keyWord.equals("")) {
-//					finalQuery.whereNear("location", Config.MY_LOCATION);
-//				}
-
-				/*
-                 * if (!DisplayUtils.hasNetwork(context)) { LogUtils.LOGD("vic",
-				 * "babysitters fromLocalDatastore()");
-				 * query.fromLocalDatastore(); }
-				 */
-
+				if (Config.keyWord.equals("")) {
+					query.whereNear("location", Config.MY_LOCATION);
+				} else {
+					String keyword = Config.keyWord;
+					keyword = keyword.replace("台", "臺");
+					query.whereContains("address", keyword);
+					query.orderByAscending("address");
+				}
 
                 return query;
             }
@@ -214,7 +212,8 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
     private void initData(UserInfo parent) {
         String parentBabycareCountTitile = getContext().getString(R.string.parent_babycare_count_ttile);
         String parentBabycareTypeTitle = getContext().getString(R.string.parent_babycare_type_title);
-        String parentBabycarePlanTitile = getContext().getString(R.string.parent_babycare_plan_ttile);;
+        String parentBabycarePlanTitile = getContext().getString(R.string.parent_babycare_plan_ttile);
+        ;
         String parentBabycareWeekTitle = getContext().getString(R.string.parent_babycare_week_title);
         String parentBabycareTimeTitle = getContext().getString(R.string.parent_babycare_time_title);
         String parentBabycareTimeMessageTitle = getContext().getString(R.string.parent_babycare_time_message_title);

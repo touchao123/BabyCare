@@ -663,6 +663,27 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
         userInfo.setBabycarePlan(mParentBabycarePlan.getText().toString());
         userInfo.setBabycareWeek(mParentBabycareWeek.getText().toString());
+        String babycareTime = mParentBabycareTimeMessage.getText().toString();
+        if (babycareTime.contains("日間")) {
+            if (babycareTime.contains("半日")) {
+                babycareTime = "日間半日";
+            } else {
+                babycareTime = "日間";
+            }
+
+        } else if (babycareTime.contains("夜間")) {
+            if (babycareTime.contains("半日")) {
+                babycareTime = "夜間半日";
+            } else {
+                babycareTime = "夜間";
+            }
+
+        } else if (babycareTime.contains("半日")) {
+            babycareTime = "半日";
+        } else if (babycareTime.contains("全日")) {
+            babycareTime = "全日";
+        }
+        userInfo.setBabycareTime(babycareTime);
         userInfo.setBabycareTimeStart(mParentBabycareTimeStart.getText().toString());
         userInfo.setBabycareTimeEnd(mParentBabycareTimeEnd.getText().toString());
         userInfo.setParentNote(mParentNote.getText().toString());

@@ -187,6 +187,7 @@ public class ParseHelper {
     }
 
     public static void pinParent(UserInfo parent) {
+        Config.parentObjectId = parent.getObjectId();
         parent.pinInBackground(new SaveCallback() {
             @Override
             public void done(ParseException parseException) {
@@ -201,18 +202,15 @@ public class ParseHelper {
     }
 
     public static UserInfo getParent() {
-        UserInfo parent = new UserInfo();
-
         ParseQuery<UserInfo> query = UserInfo.getQuery();
         query.fromLocalDatastore();
 
         try {
-            return query.getFirst();
+            return query.get(Config.parentObjectId);
         } catch (ParseException e) {
             e.printStackTrace();
+            return new UserInfo();
         }
-
-        return parent;
     }
 
     public static void loadParentFavoriteFromLocal(final UserInfo parent) {
@@ -490,7 +488,16 @@ public class ParseHelper {
     }
 
     private static void saveDataServer(UserInfo userInfo) {
-        userInfo.saveEventually();
+        userInfo.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException parseException) {
+                if (isSuccess(parseException)) {
+                } else {
+                    EventBus.getDefault().post(parseException);
+                }
+
+            }
+        });
     }
 
     // sitter

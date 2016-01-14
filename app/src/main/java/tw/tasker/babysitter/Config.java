@@ -47,6 +47,7 @@ public class Config {
     public static ParseGeoPoint MY_LOCATION = new ParseGeoPoint(LAT, LNG);
 
     public static String sitterObjectId;
+    public static String parentObjectId;
     public static List<BabysitterFavorite> favorites;
     public static List<String> conversations;
 
