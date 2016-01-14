@@ -18,7 +18,6 @@ import android.widget.ListView;
 import com.flurry.android.FlurryAgent;
 import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
@@ -38,9 +37,7 @@ import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.GetLocation;
 import tw.tasker.babysitter.utils.IntentUtil;
-import tw.tasker.babysitter.utils.MyLocation;
 import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.ProgressBarUtils;
 
@@ -173,28 +170,8 @@ public class ParentHomeFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initLocation();
         ParseHelper.loadParentsProfileData();
-        //ParentData.load();
-    }
-
-    private void initLocation() {
-        // 初始化現在的位置
-        // if (Config.MY_LOCATION == null) {
-        MyLocation myLocation = new MyLocation(getActivity(), new GetLocation() {
-
-            @Override
-            public void done(ParseGeoPoint parseGeoPoint) {
-                Config.MY_LOCATION = parseGeoPoint;
-                UpdateMyLocaton.save();
-                doListQuery();
-                // Config.MY_LOCATION = Config.MY_TEST_LOCATION;
-                // LogUtils.LOGD("vic",
-                // "get my location at ("+parseGeoPoint.getLatitude()+","+parseGeoPoint.getLongitude()+")");
-            }
-
-        });
-        // }
+        doListQuery();
     }
 
     private void doListQuery() {

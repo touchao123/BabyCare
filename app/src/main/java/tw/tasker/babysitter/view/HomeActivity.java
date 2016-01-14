@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.parse.ParseAnalytics;
+import com.parse.ParseGeoPoint;
 
+import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.UserType;
 import tw.tasker.babysitter.utils.AccountChecker;
+import tw.tasker.babysitter.utils.GetLocation;
+import tw.tasker.babysitter.utils.MyLocation;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class HomeActivity extends BaseActivity {
@@ -45,8 +49,19 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //initLocation();
+        initLocation();
     }
+
+    private void initLocation() {
+       new MyLocation(this, new GetLocation() {
+            @Override
+            public void done(ParseGeoPoint parseGeoPoint) {
+                Config.MY_LOCATION = parseGeoPoint;
+            }
+
+        });
+    }
+
 
 
 }
