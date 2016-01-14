@@ -55,7 +55,7 @@ public class SitterHomeFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getActivity().setTitle("爸媽列表");
+        getActivity().setTitle("托育案件");
         mMaterialLoginDialog = DisplayUtils.getMaterialLoignDialog(getContext(), R.string.remind_to_login);
     }
 
