@@ -128,7 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/full_button_selector"
-        android:text="媒合"
+        android:text="我知道了"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 

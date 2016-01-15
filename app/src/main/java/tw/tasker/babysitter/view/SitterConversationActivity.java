@@ -50,13 +50,8 @@ public class SitterConversationActivity extends BaseActivity implements Conversa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupConversation();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     private void setupConversation() {
@@ -184,6 +179,16 @@ public class SitterConversationActivity extends BaseActivity implements Conversa
             Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
             ParseHelper.pinSitterToCache(sitter);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @DebugLog

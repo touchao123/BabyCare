@@ -3,13 +3,12 @@ package tw.tasker.babysitter.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.MenuItem;
 
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.utils.AccountChecker;
 
-public class SitterDetailActivity extends BaseActivity implements OnClickListener {
+public class SitterDetailActivity extends BaseActivity  {
     private FragmentTransaction mFragmentTransaction;
     private Fragment mSitterDetailFragment;
 
@@ -18,6 +17,7 @@ public class SitterDetailActivity extends BaseActivity implements OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mSitterDetailFragment = SitterDetailFragment.newInstance(null);
 
@@ -36,15 +36,15 @@ public class SitterDetailActivity extends BaseActivity implements OnClickListene
         }
     }
 
-
     @Override
-    protected void onResume() {
-        super.onResume();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public void onClick(View v) {
-    }
-
 
 }

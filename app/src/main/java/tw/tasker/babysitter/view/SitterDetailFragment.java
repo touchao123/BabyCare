@@ -122,7 +122,6 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
 
     private void initData() {
         ParseHelper.getUploadImagesFromServer("home", ParseHelper.getSitter().getUser());
-
 //        mSitterName.setText("聯絡電話：");
 //        mAddress.setText("住家地址：");
 //        mSitterBabycareTime.setText("托育時段：");

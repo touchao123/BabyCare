@@ -3,14 +3,13 @@ package tw.tasker.babysitter.view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.MenuItem;
 
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.utils.AccountChecker;
 
-public class ProfileActivity extends BaseActivity implements OnClickListener {
+public class ProfileActivity extends BaseActivity {
     private SignUpListener mListener = new Listener();
     private Fragment mProfileSitterFragment;
     private Fragment mProfileParentFragment;
@@ -23,6 +22,7 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mProfileSitterFragment = SitterProfileFragment.newInstance(mListener);
         mProfileSitterEditFragment = SitterProfileEditFragment.newInstance(mListener);
@@ -43,25 +43,6 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
             mFragmentTransaction.add(R.id.container, fragment).commit();
 
         }
-
-//		mEdit = (Button) findViewById(R.id.edit);
-//		mEdit.setOnClickListener(this);
-
-
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onClick(View v) {
-//		LogUtils.LOGD("vic", "編輯");
-//		Fragment fragment = ProfileParentEditFragment.newInstance();
-//		getSupportFragmentManager().beginTransaction()
-//		.replace(R.id.container, fragment).addToBackStack(null).commit();
     }
 
     private final class Listener implements SignUpListener {
@@ -94,6 +75,17 @@ public class ProfileActivity extends BaseActivity implements OnClickListener {
 
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
