@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.Button;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import com.layer.sdk.messaging.Conversation;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
@@ -31,7 +28,6 @@ import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.parse.ParseImpl;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
@@ -188,64 +184,6 @@ public class SitterConversationActivity extends BaseActivity implements Conversa
             Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
             ParseHelper.pinSitterToCache(sitter);
         }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-
-        inflater.inflate(R.menu.sign_up, menu);
-
-        mItem = menu.findItem(R.id.action_more);
-        mSubMenu = mItem.getSubMenu();
-        mLogoutItem = mSubMenu.findItem(R.id.action_logout);
-        mProfileItem = mSubMenu.findItem(R.id.action_profile);
-
-        if (ParseUser.getCurrentUser() == null) {
-            mLogoutItem.setTitle("登入");
-            mProfileItem.setVisible(false);
-
-        } else {
-            mLogoutItem.setTitle("登出");
-        }
-
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case android.R.id.home:
-                finish();
-                break;
-
-            case R.id.action_profile:
-                startActivity(IntentUtil.startProfileActivity());
-                break;
-
-            case R.id.action_fb:
-                startActivity(IntentUtil.startFacebook());
-                break;
-
-            case R.id.action_gmail:
-                startActivity(IntentUtil.startEmail());
-                break;
-
-            case R.id.action_logout:
-                AccountChecker.logout();
-                startActivity(IntentUtil.startDispatchActivity());
-                break;
-            default:
-                break;
-        }
-
-
-        return super.onOptionsItemSelected(item);
     }
 
     @DebugLog

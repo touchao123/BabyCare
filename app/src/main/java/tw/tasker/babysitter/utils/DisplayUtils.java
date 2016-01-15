@@ -18,6 +18,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -717,9 +719,7 @@ public class DisplayUtils {
     public static Dialog getParentDailog(Activity activity, String conversationId) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_message_parent);
-
-        Button ok = (Button) dialog.findViewById(R.id.ok);
+        dialog.setContentView(R.layout.item_list_parent);
 
         // adjust dialog width
         Point size = new Point();
@@ -733,6 +733,83 @@ public class DisplayUtils {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(lp);
 
+        LinearLayout parentCard = (LinearLayout) dialog.findViewById(R.id.parent_card);
+        CircleImageView parentAvatar = (CircleImageView) dialog.findViewById(R.id.parent_avatar);
+        TextView parentName = (TextView) dialog.findViewById(R.id.parent_name);
+        TextView parentBabyInfo = (TextView) dialog.findViewById(R.id.parent_baby_info);
+        TextView parentAddress = (TextView) dialog.findViewById(R.id.parent_address);
+        TextView parentBabycareCount = (TextView) dialog.findViewById(R.id.parent_babycare_count);
+        TextView parentBabycareType = (TextView) dialog.findViewById(R.id.parent_babycare_type);
+        TextView parentBabycarePlan = (TextView) dialog.findViewById(R.id.parent_babycare_plan);
+        TextView parentBabycareWeek = (TextView) dialog.findViewById(R.id.parent_babycare_week);
+        TextView parentBabycareTime = (TextView) dialog.findViewById(R.id.parent_babycare_time);
+        TextView parentBabycareTimeMessage = (TextView) dialog.findViewById(R.id.parent_babycare_time_message);
+        TextView parentNote = (TextView) dialog.findViewById(R.id.parent_note);
+
+        Button ok = (Button) dialog.findViewById(R.id.contact);
+
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) parentCard.getLayoutParams();
+        params.setMargins(0, 0, 0, 0);
+        parentCard.setLayoutParams(params);
+
+        ok.setText("我知道了");
+
+        UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
+        if (parent != null) {
+            String parentBabycareCountTitile = activity.getString(R.string.parent_babycare_count_ttile);
+            String parentBabycareTypeTitle = activity.getString(R.string.parent_babycare_type_title);
+            String parentBabycarePlanTitile = activity.getString(R.string.parent_babycare_plan_ttile);
+            String parentBabycareWeekTitle = activity.getString(R.string.parent_babycare_week_title);
+            String parentBabycareTimeTitle = activity.getString(R.string.parent_babycare_time_title);
+            String parentBabycareTimeMessageTitle = activity.getString(R.string.parent_babycare_time_message_title);
+            String parentNoteTtile = activity.getString(R.string.parent_note_ttile);
+
+            String url = "";
+            if (parent.getAvatorFile() != null) {
+                url = parent.getAvatorFile().getUrl();
+            }
+            DisplayUtils.loadAvatorWithUrl(parentAvatar, url);
+
+            parentName.setText(parent.getName());
+            float distance = (float) parent.getLocation().distanceInKilometersTo(Config.getMyLocation());
+            parentAddress.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
+
+            Calendar startDate = DisplayUtils.getCalendarFromString(parent.getKidsAge());
+            Calendar endDate = Calendar.getInstance();
+
+            String age = "";
+            if (startDate.before(endDate)) {
+                age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
+            } else {
+                age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+            }
+
+            parentBabyInfo.setText("(" + parent.getKidsGender() + "，" + age + ")");
+
+            parentBabycareCount.setText(parentBabycareCountTitile + parent.getBabycareCount() + " 人");
+            parentBabycareType.setText(parentBabycareTypeTitle + parent.getBabycareType());
+
+
+            startDate = DisplayUtils.getCalendarFromString(parent.getBabycarePlan());
+            endDate = Calendar.getInstance();
+            String plan = "";
+            if (startDate.before(endDate)) {
+                plan = DisplayUtils.getAge(startDate, endDate, DisplayUtils.STARTDAY_BEFORE_CURREENTDAY);
+            } else {
+                plan = DisplayUtils.getAge(endDate, startDate, DisplayUtils.STARTDAY_AFTER_CURRENTDAY);
+            }
+            parentBabycarePlan.setText(parentBabycarePlanTitile + parent.getBabycarePlan() + "，" + plan);
+            parentBabycareWeek.setText(parentBabycareWeekTitle + parent.getBabycareWeek());
+
+            String startTime = parent.getBabycareTimeStart();
+            String endTime = parent.getBabycareTimeEnd();
+            parentBabycareTime.setText(parentBabycareTimeTitle + startTime + "~" + endTime);
+            String timeSection = DisplayUtils.getTimeSection(startTime, endTime).replace("\n", "");
+            parentBabycareTimeMessage.setText(parentBabycareTimeMessageTitle + "(" + timeSection + ")");
+            parentNote.setText(parentNoteTtile + parent.getParentNote());
+        }
+
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -740,30 +817,6 @@ public class DisplayUtils {
             }
         });
 
-        CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.parent_avatar);
-        TextView name = (TextView) dialog.findViewById(R.id.parent_name);
-        TextView address = (TextView) dialog.findViewById(R.id.parent_address);
-        TextView babyAge = (TextView) dialog.findViewById(R.id.parent_baby_age);
-        TextView babyGender = (TextView) dialog.findViewById(R.id.parent_baby_gender);
-
-        UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
-        if (parent != null) {
-            String url = "";
-            if (parent.getAvatorFile() != null) {
-                url = parent.getAvatorFile().getUrl();
-            }
-            DisplayUtils.loadAvatorWithUrl(avatar, url);
-
-            name.setText(parent.getName());
-
-            float distance = (float) parent.getLocation().distanceInKilometersTo(Config.getMyLocation());
-            address.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
-
-            babyAge.setText(parent.getKidsAge());
-            babyGender.setText(parent.getKidsGender());
-        }
-
-        //mSignupDialogLogin.setOnClickListener(this);
 
         return dialog;
     }

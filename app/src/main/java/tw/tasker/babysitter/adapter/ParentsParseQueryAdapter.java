@@ -206,7 +206,6 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         String parentBabycareCountTitile = getContext().getString(R.string.parent_babycare_count_ttile);
         String parentBabycareTypeTitle = getContext().getString(R.string.parent_babycare_type_title);
         String parentBabycarePlanTitile = getContext().getString(R.string.parent_babycare_plan_ttile);
-        ;
         String parentBabycareWeekTitle = getContext().getString(R.string.parent_babycare_week_title);
         String parentBabycareTimeTitle = getContext().getString(R.string.parent_babycare_time_title);
         String parentBabycareTimeMessageTitle = getContext().getString(R.string.parent_babycare_time_message_title);
