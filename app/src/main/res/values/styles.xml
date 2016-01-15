@@ -33,7 +33,7 @@
     <!-- CheckBox -->
     <style name="FullCheckbox" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/full_checkbox</item>
-        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingLeft">5dp</item>
     </style>
 
     <!-- Baby Rating Bar -->

@@ -66,7 +66,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 
                 boolean mPartTime = sharedPreferences.getBoolean("mPartTime", false);
                 if (mPartTime) {
-                    query.whereContains("babycareType", "臨時");
+                    query.whereContains("babycareType", "臨托");
                 }
 
 				boolean mInHouse = sharedPreferences.getBoolean("mInHouse", false);
@@ -247,6 +247,13 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         }
         mParentBabycarePlan.setText(parentBabycarePlanTitile + parent.getBabycarePlan() + "，" + plan);
         mParentBabycareWeek.setText(parentBabycareWeekTitle + parent.getBabycareWeek());
+        if (parent.getBabycareType().equals("臨托")) {
+            mParentBabycareWeek.setVisibility(View.GONE);
+            parentBabycareTimeTitle = "　　 時間：";
+        } else {
+            mParentBabycareWeek.setVisibility(View.VISIBLE);
+            parentBabycareTimeTitle = "　　 每日：";
+        }
 
         String startTime = parent.getBabycareTimeStart();
         String endTime = parent.getBabycareTimeEnd();

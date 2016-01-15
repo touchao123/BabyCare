@@ -52,7 +52,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                android:text="臨時 (需要托育小幫手)" />
+                android:text="臨托 (尋找托育小幫手)" />
 
 
         </LinearLayout>

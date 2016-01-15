@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="tw.tasker.babysitter.view.fragment.ProfileParentFragment"
-    >
+    tools:context="tw.tasker.babysitter.view.fragment.ProfileParentFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,8 +34,7 @@
                 android:layout_marginBottom="32dp"
                 android:layout_marginTop="16dp"
                 android:text="王小華"
-                android:textSize="20sp"
-                />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -214,10 +211,10 @@
                     android:layout_height="40dp"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/full_edittext_selector"
+                    android:gravity="center_vertical"
                     android:hint="@string/hint_parent_address"
                     android:textColorHint="@color/hint"
-                    android:textSize="16sp"
-                    android:gravity="center_vertical"/>
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -517,6 +514,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/parent_babycare_week_panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
@@ -549,6 +547,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/parent_babycare_time_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="　　 每日："
@@ -581,18 +580,15 @@
                     android:gravity="center_vertical"
                     android:text="18:00"
                     android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/parent_babycare_time_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="日間，\n10小時0分鐘"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/parent_babycare_time_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="日間，10小時0分鐘"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/normal_text" />
 
             <LinearLayout
                 android:layout_width="match_parent"

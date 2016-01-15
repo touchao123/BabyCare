@@ -541,7 +541,7 @@ public class DisplayUtils {
             }
         }
 
-        return timeSection + "，\n" +timeHour + "小時" + timeMinute + "分鐘";
+        return "(" + timeSection + "，" +timeHour + "小時" + timeMinute + "分鐘)" ;
     }
 
     public static void showMaxBabiesDialog(Context context, final TextView sitterBabycareCount) {

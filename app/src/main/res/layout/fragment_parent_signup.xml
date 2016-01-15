@@ -392,6 +392,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/parent_babycare_week_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -424,6 +425,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/parent_babycare_time_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="　　 每日："
@@ -457,16 +459,15 @@
                 android:text="18:00"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/parent_babycare_time_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="日間，\n10小時0分鐘"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/normal_text" />
-
-
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/parent_babycare_time_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(日間，10小時0分鐘)"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/normal_text" />
 
 
         <LinearLayout

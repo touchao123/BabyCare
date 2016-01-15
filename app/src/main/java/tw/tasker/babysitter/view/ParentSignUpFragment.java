@@ -13,6 +13,7 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentSignUpFragment extends Fragment
-        implements OnClickListener {
+        implements OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private static final int REQUEST_PLACE_PICKER = 0;
     private EditText mAccount;
@@ -63,7 +64,9 @@ public class ParentSignUpFragment extends Fragment
     private RadioGroup mParentBabycareType;
     private TextView mParentBabycarePlan;
     private TextView mParentBabycarePlanMessage;
+    private LinearLayout mParentBabycareWeekPanel;
     private TextView mParentBabycareWeek;
+    private TextView mParentBabycareTimeTitle;
     private TextView mParentBabycareTimeStart;
     private TextView mParentBabycareTimeEnd;
     private TextView mParentBabycareTimeMessage;
@@ -121,7 +124,11 @@ public class ParentSignUpFragment extends Fragment
         mParentBabycareType = (RadioGroup) mRootView.findViewById(R.id.parent_babycare_type);
         mParentBabycarePlan = (TextView) mRootView.findViewById(R.id.parent_babycare_plan);
         mParentBabycarePlanMessage = (TextView) mRootView.findViewById(R.id.parent_babycare_plan_message);
+
+        mParentBabycareWeekPanel = (LinearLayout) mRootView.findViewById(R.id.parent_babycare_week_panel);
         mParentBabycareWeek = (TextView) mRootView.findViewById(R.id.parent_babycare_week);
+
+        mParentBabycareTimeTitle = (TextView) mRootView.findViewById(R.id.parent_babycare_time_title);
         mParentBabycareTimeStart = (TextView) mRootView.findViewById(R.id.parent_babycare_time_start);
         mParentBabycareTimeEnd = (TextView) mRootView.findViewById(R.id.parent_babycare_time_end);
         mParentBabycareTimeMessage = (TextView) mRootView.findViewById(R.id.parent_babycare_time_message);
@@ -148,6 +155,7 @@ public class ParentSignUpFragment extends Fragment
         mParentBabycareWeek.setOnClickListener(this);
         mParentBabycareCount.setOnClickListener(this);
         mParentAddress.setOnClickListener(this);
+        mParentBabycareType.setOnCheckedChangeListener(this);
     }
 
     private void initData() {
@@ -582,5 +590,20 @@ public class ParentSignUpFragment extends Fragment
     public void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.part_time:
+                mParentBabycareWeekPanel.setVisibility(View.GONE);
+                mParentBabycareTimeTitle.setText("　　 時間：");
+                break;
+
+            default:
+                mParentBabycareWeekPanel.setVisibility(View.VISIBLE);
+                mParentBabycareTimeTitle.setText("　　 每日：");
+                break;
+        }
     }
 }
