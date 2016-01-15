@@ -712,6 +712,7 @@ public class DisplayUtils {
             @Override
             public void onClick(View v) {
                 activity.startActivity(IntentUtil.startSitterDetailActivity());
+                activity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_stop);
             }
         });
 

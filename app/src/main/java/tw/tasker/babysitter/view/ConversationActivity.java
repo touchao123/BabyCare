@@ -136,6 +136,7 @@ public class ConversationActivity extends BaseActivity implements ConversationQu
             pinParentOrSitterToCache(conversationId);
 
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_stop);
         } else if (conversation != null) {
             String conversationId = conversation.getId().toString();
 

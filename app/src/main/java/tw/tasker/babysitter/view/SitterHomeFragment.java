@@ -269,6 +269,7 @@ public class SitterHomeFragment extends Fragment implements
 
             case R.id.action_profile:
                 startActivity(IntentUtil.startProfileActivity());
+                getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_in_stop);
                 break;
 
             case R.id.action_fb:

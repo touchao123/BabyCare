@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -59,6 +60,7 @@ public class MessageActivity extends BaseActivity implements MessageQueryAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mMessagesView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -248,6 +250,18 @@ public class MessageActivity extends BaseActivity implements MessageQueryAdapter
         if (mKeyboardListenersAttached) {
             targetView.getViewTreeObserver().removeGlobalOnLayoutListener(keyboardLayoutListener);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_stop);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
