@@ -128,7 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@drawable/full_button_selector"
-        android:text="修改資訊"
+        android:text="修改檔案"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
 

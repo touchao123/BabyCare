@@ -18,6 +18,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -199,7 +200,18 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
 
         mSitterName.setText(sitter.getName());
 
-        mSitterAge.setText("保母年齡：" + sitter.getAge());
+        Calendar startDate = DisplayUtils.getCalendarFromString(sitter.getAge());
+        Calendar endDate = Calendar.getInstance();
+        String age = "";
+        if (startDate.before(endDate)) {
+            age = age + "歲";
+        } else {
+            age = age + "年後出生";
+        }
+        endDate.add(Calendar.YEAR, -startDate.get(Calendar.YEAR));
+        age = String.valueOf(endDate.get(Calendar.YEAR)) + age;
+
+        mSitterAge.setText("保母年齡：" + age);
         mSitterBabycareCount.setText("托育人數：" + sitter.getBabycareCount());
         mSitterBabycareType.setText("托育類別：" + sitter.getBabycareType());
         mSitterBabycareTime.setText("托育時段：" + sitter.getBabycareTime());

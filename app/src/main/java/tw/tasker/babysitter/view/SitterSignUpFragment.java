@@ -43,6 +43,8 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
     private EditText mSitterAddress;
     private EditText mSitterPhone;
 
+    private TextView mSitterAge;
+    private TextView mSitterAgeMessage;
     private TextView mSitterBabycareCount;
     private TextView mSitterBabycareType;
     private TextView mSitterBabycareTime;
@@ -52,8 +54,6 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
     private ScrollView mAllScreen;
     private View mRootView;
     private MaterialDialog mMaterialDialog;
-    private TextView mSitterAge;
-    private TextView mSitterAgeMessage;
 
     public SitterSignUpFragment() {
     }
@@ -252,14 +252,6 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
         sitterInfo.setName(mSitterName.getText().toString());
         sitterInfo.setAddress(mSitterAddress.getText().toString());
         sitterInfo.setTel(mSitterPhone.getText().toString());
-
-        // babycare info
-//        String baby = "";
-//        int count = Integer.valueOf(mSitterBabycareCount.getText().toString());
-//        for (int i = 0; i <= count; i++ ) {
-//            baby = baby + i + " ";
-//        }
-//        baby = baby.substring(0, baby.length()-1);
         sitterInfo.setAge(mSitterAge.getText().toString());
         sitterInfo.setBabycareCount(mSitterBabycareCount.getText().toString());
         sitterInfo.setBabycareTime(mSitterBabycareTime.getText().toString());

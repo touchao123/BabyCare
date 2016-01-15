@@ -25,13 +25,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -61,15 +68,17 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     private CircleImageView mAvatar;
 
-    private EditText mAccount;
+    private TextView mAccount;
     private EditText mPassword;
     private EditText mPasswordAgain;
     private EditText mEMail;
 
     private EditText mSitterName;
-    private EditText mSitterAddress;
+    private TextView mSitterAddress;
     private EditText mSitterPhone;
 
+    private TextView mSitterAge;
+    private TextView mSitterAgeMessage;
     private TextView mSitterBabycareCount;
     private TextView mSitterBabycareType;
     private TextView mSitterBabycareTime;
@@ -86,6 +95,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private PictureHelper mPictureHelper;
     private ImageView mSitterHome;
     private List<UploadImage> mUploadImages;
+    private ParseGeoPoint mLocation;
 
     public SitterProfileEditFragment() {
         // TODO Auto-generated constructor stub
@@ -117,15 +127,17 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
         mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
         // Set up the signup form.
-        mAccount = (EditText) mRootView.findViewById(R.id.account);
+        mAccount = (TextView) mRootView.findViewById(R.id.account);
         mPassword = (EditText) mRootView.findViewById(R.id.password);
         mPasswordAgain = (EditText) mRootView.findViewById(R.id.password_again);
         mEMail = (EditText) mRootView.findViewById(R.id.email);
 
         mSitterName = (EditText) mRootView.findViewById(R.id.sitter_name);
-        mSitterAddress = (EditText) mRootView.findViewById(R.id.sitter_address);
+        mSitterAddress = (TextView) mRootView.findViewById(R.id.sitter_address);
         mSitterPhone = (EditText) mRootView.findViewById(R.id.sitter_phone);
 
+        mSitterAge = (TextView) mRootView.findViewById(R.id.sitter_age);
+        mSitterAgeMessage = (TextView) mRootView.findViewById(R.id.sitter_age_message);
         mSitterBabycareCount = (TextView) mRootView.findViewById(R.id.sitter_babycare_count);
         mSitterBabycareType = (TextView) mRootView.findViewById(R.id.sitter_babycare_type);
         mSitterBabycareTime = (TextView) mRootView.findViewById(R.id.sitter_babycare_time);
@@ -151,9 +163,11 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
         mAvatar.setOnClickListener(this);
 
+        mSitterAge.setOnClickListener(this);
         mSitterBabycareCount.setOnClickListener(this);
         mSitterBabycareType.setOnClickListener(this);
         mSitterBabycareTime.setOnClickListener(this);
+        mSitterAddress.setOnClickListener(this);
 
         mConfirm.setOnClickListener(this);
 
@@ -178,6 +192,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     private void initData() {
         ParseHelper.getUploadImagesFromServer("home", ParseUser.getCurrentUser());
+        mSitterAge.setText(DisplayUtils.getYearBy(-24));
     }
 
     @DebugLog
@@ -211,6 +226,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
         mSitterName.setText(sitter.getName());
         mSitterAddress.setText(sitter.getAddress());
+        mLocation = sitter.getLocation();
         mSitterPhone.setText(sitter.getTel());
 
         mSitterBabycareCount.setText(sitter.getBabycareCount());
@@ -218,29 +234,6 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         mSitterBabycareTime.setText(sitter.getBabycareTime());
         mSitterNote.setText(sitter.getSitterNote());
 
-
-        //mSitterName.setText(sitter.getName());
-        //mSex.setText(babysitter.getSex());
-        //mAge.setText(babysitter.getAge());
-        //mTel.setText(sitter.getTel());
-        //mAddress.setText(sitter.getAddress());
-
-        //int babyCount = DisplayUtils.getBabyCount(sitter.getBabycareCount());
-        //mBabycareCount.setRating(babyCount);
-
-        //mSkillNumber.setText("保母證號：" + sitter.getSkillNumber());
-        //mEducation.setText(sitter.getEducation());
-        //mCommunityName.setText(sitter.getCommunityName());
-
-        //mBabycareTime.setText(babysitter.getBabycareTime());
-
-        //setBabyCareTime(sitter.getBabycareTime());
-
-        //if (sitter.getAvatarFile() == null) {
-        //    getOldAvatar(sitter);
-        //} else {
-        //    getNewAvatar(sitter);
-        //}
     }
 
     private void getOldAvatar(Babysitter sitter) {
@@ -263,33 +256,6 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     }
 
-//    private void setBabyCareTime(String babycareTime) {
-//        if (babycareTime.indexOf("白天") > -1) {
-//            mDayTime.setChecked(true);
-//        }
-//
-//        if (babycareTime.indexOf("夜間") > -1) {
-//            mNightTime.setChecked(true);
-//        }
-//
-//        if (babycareTime.indexOf("全天") > -1) {
-//            mFullDay.setChecked(true);
-//        }
-//
-//        if (babycareTime.indexOf("半天") > -1) {
-//            mHalfDay.setChecked(true);
-//        }
-//
-//        if (babycareTime.indexOf("臨時托育(平日)") > -1 || babycareTime.indexOf("臨時托育(假日)") > -1) {
-//            mPartTime.setChecked(true);
-//        }
-//
-//        if (babycareTime.indexOf("到宅服務") > -1) {
-//            mInHouse.setChecked(true);
-//        }
-//
-//    }
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -304,6 +270,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 break;
 
             case R.id.confirm:
+                saveUserAccount();
                 saveSitterInfo(ParseHelper.getSitter());
                 break;
 
@@ -319,11 +286,97 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 DisplayUtils.showBabycareTimeDialog(getContext(), mSitterBabycareTime);
                 break;
 
+            case R.id.sitter_age:
+                showDateDailog(id);
+                break;
+
+            case R.id.sitter_address:
+                showPlacePicker();
+                break;
+
             default:
                 break;
         }
-
     }
+
+    private void saveUserAccount() {
+        ParseUser.getCurrentUser().setEmail(mEMail.getText().toString());
+        ParseUser.getCurrentUser().saveInBackground();
+    }
+
+    private void showDateDailog(final int id) {
+        Calendar now = Calendar.getInstance();
+
+        String selectDate = DisplayUtils.showCurrentDate();
+        switch (id) {
+            case R.id.sitter_age:
+                selectDate = mSitterAge.getText().toString();
+                break;
+        }
+
+        now.setTime(DisplayUtils.getDateFromString(selectDate));
+
+        DatePickerDialog dpd = DatePickerDialog.newInstance(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                        showPickerDate(id, year, monthOfYear, dayOfMonth);
+                    }
+                },
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+        dpd.dismissOnPause(true);
+        dpd.showYearPickerFirst(true);
+        dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+    }
+
+    private void showPickerDate(int id, int year, int monthOfYear, int dayOfMonth) {
+        String date = year + "/" + (++monthOfYear) + "/" + dayOfMonth;
+
+        switch (id) {
+            case R.id.sitter_age: {
+                mSitterAge.setText(date);
+
+                Calendar startDate = DisplayUtils.getCalendarFromString(date);
+                Calendar endDate = Calendar.getInstance();
+                String age = "";
+                if (startDate.before(endDate)) {
+                    age = age + "歲";
+                } else {
+                    age = age + "年後出生";
+                }
+                endDate.add(Calendar.YEAR, -year);
+                age = String.valueOf(endDate.get(Calendar.YEAR)) + age;
+
+                mSitterAgeMessage.setText(age);
+                break;
+            }
+
+        }
+    }
+
+    private void showPlacePicker() {
+        // Construct an intent for the place picker
+        try {
+            PlacePicker.IntentBuilder intentBuilder =
+                    new PlacePicker.IntentBuilder();
+            Intent intent = intentBuilder.build(getActivity());
+            DisplayUtils.makeToast(getContext(), "選擇地點開啟中...");
+            // Start the intent by requesting a result,
+            // identified by a request code.
+            startActivityForResult(intent, Config.REQUEST_PLACE_PICKER);
+
+        } catch (GooglePlayServicesRepairableException e) {
+            // ...
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // ...
+            e.printStackTrace();
+        }
+    }
+
 
     private void saveAvatar() {
         mPictureHelper = new PictureHelper();
@@ -384,6 +437,19 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
                 }
                 //getFromGallery(data);
                 break;
+
+            case Config.REQUEST_PLACE_PICKER: {
+                // The user has selected a place. Extract the name and address.
+                final Place place = PlacePicker.getPlace(data, getActivity());
+
+                final CharSequence address = place.getAddress();
+
+                mSitterAddress.setText(address);
+                mLocation = new ParseGeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
+
+                break;
+            }
+
             default:
                 break;
         }
@@ -460,50 +526,15 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         // sitter info
         sitterInfo.setName(mSitterName.getText().toString());
         sitterInfo.setAddress(mSitterAddress.getText().toString());
+        sitterInfo.setLocation(mLocation);
         sitterInfo.setTel(mSitterPhone.getText().toString());
-
-        // babycare info
-//        String baby = "";
-//        int count = Integer.valueOf(mSitterBabycareCount.getText().toString());
-//        for (int i = 0; i <= count; i++ ) {
-//            baby = baby + i + " ";
-//        }
-//        baby = baby.substring(0, baby.length()-1);
+        sitterInfo.setAge(mSitterAge.getText().toString());
         sitterInfo.setBabycareCount(mSitterBabycareCount.getText().toString());
         sitterInfo.setBabycareTime(mSitterBabycareTime.getText().toString());
         sitterInfo.setBabycareType(mSitterBabycareType.getText().toString());
         sitterInfo.setSitterNote(mSitterNote.getText().toString());
 
         ParseHelper.pinDataLocal(sitterInfo);
-
-
-//        String phone = mTel.getText().toString();
-//        String address = mAddress.getText().toString();
-//
-//        String education = mEducation.getText().toString();
-//        String communityName = mCommunityName.getText().toString();
-//
-//        String babycareTime = getBabycareTimeInfo();
-//
-//        tmpSiterInfo.setTel(phone);
-//        tmpSiterInfo.setAddress(address);
-//        tmpSiterInfo.setEducation(education);
-//        tmpSiterInfo.setCommunityName(communityName);
-//        tmpSiterInfo.setBabycareTime(babycareTime);
-//
-//        tmpSiterInfo.saveInBackground(new SaveCallback() {
-//
-//            @Override
-//            public void done(ParseException e) {
-//                if (e == null) {
-//                    Toast.makeText(getActivity(),
-//                            "我的資料更新成功!" /* e.getMessage() */, Toast.LENGTH_LONG)
-//                            .show();
-//                    mListner.onSwitchToNextFragment(Config.SITTER_READ_PAGE);
-//                }
-//            }
-//        });
-
     }
 
     public class BabyRecordSaveCallback implements SaveCallback {

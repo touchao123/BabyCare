@@ -1,70 +1,176 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/all_screen"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="tw.tasker.babysitter.view.fragment.ProfileParentFragment">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/all_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/gray_light"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/avatar"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginTop="32dp"
-                android:src="@drawable/photo_icon" />
-
-            <TextView
-                android:id="@+id/account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:layout_marginTop="16dp"
-                android:text="王小華"
-                android:textSize="20sp" />
-        </LinearLayout>
+        android:layout_marginBottom="50dp"
+        android:background="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:gravity="center_horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="註冊資訊"
-                android:textColor="@color/primary"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/gray_line" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/gray_light"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="32dp"
+                    android:src="@drawable/photo_icon" />
+
+                <TextView
+                    android:id="@+id/account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginTop="16dp"
+                    android:text="王小華"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="註冊資訊"
+                    android:textColor="@color/primary"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/gray_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="　　 密碼："
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/normal_text" />
+
+                        <EditText
+                            android:id="@+id/password"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/full_edittext_selector"
+                            android:hint="@string/hint_password"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColorHint="@color/hint"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="　　　　　 "
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                        <EditText
+                            android:id="@+id/password_again"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/full_edittext_selector"
+                            android:hint="@string/hint_password_again"
+                            android:imeActionId="@+id/login"
+                            android:imeActionLabel="@string/action_sign_in_short"
+                            android:imeOptions="actionUnspecified"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColorHint="@color/hint"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="　  E-Mail："
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/normal_text" />
+
+                        <EditText
+                            android:id="@+id/email"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/full_edittext_selector"
+                            android:hint="@string/hint_email"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColorHint="@color/hint"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="聯絡資訊"
+                    android:textColor="@color/primary"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/gray_line" />
+
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,18 +180,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="　　 密碼："
+                        android:text=" 家長名稱："
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/normal_text" />
 
                     <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
+                        android:id="@+id/parent_name"
+                        android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_marginRight="5dp"
                         android:background="@drawable/full_edittext_selector"
-                        android:hint="@string/hint_password"
-                        android:inputType="textPassword"
+                        android:hint="@string/hint_parent_name"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColorHint="@color/hint"
@@ -101,22 +206,18 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="　　　　　 "
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:text=" 住家附近："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
 
-                    <EditText
-                        android:id="@+id/password_again"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/parent_address"
+                        android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_marginRight="5dp"
                         android:background="@drawable/full_edittext_selector"
-                        android:hint="@string/hint_password_again"
-                        android:imeActionId="@+id/login"
-                        android:imeActionLabel="@string/action_sign_in_short"
-                        android:imeOptions="actionUnspecified"
-                        android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:singleLine="true"
+                        android:gravity="center_vertical"
+                        android:hint="@string/hint_parent_address"
                         android:textColorHint="@color/hint"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -130,506 +231,410 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="　  E-Mail："
+                        android:text=" 聯絡電話："
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="@color/normal_text" />
 
                     <EditText
-                        android:id="@+id/email"
-                        android:layout_width="match_parent"
+                        android:id="@+id/parent_phone"
+                        android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_marginRight="5dp"
                         android:background="@drawable/full_edittext_selector"
-                        android:hint="@string/hint_email"
-                        android:inputType="textEmailAddress"
+                        android:hint="@string/hint_parent_phone"
+                        android:inputType="phone"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColorHint="@color/hint"
                         android:textSize="16sp" />
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="聯絡資訊"
-                android:textColor="@color/primary"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/gray_line" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:orientation="horizontal">
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" 家長名稱："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <EditText
-                    android:id="@+id/parent_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:hint="@string/hint_parent_name"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColorHint="@color/hint"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 住家附近："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <TextView
-                    android:id="@+id/parent_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="center_vertical"
-                    android:hint="@string/hint_parent_address"
-                    android:textColorHint="@color/hint"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 聯絡電話："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <EditText
-                    android:id="@+id/parent_phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:hint="@string/hint_parent_phone"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColorHint="@color/hint"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="寶寶資訊"
-                android:textColor="@color/primary"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/gray_line" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="生日/預產："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <TextView
-                    android:id="@+id/parent_kids_age"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="center_vertical"
-                    android:text="2015/01/01"
+                    android:layout_gravity="left"
+                    android:text="寶寶資訊"
+                    android:textColor="@color/primary"
                     android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/parent_kids_age_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="今天"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <!--
-                     <EditText
-                    android:id="@+id/kids_age_year"
-                    android:layout_width="80dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:maxLength="4" />
-                -->
-
-                <!--<Spinner-->
-                <!--android:id="@+id/kids_age_year"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="40dp" />-->
-
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="年"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
-
-                <!--
-                     <EditText
-                    android:id="@+id/kids_age_month"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:maxLines="1"
-                    android:maxLength="2"
-                    android:singleLine="true" />
-                -->
-
-                <!--<Spinner-->
-                <!--android:id="@+id/kids_age_month"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="40dp" />-->
-
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="月"-->
-                <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 寶寶性別："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <RadioGroup
-                    android:id="@+id/kids_gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/kids_gender_unknow"
-                        style="@style/FullCheckbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="未知" />
-
-                    <RadioButton
-                        android:id="@+id/kids_gender_boy"
-                        style="@style/FullCheckbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="男寶" />
-
-                    <RadioButton
-                        android:id="@+id/kids_gender_girl"
-                        style="@style/FullCheckbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="女寶" />
-
-                </RadioGroup>
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="托育資訊"
-                android:textColor="@color/primary"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="2dp"
-                android:src="@drawable/gray_line" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="  保母1對："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <TextView
-                    android:id="@+id/parent_babycare_count"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="center_vertical"
-                    android:text="1"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hint_parent_babycare_count"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 托育類別："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <RadioGroup
-                    android:id="@+id/parent_babycare_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/normal"
-                        style="@style/FullCheckbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="一般" />
-
-                    <RadioButton
-                        android:id="@+id/in_house"
-                        style="@style/FullCheckbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="到府" />
-
-                    <RadioButton
-                        android:id="@+id/part_time"
-                        style="@style/FullCheckbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="臨托" />
-                </RadioGroup>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=" 開始日期："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <TextView
-                    android:id="@+id/parent_babycare_plan"
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="center_vertical"
-                    android:text="2015/01/01"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/parent_babycare_plan_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="今天"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/parent_babycare_week_panel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="　　 每週："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <TextView
-                    android:id="@+id/parent_babycare_week"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="center_vertical"
-                    android:text="一，二，三，四，五"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/parent_babycare_time_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="　　 每日："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <TextView
-                    android:id="@+id/parent_babycare_time_start"
-                    android:layout_width="60dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="center_vertical"
-                    android:text="08:00"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="~"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@color/normal_text" />
-
-                <TextView
-                    android:id="@+id/parent_babycare_time_end"
-                    android:layout_width="60dp"
-                    android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="center_vertical"
-                    android:text="18:00"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/parent_babycare_time_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="日間，10小時0分鐘"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/normal_text" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="需求說明："
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/normal_text" />
-
-                <EditText
-                    android:id="@+id/parent_note"
+                <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/full_edittext_selector"
-                    android:gravity="top"
-                    android:hint="@string/hint_parent_note"
-                    android:textColorHint="@color/hint"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/gray_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="生日/預產："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <TextView
+                        android:id="@+id/parent_kids_age"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:gravity="center_vertical"
+                        android:text="2015/01/01"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/parent_kids_age_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="今天"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <!--
+                         <EditText
+                        android:id="@+id/kids_age_year"
+                        android:layout_width="80dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:maxLength="4" />
+                    -->
+
+                    <!--<Spinner-->
+                    <!--android:id="@+id/kids_age_year"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="40dp" />-->
+
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="年"-->
+                    <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
+
+                    <!--
+                         <EditText
+                        android:id="@+id/kids_age_month"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:maxLines="1"
+                        android:maxLength="2"
+                        android:singleLine="true" />
+                    -->
+
+                    <!--<Spinner-->
+                    <!--android:id="@+id/kids_age_month"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="40dp" />-->
+
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="月"-->
+                    <!--android:textAppearance="?android:attr/textAppearanceSmall" />-->
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" 寶寶性別："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <RadioGroup
+                        android:id="@+id/kids_gender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/kids_gender_unknow"
+                            style="@style/FullCheckbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="未知" />
+
+                        <RadioButton
+                            android:id="@+id/kids_gender_boy"
+                            style="@style/FullCheckbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:text="男寶" />
+
+                        <RadioButton
+                            android:id="@+id/kids_gender_girl"
+                            style="@style/FullCheckbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:text="女寶" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:text="托育資訊"
+                    android:textColor="@color/primary"
                     android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/gray_line" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="  保母1對："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <TextView
+                        android:id="@+id/parent_babycare_count"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:gravity="center_vertical"
+                        android:text="1"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hint_parent_babycare_count"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" 托育類別："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <RadioGroup
+                        android:id="@+id/parent_babycare_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/normal"
+                            style="@style/FullCheckbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            android:text="一般" />
+
+                        <RadioButton
+                            android:id="@+id/in_house"
+                            style="@style/FullCheckbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:text="到府" />
+
+                        <RadioButton
+                            android:id="@+id/part_time"
+                            style="@style/FullCheckbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:text="臨托" />
+                    </RadioGroup>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" 開始日期："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <TextView
+                        android:id="@+id/parent_babycare_plan"
+                        android:layout_width="120dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:gravity="center_vertical"
+                        android:text="2015/01/01"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/parent_babycare_plan_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="今天"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/parent_babycare_week_panel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="　　 每週："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <TextView
+                        android:id="@+id/parent_babycare_week"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:gravity="center_vertical"
+                        android:text="一，二，三，四，五"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/parent_babycare_time_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="　　 每日："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <TextView
+                        android:id="@+id/parent_babycare_time_start"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:gravity="center_vertical"
+                        android:text="08:00"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="~"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textColor="@color/normal_text" />
+
+                    <TextView
+                        android:id="@+id/parent_babycare_time_end"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:gravity="center_vertical"
+                        android:text="18:00"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/parent_babycare_time_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="日間，10小時0分鐘"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/normal_text" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="需求說明："
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/normal_text" />
+
+                    <EditText
+                        android:id="@+id/parent_note"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@drawable/full_edittext_selector"
+                        android:gravity="top"
+                        android:hint="@string/hint_parent_note"
+                        android:textColorHint="@color/hint"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <Button
-                android:id="@+id/confirm"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginBottom="30dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/full_button_selector"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:text="確認修改"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
-</ScrollView>
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/full_button_selector"
+        android:text="確認修改"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+</FrameLayout>

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +29,6 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
@@ -225,11 +223,11 @@ public class ParentSignUpFragment extends Fragment
                 break;
 
             case R.id.parent_babycare_week:
-                showWeekDialog();
+                DisplayUtils.showWeekDialog(getContext(), mParentBabycareWeek);
                 break;
 
             case R.id.parent_babycare_count:
-                showMaxBabiesDialog();
+                DisplayUtils.showMaxBabiesDialog(getContext(), mParentBabycareCount);
                 break;
 
             case R.id.parent_address:
@@ -276,82 +274,6 @@ public class ParentSignUpFragment extends Fragment
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    private void showMaxBabiesDialog() {
-
-        int count = Integer.parseInt(mParentBabycareCount.getText().toString()) - 1;
-
-        new MaterialDialog.Builder(getContext())
-                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
-                .title("希望保母最多照顧幾個寶寶？")
-                .items(R.array.babies)
-                .itemsCallbackSingleChoice(count, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        String maxBabies = text.toString();
-                        maxBabies = maxBabies.replace("人", "");
-                        mParentBabycareCount.setText(maxBabies);
-                        return true;
-                    }
-                })
-                .positiveText(R.string.dialog_agree)
-                .negativeText(R.string.dialog_cancel)
-                .show();
-    }
-
-    private void showWeekDialog() {
-        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
-
-        String parentBabycareWeek = mParentBabycareWeek.getText().toString();
-
-        if (parentBabycareWeek.contains("一")) {
-            dayOfWeeks.add(0);
-        }
-        if (parentBabycareWeek.contains("二")) {
-            dayOfWeeks.add(1);
-        }
-        if (parentBabycareWeek.contains("三")) {
-            dayOfWeeks.add(2);
-        }
-        if (parentBabycareWeek.contains("四")) {
-            dayOfWeeks.add(3);
-        }
-        if (parentBabycareWeek.contains("五")) {
-            dayOfWeeks.add(4);
-        }
-        if (parentBabycareWeek.contains("六")) {
-            dayOfWeeks.add(5);
-        }
-        if (parentBabycareWeek.contains("日")) {
-            dayOfWeeks.add(6);
-        }
-
-        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
-        selectedItems = dayOfWeeks.toArray(selectedItems);
-
-        new MaterialDialog.Builder(getContext())
-                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
-                .title("請選擇每星期幾托育？")
-                .items(R.array.week)
-                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
-
-                        String dayOfWeek = "";
-                        for (CharSequence item : items) {
-                            dayOfWeek = dayOfWeek + item + "，";
-                        }
-                        dayOfWeek = dayOfWeek.substring(0, dayOfWeek.length() - 1);
-                        dayOfWeek = dayOfWeek.replace("星期", "");
-                        mParentBabycareWeek.setText(dayOfWeek);
-
-                        return true;
-                    }
-                })
-                .positiveText(R.string.dialog_agree)
-                .negativeText(R.string.dialog_cancel)
-                .show();
     }
 
     private void showDateDailog(final int id) {

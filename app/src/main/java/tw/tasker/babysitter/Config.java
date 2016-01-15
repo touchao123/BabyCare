@@ -42,6 +42,9 @@ public class Config {
     public static final int PARENT_EDIT_PAGE = 1;
     public static final int SITTER_READ_PAGE = 2;
     public static final int SITTER_EDIT_PAGE = 3;
+
+    public static final int REQUEST_PLACE_PICKER = 2;
+
     public static String keyWord = "";
     //public static Sitter tmpSiterInfo;
     // if we can't get the user location.

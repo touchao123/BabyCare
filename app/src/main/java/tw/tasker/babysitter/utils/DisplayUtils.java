@@ -566,18 +566,18 @@ public class DisplayUtils {
                 .show();
     }
 
-    public static void showBabycareTypeDialog(Context context, final TextView sitterBabycareType) {
+    public static void showBabycareTypeDialog(final Context context, final TextView babycareTypeTextView) {
         ArrayList<Integer> dayOfWeeks = new ArrayList<>();
 
-        String parentBabycareWeek = sitterBabycareType.getText().toString();
+        final String babycareTypeOld = babycareTypeTextView.getText().toString();
 
-        if (parentBabycareWeek.contains("一般")) {
+        if (babycareTypeOld.contains("一般")) {
             dayOfWeeks.add(0);
         }
-        if (parentBabycareWeek.contains("到府")) {
+        if (babycareTypeOld.contains("到府")) {
             dayOfWeeks.add(1);
         }
-        if (parentBabycareWeek.contains("臨托")) {
+        if (babycareTypeOld.contains("臨托")) {
             dayOfWeeks.add(2);
         }
 
@@ -592,12 +592,18 @@ public class DisplayUtils {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
 
-                        String babycareType = "";
+                        String babycareTypeNew = "";
                         for (CharSequence item : items) {
-                            babycareType = babycareType + item + "，";
+                            babycareTypeNew = babycareTypeNew + item + "，";
                         }
-                        babycareType = babycareType.substring(0, babycareType.length() - 1);
-                        sitterBabycareType.setText(babycareType);
+
+                        if (babycareTypeNew.isEmpty()) {
+                            babycareTypeTextView.setText(babycareTypeOld);
+                            DisplayUtils.makeToast(context, "至少需勾選一個項目!");
+                        } else {
+                            babycareTypeNew = babycareTypeNew.substring(0, babycareTypeNew.length() - 1);
+                            babycareTypeTextView.setText(babycareTypeNew);
+                        }
 
                         return true;
                     }
@@ -607,21 +613,21 @@ public class DisplayUtils {
                 .show();
     }
 
-    public static void showBabycareTimeDialog(Context context, final TextView mSitterBabycareTime) {
+    public static void showBabycareTimeDialog(final Context context, final TextView babycareTimeTextView) {
         ArrayList<Integer> dayOfWeeks = new ArrayList<>();
 
-        String parentBabycareWeek = mSitterBabycareTime.getText().toString();
+        final String babycareTimeOld = babycareTimeTextView.getText().toString();
 
-        if (parentBabycareWeek.contains("日間")) {
+        if (babycareTimeOld.contains("日間")) {
             dayOfWeeks.add(0);
         }
-        if (parentBabycareWeek.contains("夜間")) {
+        if (babycareTimeOld.contains("夜間")) {
             dayOfWeeks.add(1);
         }
-        if (parentBabycareWeek.contains("半日")) {
+        if (babycareTimeOld.contains("半日")) {
             dayOfWeeks.add(2);
         }
-        if (parentBabycareWeek.contains("全日")) {
+        if (babycareTimeOld.contains("全日")) {
             dayOfWeeks.add(3);
         }
 
@@ -636,12 +642,77 @@ public class DisplayUtils {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
 
-                        String babycareTime = "";
+                        String babycareTimeNew = "";
                         for (CharSequence item : items) {
-                            babycareTime = babycareTime + item + "，";
+                            babycareTimeNew = babycareTimeNew + item + "，";
                         }
-                        babycareTime = babycareTime.substring(0, babycareTime.length() - 1);
-                        mSitterBabycareTime.setText(babycareTime);
+
+                        if (babycareTimeNew.isEmpty()) {
+                            babycareTimeTextView.setText(babycareTimeOld);
+                            DisplayUtils.makeToast(context, "至少需勾選一個項目!");
+                        } else {
+                            babycareTimeNew = babycareTimeNew.substring(0, babycareTimeNew.length() - 1);
+                            babycareTimeTextView.setText(babycareTimeNew);
+                        }
+                        return true;
+                    }
+                })
+                .positiveText(R.string.dialog_agree)
+                .negativeText(R.string.dialog_cancel)
+                .show();
+    }
+
+    public static void showWeekDialog(final Context context, final TextView babycareWeekTextView) {
+        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
+
+        final String babycareWeekOld = babycareWeekTextView.getText().toString();
+
+        if (babycareWeekOld.contains("一")) {
+            dayOfWeeks.add(0);
+        }
+        if (babycareWeekOld.contains("二")) {
+            dayOfWeeks.add(1);
+        }
+        if (babycareWeekOld.contains("三")) {
+            dayOfWeeks.add(2);
+        }
+        if (babycareWeekOld.contains("四")) {
+            dayOfWeeks.add(3);
+        }
+        if (babycareWeekOld.contains("五")) {
+            dayOfWeeks.add(4);
+        }
+        if (babycareWeekOld.contains("六")) {
+            dayOfWeeks.add(5);
+        }
+        if (babycareWeekOld.contains("日")) {
+            dayOfWeeks.add(6);
+        }
+
+        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
+        selectedItems = dayOfWeeks.toArray(selectedItems);
+
+        new MaterialDialog.Builder(context)
+                .icon(ContextCompat.getDrawable(context, R.drawable.ic_launcher))
+                .title("請選擇每星期幾托育？")
+                .items(R.array.week)
+                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
+
+                        String babycareWeekNew = "";
+                        for (CharSequence item : items) {
+                            babycareWeekNew = babycareWeekNew + item + "，";
+                        }
+
+                        if (babycareWeekNew.isEmpty()) {
+                            babycareWeekTextView.setText(babycareWeekOld);
+                            DisplayUtils.makeToast(context, "至少需勾選一個項目!");
+                        } else {
+                            babycareWeekNew = babycareWeekNew.substring(0, babycareWeekNew.length() - 1);
+                            babycareWeekNew = babycareWeekNew.replace("星期", "");
+                            babycareWeekTextView.setText(babycareWeekNew);
+                        }
 
                         return true;
                     }
@@ -650,6 +721,7 @@ public class DisplayUtils {
                 .negativeText(R.string.dialog_cancel)
                 .show();
     }
+
 
     public static Dialog getSitterDailog(final Activity activity, String conversationId) {
 

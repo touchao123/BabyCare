@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,7 +22,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
@@ -37,12 +35,12 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
+import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
@@ -52,7 +50,6 @@ import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentProfileEditFragment extends Fragment implements OnClickListener, RadioGroup.OnCheckedChangeListener {
 
-    private static final int REQUEST_PLACE_PICKER = 2;
     private static SignUpListener mListener;
 
     private CircleImageView mParentAvatar;
@@ -213,6 +210,7 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
         mParentName.setText(parent.getName());
         mParentAddress.setText(parent.getAddress());
+        mLocation = parent.getLocation();
         mParentPhone.setText(parent.getPhone());
 
         mParentKidsAge.setText(parent.getKidsAge());
@@ -277,7 +275,6 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
                 break;
 
             case R.id.confirm:
-                //mMaterialDialog.show();
                 saveUserAccount();
                 saveUserInfo(ParseHelper.getParent());
                 break;
@@ -299,11 +296,11 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
                 break;
 
             case R.id.parent_babycare_week:
-                showWeekDialog();
+                DisplayUtils.showWeekDialog(getContext(), mParentBabycareWeek);
                 break;
 
             case R.id.parent_babycare_count:
-                showMaxBabiesDialog();
+                DisplayUtils.showMaxBabiesDialog(getContext(), mParentBabycareCount);
                 break;
 
             case R.id.parent_address:
@@ -316,6 +313,11 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
     }
 
+    private void saveUserAccount() {
+        ParseUser.getCurrentUser().setEmail(mEMail.getText().toString());
+        ParseUser.getCurrentUser().saveInBackground();
+    }
+
     private void showPlacePicker() {
         // Construct an intent for the place picker
         try {
@@ -325,7 +327,7 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
             DisplayUtils.makeToast(getContext(), "選擇地點開啟中...");
             // Start the intent by requesting a result,
             // identified by a request code.
-            startActivityForResult(intent, REQUEST_PLACE_PICKER);
+            startActivityForResult(intent, Config.REQUEST_PLACE_PICKER);
 
         } catch (GooglePlayServicesRepairableException e) {
             // ...
@@ -456,86 +458,6 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
         mParentBabycareTimeMessage.setText(timeSection);
     }
 
-    private void showMaxBabiesDialog() {
-
-        int count = Integer.parseInt(mParentBabycareCount.getText().toString()) - 1;
-
-        new MaterialDialog.Builder(getContext())
-                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
-                .title("希望保母最多照顧幾個寶寶？")
-                .items(R.array.babies)
-                .itemsCallbackSingleChoice(count, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        String maxBabies = text.toString();
-                        maxBabies = maxBabies.replace("人", "");
-                        mParentBabycareCount.setText(maxBabies);
-                        return true;
-                    }
-                })
-                .positiveText(R.string.dialog_agree)
-                .negativeText(R.string.dialog_cancel)
-                .show();
-    }
-
-    private void showWeekDialog() {
-        ArrayList<Integer> dayOfWeeks = new ArrayList<>();
-
-        String parentBabycareWeek = mParentBabycareWeek.getText().toString();
-
-        if (parentBabycareWeek.contains("一")) {
-            dayOfWeeks.add(0);
-        }
-        if (parentBabycareWeek.contains("二")) {
-            dayOfWeeks.add(1);
-        }
-        if (parentBabycareWeek.contains("三")) {
-            dayOfWeeks.add(2);
-        }
-        if (parentBabycareWeek.contains("四")) {
-            dayOfWeeks.add(3);
-        }
-        if (parentBabycareWeek.contains("五")) {
-            dayOfWeeks.add(4);
-        }
-        if (parentBabycareWeek.contains("六")) {
-            dayOfWeeks.add(5);
-        }
-        if (parentBabycareWeek.contains("日")) {
-            dayOfWeeks.add(6);
-        }
-
-        Integer[] selectedItems = new Integer[dayOfWeeks.size()];
-        selectedItems = dayOfWeeks.toArray(selectedItems);
-
-        new MaterialDialog.Builder(getContext())
-                .icon(ContextCompat.getDrawable(getContext(), R.drawable.ic_launcher))
-                .title("請選擇每星期幾托育？")
-                .items(R.array.week)
-                .itemsCallbackMultiChoice(selectedItems, new MaterialDialog.ListCallbackMultiChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] items) {
-
-                        String dayOfWeek = "";
-                        for (CharSequence item : items) {
-                            dayOfWeek = dayOfWeek + item + "，";
-                        }
-                        dayOfWeek = dayOfWeek.substring(0, dayOfWeek.length()-1);
-                        dayOfWeek = dayOfWeek.replace("星期", "");
-                        mParentBabycareWeek.setText(dayOfWeek);
-
-                        return true;
-                    }
-                })
-                .positiveText(R.string.dialog_agree)
-                .negativeText(R.string.dialog_cancel)
-                .show();
-    }
-
-    private void saveUserAccount() {
-        ParseUser.getCurrentUser().setEmail(mEMail.getText().toString());
-    }
-
     private void saveAvatar() {
         //mPictureHelper = new PictureHelper();
         openCamera();
@@ -572,7 +494,7 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
                 getFromGallery(data);
                 break;
 
-            case REQUEST_PLACE_PICKER: {
+            case Config.REQUEST_PLACE_PICKER: {
                 // The user has selected a place. Extract the name and address.
                 final Place place = PlacePicker.getPlace(data, getActivity());
 
