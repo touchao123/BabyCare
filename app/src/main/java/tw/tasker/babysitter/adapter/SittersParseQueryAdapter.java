@@ -182,7 +182,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
         mSitterNote = (TextView) rootView.findViewById(R.id.sitter_note);
 
         mContact = (Button) rootView.findViewById(R.id.contact);
-        mDetail = (TextView) rootView.findViewById(R.id.detail);
+        mDetail = (TextView) rootView.findViewById(R.id.sitter_detail);
     }
 
     private void initData(Babysitter sitter) {

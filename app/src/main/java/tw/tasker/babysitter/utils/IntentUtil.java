@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 
 import tw.tasker.babysitter.view.ConversationActivity;
-import tw.tasker.babysitter.view.DataCheckActivity;
 import tw.tasker.babysitter.view.DispatchActivity;
 import tw.tasker.babysitter.view.HomeActivity;
 import tw.tasker.babysitter.view.ProfileActivity;
@@ -78,15 +77,6 @@ public class IntentUtil {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        return intent;
-    }
-
-    public static Intent startDataCheckActivity() {
-        Class<DataCheckActivity> clazz = DataCheckActivity.class;
-        String className = clazz.getName();
-
-        Intent intent = new Intent();
-        intent.setClassName(PACKAGE_NAME, className);
         return intent;
     }
 
