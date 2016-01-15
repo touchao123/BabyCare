@@ -657,10 +657,6 @@ public class DisplayUtils {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.item_list_sitter);
 
-        Button ok = (Button) dialog.findViewById(R.id.contact);
-        ok.setText("確認");
-        TextView detail = (TextView) dialog.findViewById(R.id.detail);
-
         // adjust dialog width
         Point size = new Point();
         Display display = activity.getWindowManager().getDefaultDisplay();
@@ -673,20 +669,7 @@ public class DisplayUtils {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         dialog.getWindow().setAttributes(lp);
 
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        detail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.startActivity(IntentUtil.startSitterDetailActivity());
-            }
-        });
-
+        LinearLayout sitterCard = (LinearLayout) dialog.findViewById(R.id.sitter_card);
         CircleImageView avatar = (CircleImageView) dialog.findViewById(R.id.avatar);
         TextView sitterName = (TextView) dialog.findViewById(R.id.sitter_name);
         TextView sitterAge = (TextView) dialog.findViewById(R.id.sitter_age);
@@ -695,8 +678,15 @@ public class DisplayUtils {
         TextView sitterBabycareType = (TextView) dialog.findViewById(R.id.sitter_babycare_type);
         TextView sitterBabycareTime = (TextView) dialog.findViewById(R.id.sitter_babycare_time);
         TextView sitterNote = (TextView) dialog.findViewById(R.id.sitter_note);
+        TextView sitterDetail = (TextView) dialog.findViewById(R.id.sitter_detail);
 
-        //Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
+        Button ok = (Button) dialog.findViewById(R.id.contact);
+
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) sitterCard.getLayoutParams();
+        params.setMargins(0, 0, 0, 0);
+        sitterCard.setLayoutParams(params);
+
+        ok.setText("我知道了");
         Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
         if (sitter != null) {
             ParseHelper.pinSitter(sitter);
@@ -711,7 +701,19 @@ public class DisplayUtils {
             sitterNote.setText(sitter.getSitterNote());
         }
 
-        //mSignupDialogLogin.setOnClickListener(this);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        sitterDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.startActivity(IntentUtil.startSitterDetailActivity());
+            }
+        });
 
         return dialog;
     }
@@ -747,7 +749,6 @@ public class DisplayUtils {
         TextView parentNote = (TextView) dialog.findViewById(R.id.parent_note);
 
         Button ok = (Button) dialog.findViewById(R.id.contact);
-
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) parentCard.getLayoutParams();
         params.setMargins(0, 0, 0, 0);
