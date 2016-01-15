@@ -7,10 +7,12 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.Calendar;
+
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
-import tw.tasker.babysitter.model.UserInfo;
+import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentConfirm extends Confirm {
@@ -24,7 +26,21 @@ public class ParentConfirm extends Confirm {
 
     @Override
     public String getTitle2() {
-        return mSitter == null ? "" : "(" + mSitter.getAge() + ")";
+        if (mSitter != null && mSitter.getAge() != null) {
+            Calendar startDate = DisplayUtils.getCalendarFromString(mSitter.getAge());
+            Calendar endDate = Calendar.getInstance();
+            String age = "";
+            if (startDate.before(endDate)) {
+                age = age + "歲";
+            } else {
+                age = age + "年後出生";
+            }
+            endDate.add(Calendar.YEAR, - startDate.get(Calendar.YEAR));
+            age = String.valueOf(endDate.get(Calendar.YEAR)) + age;
+            return "(" + age + ")";
+        } else {
+            return "";
+        }
     }
 
     @Override

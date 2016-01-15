@@ -7,11 +7,13 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.Calendar;
+
 import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.adapter.ConversationQueryAdapter.ViewHolder;
-import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 import tw.tasker.babysitter.model.UserInfo;
+import tw.tasker.babysitter.utils.DisplayUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class SitterConfirm extends Confirm {
@@ -25,7 +27,22 @@ public class SitterConfirm extends Confirm {
 
     @Override
     public String getTitle2() {
-        return mParent == null ? "" : mParent.getKidsGender() + "寶寶";
+        if (mParent != null &&  mParent.getKidsGender() !=null && mParent.getKidsAge() != null ) {
+            Calendar startDate = DisplayUtils.getCalendarFromString(mParent.getKidsAge());
+            Calendar endDate = Calendar.getInstance();
+
+            String age = "";
+            if (startDate.before(endDate)) {
+                age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
+            } else {
+                age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+            }
+
+            return  "(" + mParent.getKidsGender() + "，" + age + ")";
+
+        } else {
+            return "";
+        }
     }
 
     @Override

@@ -152,7 +152,7 @@
                 android:id="@+id/sitter_age_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="今天"
+                android:text="24歲"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/normal_text" />
 

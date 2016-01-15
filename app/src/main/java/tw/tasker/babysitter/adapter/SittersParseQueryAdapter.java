@@ -14,6 +14,8 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
+import java.util.Calendar;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
@@ -189,7 +191,18 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
 
         DisplayUtils.loadAvatorWithUrl(mAvatar, sitter.getImageUrl());
         mSitterName.setText(sitter.getName());
-        mSitterAge.setText("(" + sitter.getAge() + ")");
+
+        Calendar startDate = DisplayUtils.getCalendarFromString(sitter.getAge());
+        Calendar endDate = Calendar.getInstance();
+        String age = "";
+        if (startDate.before(endDate)) {
+            age = age + "歲";
+        } else {
+            age = age + "年後出生";
+        }
+        endDate.add(Calendar.YEAR, - startDate.get(Calendar.YEAR));
+        age = String.valueOf(endDate.get(Calendar.YEAR)) + age;
+        mSitterAge.setText("(" + age + ")");
 
         float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.getMyLocation());
         mSitterAddress.setText(sitter.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");

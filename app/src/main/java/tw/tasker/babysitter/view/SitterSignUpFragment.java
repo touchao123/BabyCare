@@ -1,9 +1,7 @@
 package tw.tasker.babysitter.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -21,12 +18,10 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
-import tw.tasker.babysitter.BuildConfig;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.HomeEvent;
@@ -77,7 +72,7 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
 
         initView();
         initListener();
-        loadData();
+        initData();
 
         return mRootView;
     }
@@ -123,8 +118,8 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
         mSitterBabycareTime.setOnClickListener(this);
     }
 
-    private void loadData() {
-        mSitterAge.setText(DisplayUtils.showCurrentDate());
+    private void initData() {
+        mSitterAge.setText(DisplayUtils.getYearBy(-24));
 
 //        if (BuildConfig.DEBUG)
 //            loadTestData();
@@ -194,6 +189,7 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
                 now.get(Calendar.DAY_OF_MONTH)
         );
         dpd.dismissOnPause(true);
+        dpd.showYearPickerFirst(true);
         dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
     }
 
@@ -206,13 +202,15 @@ public class SitterSignUpFragment extends Fragment implements OnClickListener {
 
                 Calendar startDate = DisplayUtils.getCalendarFromString(date);
                 Calendar endDate = Calendar.getInstance();
-
                 String age = "";
                 if (startDate.before(endDate)) {
-                    age = DisplayUtils.getAge(startDate, endDate, DisplayUtils.BIRTHDAY_BEFORE_CURREENTDAY);
+                    age = age + "歲";
                 } else {
-                    age = DisplayUtils.getAge(endDate, startDate, DisplayUtils.BIRTHDAY_AFTER_CURRENTDAY);
+                    age = age + "年後出生";
                 }
+                endDate.add(Calendar.YEAR, -year);
+                age = String.valueOf(endDate.get(Calendar.YEAR)) + age;
+
                 mSitterAgeMessage.setText(age);
                 break;
             }

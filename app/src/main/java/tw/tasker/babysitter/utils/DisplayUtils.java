@@ -692,7 +692,19 @@ public class DisplayUtils {
             ParseHelper.pinSitter(sitter);
             DisplayUtils.loadAvatorWithUrl(avatar, sitter.getAvatarFile().getUrl());
             sitterName.setText(sitter.getName());
-            sitterAge.setText("(" + sitter.getAge() + ")");
+
+            Calendar startDate = DisplayUtils.getCalendarFromString(sitter.getAge());
+            Calendar endDate = Calendar.getInstance();
+            String age = "";
+            if (startDate.before(endDate)) {
+                age = age + "歲";
+            } else {
+                age = age + "年後出生";
+            }
+            endDate.add(Calendar.YEAR, -startDate.get(Calendar.YEAR));
+            age = String.valueOf(endDate.get(Calendar.YEAR)) + age;
+            sitterAge.setText("(" + age + ")");
+
             float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.getMyLocation());
             sitterAddress.setText(sitter.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
             sitterBabycareCount.setText("托育人數：" + sitter.getBabycareCount());
