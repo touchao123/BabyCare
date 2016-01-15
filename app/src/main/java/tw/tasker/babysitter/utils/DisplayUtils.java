@@ -306,6 +306,7 @@ public class DisplayUtils {
                 .build();
     }
 
+    @DebugLog
     public static String showDistance(float distance) {
         String showDistance = "";
         DecimalFormat df = new DecimalFormat("##");
@@ -700,7 +701,7 @@ public class DisplayUtils {
             DisplayUtils.loadAvatorWithUrl(avatar, sitter.getAvatarFile().getUrl());
             sitterName.setText(sitter.getName());
             sitterAge.setText("(" + sitter.getAge() + ")");
-            float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+            float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.getMyLocation());
             sitterAddress.setText(sitter.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
             sitterBabycareCount.setText("托育人數：" + sitter.getBabycareCount());
             sitterBabycareType.setText("托育類別：" + sitter.getBabycareType());
@@ -755,7 +756,7 @@ public class DisplayUtils {
 
             name.setText(parent.getName());
 
-            float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+            float distance = (float) parent.getLocation().distanceInKilometersTo(Config.getMyLocation());
             address.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
 
             babyAge.setText(parent.getKidsAge());

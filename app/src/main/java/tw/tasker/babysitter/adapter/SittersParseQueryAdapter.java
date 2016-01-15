@@ -3,15 +3,11 @@ package tw.tasker.babysitter.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.parse.ParseException;
@@ -125,14 +121,14 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
                     query.whereMatches("age", "^[5][0-9]");
                 }
 
-                if (Config.keyWord.equals("")) {
-                    query.whereNear("location", Config.MY_LOCATION);
-                } else {
-                    String keyword = Config.keyWord;
-                    keyword = keyword.replace("台", "臺");
-                    query.whereContains("address", keyword);
-                    query.orderByAscending("address");
-                }
+//                if (Config.keyWord.equals("")) {
+                    query.whereNear("location", Config.getMyLocation());
+//                } else {
+//                    String keyword = Config.keyWord;
+//                    keyword = keyword.replace("台", "臺");
+//                    query.whereContains("address", keyword);
+//                    query.orderByAscending("address");
+//                }
 
 
 //				if (!Config.keyWord.equals("")) {
@@ -195,7 +191,7 @@ public class SittersParseQueryAdapter extends ParseQueryAdapter<Babysitter> {
         mSitterName.setText(sitter.getName());
         mSitterAge.setText("(" + sitter.getAge() + ")");
 
-        float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+        float distance = (float) sitter.getLocation().distanceInKilometersTo(Config.getMyLocation());
         mSitterAddress.setText(sitter.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
 
         mSitterBabycareCount.setText("托育人數：" + sitter.getBabycareCount());

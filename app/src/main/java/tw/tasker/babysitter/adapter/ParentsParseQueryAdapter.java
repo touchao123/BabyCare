@@ -133,14 +133,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
 					query.whereLessThan("kidsAge", DisplayUtils.getYearBy(-4));
 				}
 
-				if (Config.keyWord.equals("")) {
-					query.whereNear("location", Config.MY_LOCATION);
-				} else {
-					String keyword = Config.keyWord;
-					keyword = keyword.replace("台", "臺");
-					query.whereContains("address", keyword);
-					query.orderByAscending("address");
-				}
+                query.whereNear("location", Config.getMyLocation());
 
                 return query;
             }
@@ -226,7 +219,7 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         DisplayUtils.loadAvatorWithUrl(mParentAvatar, url);
 
         mParentName.setText(parent.getName());
-        float distance = (float) parent.getLocation().distanceInKilometersTo(Config.MY_LOCATION);
+        float distance = (float) parent.getLocation().distanceInKilometersTo(Config.getMyLocation());
         mParentAddress.setText(parent.getAddress() + " (" + DisplayUtils.showDistance(distance) + ")");
 
         Calendar startDate = DisplayUtils.getCalendarFromString(parent.getKidsAge());

@@ -18,6 +18,7 @@ import android.widget.ListView;
 import com.flurry.android.FlurryAgent;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
@@ -37,7 +38,9 @@ import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.AccountChecker;
 import tw.tasker.babysitter.utils.DisplayUtils;
+import tw.tasker.babysitter.utils.GetLocation;
 import tw.tasker.babysitter.utils.IntentUtil;
+import tw.tasker.babysitter.utils.MyLocation;
 import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.ProgressBarUtils;
 
@@ -171,8 +174,21 @@ public class ParentHomeFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ParseHelper.loadParentsProfileData();
-        doListQuery();
+        initLocation();
     }
+
+    private void initLocation() {
+        new MyLocation(getContext(), new GetLocation() {
+            @Override
+            public void done(ParseGeoPoint parseGeoPoint) {
+                Config.getMyLocation().setLatitude(parseGeoPoint.getLatitude());
+                Config.getMyLocation().setLongitude(parseGeoPoint.getLongitude());
+                doListQuery();
+            }
+
+        });
+    }
+
 
     private void doListQuery() {
         mAdapter = new SittersParseQueryAdapter(getActivity(), this);
@@ -326,7 +342,7 @@ public class ParentHomeFragment extends Fragment implements
         private static void addUserInfo() {
 
             UserInfo userInfo = new UserInfo();
-            userInfo.setLocation(Config.MY_LOCATION);
+            userInfo.setLocation(Config.getMyLocation());
             userInfo.setUser(ParseUser.getCurrentUser());
 
             userInfo.saveInBackground(new SaveCallback() {
@@ -343,7 +359,7 @@ public class ParentHomeFragment extends Fragment implements
 
         @DebugLog
         private static void updateUserInfo(UserInfo userInfo) {
-            userInfo.setLocation(Config.MY_LOCATION);
+            userInfo.setLocation(Config.getMyLocation());
             userInfo.saveInBackground();
         }
 

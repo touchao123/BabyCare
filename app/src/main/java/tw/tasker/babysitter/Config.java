@@ -9,6 +9,7 @@ import com.parse.ParseGeoPoint;
 
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import tw.tasker.babysitter.model.BabysitterFavorite;
 
 public class Config {
@@ -44,11 +45,25 @@ public class Config {
     public static String keyWord = "";
     //public static Sitter tmpSiterInfo;
     // if we can't get the user location.
-    public static ParseGeoPoint MY_LOCATION = new ParseGeoPoint(LAT, LNG);
+    private static ParseGeoPoint mMyLocation = new ParseGeoPoint(LAT, LNG);
+    private static ParseGeoPoint mMyLocationSearch = new ParseGeoPoint(0, 0);
 
     public static String sitterObjectId;
     public static String parentObjectId;
     public static List<BabysitterFavorite> favorites;
     public static List<String> conversations;
+
+    @DebugLog
+    public static ParseGeoPoint getMyLocation() {
+        if (mMyLocationSearch.getLatitude() == 0 && mMyLocationSearch.getLongitude() == 0) {
+            return mMyLocation;
+        } else {
+            return mMyLocationSearch;
+        }
+    }
+
+    public static ParseGeoPoint getMyLocationSearch() {
+        return mMyLocationSearch;
+    }
 
 }

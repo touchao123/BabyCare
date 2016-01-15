@@ -200,7 +200,7 @@ public class SitterDetailFragment extends Fragment implements OnClickListener {
         mStaticMapAddr.setText(sitter.getAddress());
 
         float distance = (float) sitter.getLocation()
-                .distanceInKilometersTo(Config.MY_LOCATION);
+                .distanceInKilometersTo(Config.getMyLocation());
         mStaticMapDistance.setText("距離您的位置：" + DisplayUtils.showDistance(distance));
 
         // sitter sync info

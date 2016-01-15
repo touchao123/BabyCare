@@ -55,7 +55,7 @@
             android:layout_weight="1"
             android:background="@drawable/full_address"
             android:gravity="center_vertical"
-            android:text="範例：高雄市鳳山區光復路"
+            android:text="請選擇要搜尋的地點"
             android:textColor="@color/gray_dark"
             android:textSize="16sp" />
 
@@ -69,7 +69,8 @@
             android:background="@drawable/full_edittext_address"
             android:ems="10"
             android:imeOptions="actionSearch"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/agree"
@@ -79,7 +80,8 @@
             android:background="@drawable/border_button_selector"
             android:text="@string/dialog_agree"
             android:textColor="@drawable/border_button_text_selector"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/cancel"
@@ -97,7 +99,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:gravity="right"
-            android:src="@drawable/location" />
+            android:src="@drawable/location"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <ImageView

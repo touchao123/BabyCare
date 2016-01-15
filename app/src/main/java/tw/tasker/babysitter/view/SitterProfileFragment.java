@@ -1,6 +1,5 @@
 package tw.tasker.babysitter.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,13 +9,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.GetCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -215,7 +212,7 @@ public class SitterProfileFragment extends Fragment implements OnClickListener {
         mStaticMapAddr.setText(sitter.getAddress());
 
         float distance = (float) sitter.getLocation()
-                .distanceInKilometersTo(Config.MY_LOCATION);
+                .distanceInKilometersTo(Config.getMyLocation());
         mStaticMapDistance.setText("距離您的位置：" + DisplayUtils.showDistance(distance));
 
         if (sitter.getRegisterNumber() == null) {

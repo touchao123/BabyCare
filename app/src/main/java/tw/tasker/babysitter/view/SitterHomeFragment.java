@@ -1,5 +1,6 @@
 package tw.tasker.babysitter.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +14,16 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.parse.ParseException;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
@@ -39,17 +46,21 @@ import tw.tasker.babysitter.utils.IntentUtil;
 import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.ProgressBarUtils;
 
+
 public class SitterHomeFragment extends Fragment implements
         OnQueryLoadListener<UserInfo>,
-        ParentListClickHandler {
+        ParentListClickHandler, View.OnClickListener {
 
     public ListView mListView;
     private FilterPanelView mFilterPanelView;
-    private AddressPanelView mAddressPanelView;
+    //private AddressPanelView mAddressPanelView;
     private ParseQueryAdapter<UserInfo> mAdapter;
 
     private UserInfo mUserInfo;
     private MaterialDialog mMaterialLoginDialog;
+    private LinearLayout mAddressPanel;
+    private TextView mAddressText;
+    private Button mCancel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,13 +90,15 @@ public class SitterHomeFragment extends Fragment implements
 
             case HomeEvent.ACTION_FILTERPANEL_SHOW:
                 mListView.setVisibility(View.GONE);
-                mAddressPanelView.hide();
+                mAddressPanel.setVisibility(View.GONE);
+                //mAddressPanelView.hide();
 
                 break;
 
             case HomeEvent.ACTION_FILTERPANEL_HIDE:
                 mListView.setVisibility(View.VISIBLE);
-                mAddressPanelView.show();
+                mAddressPanel.setVisibility(View.VISIBLE);
+                //mAddressPanelView.show();
                 break;
 
             case HomeEvent.ACTION_TOGGLE_KEYPAD:
@@ -140,16 +153,6 @@ public class SitterHomeFragment extends Fragment implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == HomeActivity.REQUEST_DATA_CHECK) {
-            TalkToParent talkToParent = new TalkToParent();
-            talkToParent.send(mUserInfo);
-        }
-    }
-
-    @Override
     public void onDetailClick() {
 
     }
@@ -169,7 +172,13 @@ public class SitterHomeFragment extends Fragment implements
                 false);
 
         mFilterPanelView = new FilterPanelView(getActivity(), rootView);
-        mAddressPanelView = new AddressPanelView(rootView);
+        //mAddressPanelView = new AddressPanelView(rootView);
+
+        mAddressPanel = (LinearLayout) rootView.findViewById(R.id.address_panel);
+        mAddressText = (TextView) rootView.findViewById(R.id.address_text);
+        mAddressText.setOnClickListener(this);
+        mCancel = (Button) rootView.findViewById(R.id.cancel);
+        mCancel.setOnClickListener(this);
 
         mListView = (ListView) rootView.findViewById(R.id.list);
         mListView.setOnScrollListener(new OnScrollListener() {
@@ -298,4 +307,61 @@ public class SitterHomeFragment extends Fragment implements
     protected void hideLoading() {
         ProgressBarUtils.hide(getActivity());
     }
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+            case R.id.address_text:
+                showPlacePicker();
+                break;
+
+            case R.id.cancel:
+                Config.getMyLocationSearch().setLatitude(0);
+                Config.getMyLocationSearch().setLongitude(0);
+                mAddressText.setText("請選擇要搜尋的地點");
+                doListQuery();
+                break;
+        }
+
+    }
+
+    private void showPlacePicker() {
+        // Construct an intent for the place picker
+        try {
+            PlacePicker.IntentBuilder intentBuilder =
+                    new PlacePicker.IntentBuilder();
+            Intent intent = intentBuilder.build(getActivity());
+            DisplayUtils.makeToast(getContext(), "選擇地點開啟中...");
+            // Start the intent by requesting a result,
+            // identified by a request code.
+            startActivityForResult(intent, 0);
+
+        } catch (GooglePlayServicesRepairableException e) {
+            // ...
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // ...
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ( resultCode == Activity.RESULT_OK) {
+
+            // The user has selected a place. Extract the name and address.
+            final Place place = PlacePicker.getPlace(data, getActivity());
+            final CharSequence address = place.getAddress();
+            mAddressText.setText(address);
+
+            Config.getMyLocationSearch().setLatitude(place.getLatLng().latitude);
+            Config.getMyLocationSearch().setLongitude(place.getLatLng().longitude);
+
+            doListQuery();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 }
