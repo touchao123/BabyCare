@@ -45,6 +45,9 @@ public class Config {
 
     public static final int REQUEST_PLACE_PICKER = 2;
 
+    public static final int REQUEST_AVATAR_IMAGE = 0;
+    public static final int REQUEST_IMAGE = 1;
+
     public static String keyWord = "";
     //public static Sitter tmpSiterInfo;
     // if we can't get the user location.

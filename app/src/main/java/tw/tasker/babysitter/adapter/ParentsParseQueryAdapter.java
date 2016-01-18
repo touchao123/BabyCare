@@ -212,8 +212,8 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         String parentNoteTtile = getContext().getString(R.string.parent_note_ttile);
 
         String url = "";
-        if (parent.getAvatorFile() != null) {
-            url = parent.getAvatorFile().getUrl();
+        if (parent.getAvatarFile() != null) {
+            url = parent.getAvatarFile().getUrl();
         }
         DisplayUtils.loadAvatorWithUrl(mParentAvatar, url);
 
@@ -259,12 +259,11 @@ public class ParentsParseQueryAdapter extends ParseQueryAdapter<UserInfo> {
         String endTime = parent.getBabycareTimeEnd();
         mParentBabycareTime.setText(parentBabycareTimeTitle + startTime + "~" + endTime);
         String timeSection = DisplayUtils.getTimeSection(startTime, endTime).replace("\n", "");
-        mParentBabycareTimeMessage.setText(parentBabycareTimeMessageTitle + "(" + timeSection + ")");
+        mParentBabycareTimeMessage.setText(parentBabycareTimeMessageTitle + timeSection );
         mParentNote.setText(parentNoteTtile + parent.getParentNote());
 
         initContactStatus(parent);
     }
-
 
     private void initContactStatus(UserInfo parent) {
         if (isTalkToSitter(parent)) {

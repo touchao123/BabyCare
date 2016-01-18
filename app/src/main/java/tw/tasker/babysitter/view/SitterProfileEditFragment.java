@@ -3,12 +3,7 @@ package tw.tasker.babysitter.view;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -22,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -31,10 +25,10 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.ArrayList;
@@ -52,13 +46,11 @@ import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UploadImage;
 import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 import tw.tasker.babysitter.utils.PictureHelper;
 
 public class SitterProfileEditFragment extends Fragment implements OnClickListener {
 
-    private static final int REQUEST_IMAGE = 1;
     private static final int RESULT_OK = -1;
 
     private static SignUpListener mListener;
@@ -66,7 +58,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
     private ViewPager mPager;
     private TextView mSitterHomeImageNo;
 
-    private CircleImageView mAvatar;
+    private CircleImageView mSitterAvatar;
 
     private TextView mAccount;
     private EditText mPassword;
@@ -125,7 +117,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         mPager = (ViewPager) mRootView.findViewById(R.id.pager);
         mSitterHomeImageNo = (TextView) mRootView.findViewById(R.id.sitter_home_image_no);
 
-        mAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
+        mSitterAvatar = (CircleImageView) mRootView.findViewById(R.id.avatar);
         // Set up the signup form.
         mAccount = (TextView) mRootView.findViewById(R.id.account);
         mPassword = (EditText) mRootView.findViewById(R.id.password);
@@ -161,7 +153,7 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         });
         mSitterHome.setOnClickListener(this);
 
-        mAvatar.setOnClickListener(this);
+        mSitterAvatar.setOnClickListener(this);
 
         mSitterAge.setOnClickListener(this);
         mSitterBabycareCount.setOnClickListener(this);
@@ -219,9 +211,11 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
     protected void fillDataToUI(Babysitter sitter) {
 
+        if (sitter.getAvatarFile() != null) {
+            DisplayUtils.loadAvatorWithUrl(mSitterAvatar, sitter.getAvatarFile().getUrl());
+        }
+
         mAccount.setText(ParseUser.getCurrentUser().getUsername());
-        //mPassword;
-        //mPasswordAgain;
         mEMail.setText(ParseUser.getCurrentUser().getEmail());
 
         mSitterName.setText(sitter.getName());
@@ -240,18 +234,18 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         String websiteUrl = "http://cwisweb.sfaa.gov.tw/";
         String parseUrl = sitter.getImageUrl();
         if (parseUrl.equals("../img/photo_mother_no.jpg")) {
-            mAvatar.setImageResource(R.drawable.photo_icon);
+            mSitterAvatar.setImageResource(R.drawable.photo_icon);
         } else {
-            imageLoader.displayImage(websiteUrl + parseUrl, mAvatar, Config.OPTIONS, null);
+            imageLoader.displayImage(websiteUrl + parseUrl, mSitterAvatar, Config.OPTIONS, null);
         }
     }
 
     private void getNewAvatar(Babysitter sitter) {
         if (sitter.getAvatarFile() != null) {
             String url = sitter.getAvatarFile().getUrl();
-            imageLoader.displayImage(url, mAvatar, Config.OPTIONS, null);
+            imageLoader.displayImage(url, mSitterAvatar, Config.OPTIONS, null);
         } else {
-            mAvatar.setImageResource(R.drawable.photo_icon);
+            mSitterAvatar.setImageResource(R.drawable.photo_icon);
         }
 
     }
@@ -262,11 +256,11 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
 
         switch (id) {
             case R.id.sitter_home:
-                openGallery();
+                DisplayUtils.openGallery(this, Config.REQUEST_IMAGE, 5);
                 break;
 
             case R.id.avatar:
-                saveAvatar();
+                DisplayUtils.openGallery(this, Config.REQUEST_AVATAR_IMAGE, 1);
                 break;
 
             case R.id.confirm:
@@ -377,76 +371,35 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         }
     }
 
-
-    private void saveAvatar() {
-        mPictureHelper = new PictureHelper();
-        openCamera();
-    }
-
-    private void openCamera() {
-        Intent intent_camera = new Intent(
-                MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent_camera, 0);
-    }
-
-    private void openGallery() {
-        Intent intent = new Intent(getContext(), MultiImageSelectorActivity.class);
-
-        // whether show camera
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, false);
-
-        // max select image amount
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 10);
-
-        // select mode (MultiImageSelectorActivity.MODE_SINGLE OR MultiImageSelectorActivity.MODE_MULTI)
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
-
-        startActivityForResult(intent, REQUEST_IMAGE);
-
-//        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-//        photoPickerIntent.setType("image/*");
-//        startActivityForResult(photoPickerIntent, 1);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        LogUtils.LOGD("vic", "requestCode=" + requestCode + "resultCode=" + resultCode);
 
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
         }
 
         switch (requestCode) {
-            case 0:
-                getFromCamera(data);
+            case Config.REQUEST_AVATAR_IMAGE: {
+                ArrayList<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                startUploadService(paths, "sitter_avatar");
                 break;
+            }
 
-            case REQUEST_IMAGE:
-                if(resultCode == RESULT_OK) {
-
-                    if (mUploadImages != null && !mUploadImages.isEmpty()) {
-                        ParseObject.deleteAllInBackground(mUploadImages);
-                    }
-                    // Get the result list of select image paths
-                    ArrayList<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    // do your logic ....
-                    startUploadService(paths, "home");
-
+            case Config.REQUEST_IMAGE: {
+                if (mUploadImages != null && !mUploadImages.isEmpty()) {
+                    ParseObject.deleteAllInBackground(mUploadImages);
                 }
-                //getFromGallery(data);
+                ArrayList<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                startUploadService(paths, "home");
                 break;
+            }
 
             case Config.REQUEST_PLACE_PICKER: {
-                // The user has selected a place. Extract the name and address.
                 final Place place = PlacePicker.getPlace(data, getActivity());
-
                 final CharSequence address = place.getAddress();
-
                 mSitterAddress.setText(address);
                 mLocation = new ParseGeoPoint(place.getLatLng().latitude, place.getLatLng().longitude);
-
                 break;
             }
 
@@ -461,64 +414,6 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         intent.putExtra("type", type);
         intent.setAction(UploadService.getActionUpload());
         getActivity().startService(intent);
-    }
-
-    private void getFromCamera(Intent data) {
-        mRingProgressDialog = ProgressDialog.show(getActivity(),
-                "請稍等 ...", "資料儲存中...", true);
-
-        // 取出拍照後回傳資料
-        Bundle extras = data.getExtras();
-        // 將資料轉換為圖像格式
-        Bitmap bmp = (Bitmap) extras.get("data");
-        mAvatar.setImageBitmap(bmp);
-
-        mPictureHelper.setBitmap(bmp);
-        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
-        mPictureHelper.savePicture();
-    }
-
-    private void getFromGallery(Intent data) {
-        mRingProgressDialog = ProgressDialog.show(getActivity(),
-                "請稍等 ...", "資料儲存中...", true);
-
-        Uri selectedImage = data.getData();
-
-        String filePath = getFilePath(selectedImage);
-
-        Bitmap bmp = BitmapFactory.decodeFile(filePath);
-        mAvatar.setImageBitmap(bmp);
-
-        mPictureHelper.setBitmap(bmp);
-        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
-        mPictureHelper.savePicture();
-    }
-
-    private String getFilePath(Uri selectedImage) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
-        cursor.close();
-        return filePath;
-    }
-
-    private void saveComment(Babysitter tmpSiterInfo) {
-        //ParseQuery<UserInfo> query = UserInfo.getQuery();
-        //query.whereEqualTo("user", ParseUser.getCurrentUser());
-        //query.getFirstInBackground(new GetCallback<UserInfo>() {
-
-        //@Override
-        //public void done(UserInfo userInfo, ParseException e) {
-        tmpSiterInfo.setAvatarFile(mPictureHelper.getFile());
-        tmpSiterInfo.saveInBackground();
-        //}
-        //});
-        mRingProgressDialog.dismiss();
     }
 
     private void saveSitterInfo(Babysitter sitterInfo) {
@@ -537,31 +432,8 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         ParseHelper.pinDataLocal(sitterInfo);
     }
 
-    public class BabyRecordSaveCallback implements SaveCallback {
-
-        @Override
-        public void done(ParseException e) {
-            if (e == null) {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "大頭照已上傳..", Toast.LENGTH_SHORT).show();
-                saveComment(ParseHelper.getSitter());
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "Error saving: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
     @DebugLog
-    public void onEvent(HomeEvent homeEvent) {
+    public void onEventMainThread(HomeEvent homeEvent) {
 
         switch (homeEvent.getAction()) {
             case HomeEvent.ACTION_ADD_SITTER_INFO_DOEN:
@@ -571,6 +443,11 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
             case HomeEvent.ACTION_UPLOAD_IMAGE_DONE:
                 ParseHelper.getUploadImagesFromServer("home", ParseUser.getCurrentUser());
                 break;
+            case HomeEvent.ACTION_UPLOAD_SITTER_AVATAR_IMAGE_DONE:
+                ParseFile parseFile = ParseHelper.getSitter().getAvatarFile();
+                if (parseFile != null) {
+                    DisplayUtils.loadAvatorWithUrl(mSitterAvatar, parseFile.getUrl());
+                }
         }
     }
 
@@ -579,6 +456,12 @@ public class SitterProfileEditFragment extends Fragment implements OnClickListen
         //mMaterialDialog.dismiss();
         String errorMessage = DisplayUtils.getErrorMessage(getActivity(), parseException);
         DisplayUtils.makeToast(getActivity(), errorMessage);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override

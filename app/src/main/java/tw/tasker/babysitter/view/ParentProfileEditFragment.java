@@ -2,10 +2,7 @@ package tw.tasker.babysitter.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -28,24 +24,26 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
+import tw.tasker.babysitter.UploadService;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UserInfo;
 import tw.tasker.babysitter.utils.DisplayUtils;
-import tw.tasker.babysitter.utils.LogUtils;
 import tw.tasker.babysitter.utils.ParseHelper;
 
 public class ParentProfileEditFragment extends Fragment implements OnClickListener, RadioGroup.OnCheckedChangeListener {
@@ -200,8 +198,8 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
     protected void fillDataToUI(UserInfo parent) {
         String url = "";
-        if (parent.getAvatorFile() != null) {
-            url = parent.getAvatorFile().getUrl();
+        if (parent.getAvatarFile() != null) {
+            url = parent.getAvatarFile().getUrl();
         }
         DisplayUtils.loadAvatorWithUrl(mParentAvatar, url);
 
@@ -271,7 +269,7 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
 
         switch (id) {
             case R.id.avatar:
-                //saveAvatar();
+                DisplayUtils.openGallery(this, Config.REQUEST_AVATAR_IMAGE, 1);
                 break;
 
             case R.id.confirm:
@@ -458,41 +456,22 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
         mParentBabycareTimeMessage.setText(timeSection);
     }
 
-    private void saveAvatar() {
-        //mPictureHelper = new PictureHelper();
-        openCamera();
-    }
-
-    private void openCamera() {
-        Intent intent_camera = new Intent(
-                MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent_camera, 0);
-    }
-
-    private void openGallery() {
-        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
-        startActivityForResult(photoPickerIntent, 1);
-    }
-
+    @DebugLog
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        LogUtils.LOGD("vic", "requestCode=" + requestCode + "resultCode=" + resultCode);
 
         if (resultCode == Activity.RESULT_CANCELED) {
             return;
         }
 
         switch (requestCode) {
-            case 0:
-                getFromCamera(data);
-                break;
 
-            case 1:
-                getFromGallery(data);
+            case Config.REQUEST_AVATAR_IMAGE: {
+                ArrayList<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
+                startUploadService(paths, "parent_avatar");
                 break;
+            }
 
             case Config.REQUEST_PLACE_PICKER: {
                 // The user has selected a place. Extract the name and address.
@@ -510,62 +489,12 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
         }
     }
 
-    private void getFromCamera(Intent data) {
-//        mRingProgressDialog = ProgressDialog.show(getActivity(),
-//                "請稍等 ...", "資料儲存中...", true);
-//
-//        // 取出拍照後回傳資料
-//        Bundle extras = data.getExtras();
-//        // 將資料轉換為圖像格式
-//        Bitmap bmp = (Bitmap) extras.get("data");
-//        mParentAvatar.setImageBitmap(bmp);
-//
-//        mPictureHelper.setBitmap(bmp);
-//        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
-//        mPictureHelper.savePicture();
-    }
-
-    private void getFromGallery(Intent data) {
-//        mRingProgressDialog = ProgressDialog.show(getActivity(),
-//                "請稍等 ...", "資料儲存中...", true);
-//
-//        Uri selectedImage = data.getData();
-//
-//        String filePath = getFilePath(selectedImage);
-//
-//        Bitmap bmp = BitmapFactory.decodeFile(filePath);
-//        mParentAvatar.setImageBitmap(bmp);
-//
-//        mPictureHelper.setBitmap(bmp);
-//        mPictureHelper.setSaveCallback(new BabyRecordSaveCallback());
-//        mPictureHelper.savePicture();
-    }
-
-    private String getFilePath(Uri selectedImage) {
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-        Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String filePath = cursor.getString(columnIndex);
-        cursor.close();
-        return filePath;
-    }
-
-    private void saveComment(UserInfo userInfo) {
-        //ParseQuery<UserInfo> query = UserInfo.getQuery();
-        //query.whereEqualTo("user", ParseUser.getCurrentUser());
-        //query.getFirstInBackground(new GetCallback<UserInfo>() {
-
-        //@Override
-        //public void done(UserInfo userInfo, ParseException e) {
-//        userInfo.setAvatorFile(mPictureHelper.getFile());
-//        userInfo.saveInBackground();
-        //}
-        //});
-//        mRingProgressDialog.dismiss();
+    private void startUploadService(ArrayList<String> paths, String type) {
+        Intent intent = new Intent(getContext(), UploadService.class);
+        intent.putStringArrayListExtra(UploadService.PARAM_PATHS, paths);
+        intent.putExtra("type", type);
+        intent.setAction(UploadService.getActionUpload());
+        getActivity().startService(intent);
     }
 
     @Override
@@ -575,19 +504,22 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
     }
 
     @DebugLog
-    public void onEvent(HomeEvent homeEvent) {
+    public void onEventMainThread(HomeEvent homeEvent) {
 
         switch (homeEvent.getAction()) {
             case HomeEvent.ACTION_ADD_PARENT_INFO_DOEN:
                 //mMaterialDialog.dismiss();
                 DisplayUtils.makeToast(getContext(), "資料儲存成功!");
                 break;
+            case HomeEvent.ACTION_UPLOAD_PARENT_AVATAR_IMAGE_DONE:
+                ParseFile parseFile = ParseHelper.getSitter().getAvatarFile();
+                if (parseFile != null) {
+                    DisplayUtils.loadAvatorWithUrl(mParentAvatar, parseFile.getUrl());
+                }
         }
     }
 
     private void saveUserInfo(UserInfo userInfo) {
-        //userInfo.setLocation(Config.MY_LOCATION);
-
         // parent info
         userInfo.setName(mParentName.getText().toString());
         userInfo.setAddress(mParentAddress.getText().toString());
@@ -663,8 +595,6 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
         userInfo.setBabycareTimeEnd(mParentBabycareTimeEnd.getText().toString());
         userInfo.setParentNote(mParentNote.getText().toString());
 
-        //ParseHelper.addUserInfo(userInfo);
-
         ParseHelper.pinDataLocal(userInfo);
     }
 
@@ -680,23 +610,6 @@ public class ParentProfileEditFragment extends Fragment implements OnClickListen
                 mParentBabycareWeekPanel.setVisibility(View.VISIBLE);
                 mParentBabycareTimeTitle.setText("　　 每日：");
                 break;
-        }
-    }
-
-    public class BabyRecordSaveCallback implements SaveCallback {
-
-        @Override
-        public void done(ParseException e) {
-            if (e == null) {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "大頭照已上傳..", Toast.LENGTH_SHORT).show();
-                saveComment(ParseHelper.getParent());
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "Error saving: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
-
         }
     }
 

@@ -57,8 +57,8 @@ public class SitterConfirm extends Confirm {
         }
 
         String url = "";
-        if (mParent.getAvatorFile() != null) {
-            url = mParent.getAvatorFile().getUrl();
+        if (mParent.getAvatarFile() != null) {
+            url = mParent.getAvatarFile().getUrl();
         }
 
         return url;

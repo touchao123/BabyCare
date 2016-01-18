@@ -23,8 +23,11 @@ import java.util.UUID;
 
 import de.greenrobot.event.EventBus;
 import hugo.weaving.DebugLog;
+import tw.tasker.babysitter.model.Babysitter;
 import tw.tasker.babysitter.model.HomeEvent;
 import tw.tasker.babysitter.model.UploadImage;
+import tw.tasker.babysitter.model.UserInfo;
+import tw.tasker.babysitter.utils.ParseHelper;
 
 
 public class UploadService extends IntentService {
@@ -147,11 +150,22 @@ public class UploadService extends IntentService {
             count++;
 
         }
-        broadcastCompleted("");
+        broadcastCompleted(type);
     }
 
     @DebugLog
     private void saveToParse(final String uploadId, ParseFile parseFile, String type, int count) {
+
+        if (type.equals("home")) {
+            saveToParseParentHome(uploadId, parseFile, type, count);
+        } else if (type.equals("sitter_avatar")) {
+            saveToParseSitterAvatar(uploadId, parseFile, type, count);
+        } else if (type.equals("parent_avatar")) {
+            saveToParseParentAvatar(uploadId, parseFile, type, count);
+        }
+    }
+
+    private void saveToParseParentHome(String uploadId, ParseFile parseFile, String type, int count) {
         UploadImage uploadImage = new UploadImage();
 
         uploadImage.setImageFile(parseFile);
@@ -164,6 +178,23 @@ public class UploadService extends IntentService {
         } catch (ParseException parseException) {
             broadcastError(uploadId, parseException);
         }
+    }
+
+    private void saveToParseSitterAvatar(String uploadId, ParseFile parseFile, String type, int count) {
+        Babysitter sitter = ParseHelper.getSitter();
+
+        sitter.setAvatarFile(parseFile);
+        ParseHelper.pinDataLocal(sitter);
+        broadcastProgress(uploadId, count);
+    }
+
+    private void saveToParseParentAvatar(String uploadId, ParseFile parseFile, String type, int count) {
+        UserInfo parent = ParseHelper.getParent();
+
+        parent.setAvatarFile(parseFile);
+        ParseHelper.pinDataLocal(parent);
+        broadcastProgress(uploadId, count);
+
     }
 
     private void createNotification() {
@@ -201,7 +232,15 @@ public class UploadService extends IntentService {
     }
 
     @DebugLog
-    void broadcastCompleted(final String uploadId) {
+    void broadcastCompleted(final String type) {
+
+        if (type.equals("home")) {
+            EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_UPLOAD_IMAGE_DONE));
+        } else if (type.equals("sitter_avatar")) {
+            EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_UPLOAD_SITTER_AVATAR_IMAGE_DONE));
+        } else if (type.equals("parent_avatar")) {
+            EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_UPLOAD_PARENT_AVATAR_IMAGE_DONE));
+        }
 
 //        final String filteredMessage;
 //        if (responseMessage == null) {
@@ -263,9 +302,6 @@ public class UploadService extends IntentService {
                     .setOngoing(false);
             setRingtone();
             notificationManager.notify(UPLOAD_NOTIFICATION_ID_DONE, notification.build());
-
-            EventBus.getDefault().post(new HomeEvent(HomeEvent.ACTION_UPLOAD_IMAGE_DONE));
-
         }
     }
 

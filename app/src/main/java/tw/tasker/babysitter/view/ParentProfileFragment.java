@@ -151,8 +151,8 @@ public class ParentProfileFragment extends Fragment implements OnClickListener {
         mKidsGender.setText("小孩姓別：" + parent.getKidsGender());
 
         String url = "";
-        if (parent.getAvatorFile() != null) {
-            url = parent.getAvatorFile().getUrl();
+        if (parent.getAvatarFile() != null) {
+            url = parent.getAvatarFile().getUrl();
         }
         DisplayUtils.loadAvatorWithUrl(mAvatar, url);
     }

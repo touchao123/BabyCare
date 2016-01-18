@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.Display;
@@ -43,6 +44,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 import hugo.weaving.DebugLog;
+import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import tw.tasker.babysitter.Config;
 import tw.tasker.babysitter.R;
 import tw.tasker.babysitter.model.Babysitter;
@@ -852,8 +854,8 @@ public class DisplayUtils {
             String parentNoteTtile = activity.getString(R.string.parent_note_ttile);
 
             String url = "";
-            if (parent.getAvatorFile() != null) {
-                url = parent.getAvatorFile().getUrl();
+            if (parent.getAvatarFile() != null) {
+                url = parent.getAvatarFile().getUrl();
             }
             DisplayUtils.loadAvatorWithUrl(parentAvatar, url);
 
@@ -905,6 +907,14 @@ public class DisplayUtils {
 
 
         return dialog;
+    }
+
+    public static void openGallery(Fragment fragment, int requestCode, int selectCount) {
+        Intent intent = new Intent(fragment.getContext(), MultiImageSelectorActivity.class);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, false);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, selectCount);
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
+        fragment.startActivityForResult(intent, requestCode);
     }
 
 

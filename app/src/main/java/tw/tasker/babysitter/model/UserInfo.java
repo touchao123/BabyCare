@@ -69,12 +69,12 @@ public class UserInfo extends ParseObject {
         put("kidsGender", vluae);
     }
 
-    public ParseFile getAvatorFile() {
-        return getParseFile("avator");
+    public ParseFile getAvatarFile() {
+        return getParseFile("avatar");
     }
 
-    public void setAvatorFile(ParseFile file) {
-        put("avator", file);
+    public void setAvatarFile(ParseFile file) {
+        put("avatar", file);
     }
 
     public String getBabycareTime() {

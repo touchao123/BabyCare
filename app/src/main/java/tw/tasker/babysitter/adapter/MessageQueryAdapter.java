@@ -132,8 +132,8 @@ public class MessageQueryAdapter extends QueryAdapter<Message, MessageQueryAdapt
             String imageUrl = "";
             if (AccountChecker.isSitter()) {
                 UserInfo parent = ParseHelper.getParentFromCache();
-                if (parent.getAvatorFile() != null) {
-                    imageUrl = parent.getAvatorFile().getUrl();
+                if (parent.getAvatarFile() != null) {
+                    imageUrl = parent.getAvatarFile().getUrl();
                 }
             } else {
                 Babysitter sitter = ParseHelper.getSitterFromCache();
