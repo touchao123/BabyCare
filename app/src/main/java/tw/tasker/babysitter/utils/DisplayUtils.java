@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -761,7 +762,7 @@ public class DisplayUtils {
         sitterCard.setLayoutParams(params);
 
         ok.setText("我知道了");
-        Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
+        final Babysitter sitter = ParseHelper.getSitterWithConversationId(conversationId);
         if (sitter != null) {
             ParseHelper.pinSitter(sitter);
             DisplayUtils.loadAvatorWithUrl(avatar, sitter.getAvatarFile().getUrl());
@@ -785,6 +786,16 @@ public class DisplayUtils {
             sitterBabycareType.setText("托育類別：" + sitter.getBabycareType());
             sitterBabycareTime.setText("托育時段：" + sitter.getBabycareTime());
             sitterNote.setText(sitter.getSitterNote());
+
+            sitter.fetchInBackground(new GetCallback<Babysitter>() {
+                @Override
+                public void done(Babysitter sitterFromServer, ParseException e) {
+                    if (sitterFromServer.getUpdatedAt().after(sitter.getUpdatedAt())) {
+                        sitter.pinInBackground();
+                    }
+                }
+            });
+
         }
 
         ok.setOnClickListener(new View.OnClickListener() {
@@ -843,7 +854,7 @@ public class DisplayUtils {
 
         ok.setText("我知道了");
 
-        UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
+        final UserInfo parent = ParseHelper.getParentWithConversationId(conversationId);
         if (parent != null) {
             String parentBabycareCountTitile = activity.getString(R.string.parent_babycare_count_ttile);
             String parentBabycareTypeTitle = activity.getString(R.string.parent_babycare_type_title);
@@ -894,8 +905,18 @@ public class DisplayUtils {
             String endTime = parent.getBabycareTimeEnd();
             parentBabycareTime.setText(parentBabycareTimeTitle + startTime + "~" + endTime);
             String timeSection = DisplayUtils.getTimeSection(startTime, endTime).replace("\n", "");
-            parentBabycareTimeMessage.setText(parentBabycareTimeMessageTitle + "(" + timeSection + ")");
+            parentBabycareTimeMessage.setText(parentBabycareTimeMessageTitle + timeSection );
             parentNote.setText(parentNoteTtile + parent.getParentNote());
+
+            parent.fetchInBackground(new GetCallback<UserInfo>() {
+                @Override
+                public void done(UserInfo parentFromServer, ParseException e) {
+                    if (parentFromServer.getUpdatedAt().after(parent.getUpdatedAt())) {
+                        parent.pinInBackground();
+                    }
+                }
+            });
+
         }
 
         ok.setOnClickListener(new View.OnClickListener() {
