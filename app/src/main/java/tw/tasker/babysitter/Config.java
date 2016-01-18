@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.parse.ParseGeoPoint;
 
 import java.util.List;
@@ -26,11 +25,11 @@ public class Config {
             .cacheOnDisk(true)
             .resetViewBeforeLoading(true)
             .showImageOnFail(R.drawable.profile)
-                    //.showImageOnLoading(R.drawable.profile)
+            //.showImageOnLoading(R.drawable.profile)
             .imageScaleType(ImageScaleType.EXACTLY)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .considerExifParams(true)
-            .displayer(new FadeInBitmapDisplayer(300))
+            //.displayer(new FadeInBitmapDisplayer(300))
             .build();
 
     public static final double LAT = 22.885127;
